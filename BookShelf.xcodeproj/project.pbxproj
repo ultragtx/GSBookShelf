@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C12BFCDC14F7CEF600206AFC /* GSBookViewContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C12BFCDB14F7CEF600206AFC /* GSBookViewContainerView.m */; };
+		C12BFCE014F7CF3A00206AFC /* GSCellContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C12BFCDF14F7CF3A00206AFC /* GSCellContainerView.m */; };
 		C1D6739B14F4D247006D3483 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D6739A14F4D247006D3483 /* UIKit.framework */; };
 		C1D6739D14F4D247006D3483 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D6739C14F4D247006D3483 /* Foundation.framework */; };
 		C1D6739F14F4D247006D3483 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D6739E14F4D247006D3483 /* CoreGraphics.framework */; };
@@ -15,22 +17,53 @@
 		C1D673AB14F4D247006D3483 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D673AA14F4D247006D3483 /* AppDelegate.m */; };
 		C1D673AE14F4D247006D3483 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D673AD14F4D247006D3483 /* ViewController.m */; };
 		C1D673B114F4D247006D3483 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C1D673AF14F4D247006D3483 /* ViewController.xib */; };
+		C1D673BA14F4D35B006D3483 /* GSBookShelfView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D673B914F4D35B006D3483 /* GSBookShelfView.m */; };
+		C1D673D714F60896006D3483 /* 8.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C1D673CE14F60896006D3483 /* 8.tiff */; };
+		C1D673D814F60896006D3483 /* 7.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C1D673CF14F60896006D3483 /* 7.tiff */; };
+		C1D673D914F60896006D3483 /* 6.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C1D673D014F60896006D3483 /* 6.tiff */; };
+		C1D673DA14F60896006D3483 /* 5.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C1D673D114F60896006D3483 /* 5.tiff */; };
+		C1D673DB14F60896006D3483 /* 4.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C1D673D214F60896006D3483 /* 4.tiff */; };
+		C1D673DC14F60896006D3483 /* 3.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C1D673D314F60896006D3483 /* 3.tiff */; };
+		C1D673DD14F60896006D3483 /* 2.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C1D673D414F60896006D3483 /* 2.tiff */; };
+		C1D673DE14F60896006D3483 /* 1.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C1D673D514F60896006D3483 /* 1.tiff */; };
+		C1D673DF14F60896006D3483 /* 0.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C1D673D614F60896006D3483 /* 0.tiff */; };
+		C1D673E714F62283006D3483 /* GSBookView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D673E614F62282006D3483 /* GSBookView.m */; };
+		C1D673EA14F67DA4006D3483 /* GSBookShelfCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D673E914F67DA4006D3483 /* GSBookShelfCellView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C12BFCDA14F7CEF600206AFC /* GSBookViewContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBookViewContainerView.h; sourceTree = "<group>"; };
+		C12BFCDB14F7CEF600206AFC /* GSBookViewContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSBookViewContainerView.m; sourceTree = "<group>"; };
+		C12BFCDE14F7CF3A00206AFC /* GSCellContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSCellContainerView.h; sourceTree = "<group>"; };
+		C12BFCDF14F7CF3A00206AFC /* GSCellContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSCellContainerView.m; sourceTree = "<group>"; };
 		C1D6739614F4D247006D3483 /* BookShelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookShelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1D6739A14F4D247006D3483 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C1D6739C14F4D247006D3483 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C1D6739E14F4D247006D3483 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		C1D673A214F4D247006D3483 /* BookShelf-Info.plist */ = {isa = PBXFileReference; path = "BookShelf-Info.plist"; sourceTree = "<group>"; };
+		C1D673A214F4D247006D3483 /* BookShelf-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BookShelf-Info.plist"; sourceTree = "<group>"; };
 		C1D673A414F4D247006D3483 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C1D673A614F4D247006D3483 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		C1D673A814F4D247006D3483 /* BookShelf-Prefix.pch */ = {isa = PBXFileReference; path = "BookShelf-Prefix.pch"; sourceTree = "<group>"; };
-		C1D673A914F4D247006D3483 /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		C1D673A814F4D247006D3483 /* BookShelf-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BookShelf-Prefix.pch"; sourceTree = "<group>"; };
+		C1D673A914F4D247006D3483 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C1D673AA14F4D247006D3483 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		C1D673AC14F4D247006D3483 /* ViewController.h */ = {isa = PBXFileReference; path = ViewController.h; sourceTree = "<group>"; };
+		C1D673AC14F4D247006D3483 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		C1D673AD14F4D247006D3483 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		C1D673B014F4D247006D3483 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
+		C1D673B814F4D35B006D3483 /* GSBookShelfView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBookShelfView.h; sourceTree = "<group>"; };
+		C1D673B914F4D35B006D3483 /* GSBookShelfView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSBookShelfView.m; sourceTree = "<group>"; };
+		C1D673CE14F60896006D3483 /* 8.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = 8.tiff; sourceTree = "<group>"; };
+		C1D673CF14F60896006D3483 /* 7.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = 7.tiff; sourceTree = "<group>"; };
+		C1D673D014F60896006D3483 /* 6.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = 6.tiff; sourceTree = "<group>"; };
+		C1D673D114F60896006D3483 /* 5.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = 5.tiff; sourceTree = "<group>"; };
+		C1D673D214F60896006D3483 /* 4.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = 4.tiff; sourceTree = "<group>"; };
+		C1D673D314F60896006D3483 /* 3.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = 3.tiff; sourceTree = "<group>"; };
+		C1D673D414F60896006D3483 /* 2.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = 2.tiff; sourceTree = "<group>"; };
+		C1D673D514F60896006D3483 /* 1.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = 1.tiff; sourceTree = "<group>"; };
+		C1D673D614F60896006D3483 /* 0.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = 0.tiff; sourceTree = "<group>"; };
+		C1D673E514F62282006D3483 /* GSBookView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBookView.h; sourceTree = "<group>"; };
+		C1D673E614F62282006D3483 /* GSBookView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSBookView.m; sourceTree = "<group>"; };
+		C1D673E814F67DA4006D3483 /* GSBookShelfCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBookShelfCellView.h; sourceTree = "<group>"; };
+		C1D673E914F67DA4006D3483 /* GSBookShelfCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSBookShelfCellView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +80,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C12BFCE114F7D29300206AFC /* Public */ = {
+			isa = PBXGroup;
+			children = (
+				C1D673B814F4D35B006D3483 /* GSBookShelfView.h */,
+				C1D673B914F4D35B006D3483 /* GSBookShelfView.m */,
+				C1D673E514F62282006D3483 /* GSBookView.h */,
+				C1D673E614F62282006D3483 /* GSBookView.m */,
+				C1D673E814F67DA4006D3483 /* GSBookShelfCellView.h */,
+				C1D673E914F67DA4006D3483 /* GSBookShelfCellView.m */,
+			);
+			name = Public;
+			sourceTree = "<group>";
+		};
+		C12BFCE214F7D29C00206AFC /* Private */ = {
+			isa = PBXGroup;
+			children = (
+				C12BFCDE14F7CF3A00206AFC /* GSCellContainerView.h */,
+				C12BFCDF14F7CF3A00206AFC /* GSCellContainerView.m */,
+				C12BFCDA14F7CEF600206AFC /* GSBookViewContainerView.h */,
+				C12BFCDB14F7CEF600206AFC /* GSBookViewContainerView.m */,
+			);
+			name = Private;
+			sourceTree = "<group>";
+		};
 		C1D6738B14F4D247006D3483 = {
 			isa = PBXGroup;
 			children = (
@@ -77,6 +134,8 @@
 		C1D673A014F4D247006D3483 /* BookShelf */ = {
 			isa = PBXGroup;
 			children = (
+				C1D673CD14F60883006D3483 /* ImagesForTest */,
+				C1D673B714F4D317006D3483 /* BookShelf */,
 				C1D673A914F4D247006D3483 /* AppDelegate.h */,
 				C1D673AA14F4D247006D3483 /* AppDelegate.m */,
 				C1D673AC14F4D247006D3483 /* ViewController.h */,
@@ -96,6 +155,31 @@
 				C1D673A814F4D247006D3483 /* BookShelf-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C1D673B714F4D317006D3483 /* BookShelf */ = {
+			isa = PBXGroup;
+			children = (
+				C12BFCE214F7D29C00206AFC /* Private */,
+				C12BFCE114F7D29300206AFC /* Public */,
+			);
+			name = BookShelf;
+			sourceTree = "<group>";
+		};
+		C1D673CD14F60883006D3483 /* ImagesForTest */ = {
+			isa = PBXGroup;
+			children = (
+				C1D673CE14F60896006D3483 /* 8.tiff */,
+				C1D673CF14F60896006D3483 /* 7.tiff */,
+				C1D673D014F60896006D3483 /* 6.tiff */,
+				C1D673D114F60896006D3483 /* 5.tiff */,
+				C1D673D214F60896006D3483 /* 4.tiff */,
+				C1D673D314F60896006D3483 /* 3.tiff */,
+				C1D673D414F60896006D3483 /* 2.tiff */,
+				C1D673D514F60896006D3483 /* 1.tiff */,
+				C1D673D614F60896006D3483 /* 0.tiff */,
+			);
+			name = ImagesForTest;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -151,6 +235,15 @@
 			files = (
 				C1D673A514F4D247006D3483 /* InfoPlist.strings in Resources */,
 				C1D673B114F4D247006D3483 /* ViewController.xib in Resources */,
+				C1D673D714F60896006D3483 /* 8.tiff in Resources */,
+				C1D673D814F60896006D3483 /* 7.tiff in Resources */,
+				C1D673D914F60896006D3483 /* 6.tiff in Resources */,
+				C1D673DA14F60896006D3483 /* 5.tiff in Resources */,
+				C1D673DB14F60896006D3483 /* 4.tiff in Resources */,
+				C1D673DC14F60896006D3483 /* 3.tiff in Resources */,
+				C1D673DD14F60896006D3483 /* 2.tiff in Resources */,
+				C1D673DE14F60896006D3483 /* 1.tiff in Resources */,
+				C1D673DF14F60896006D3483 /* 0.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,6 +257,11 @@
 				C1D673A714F4D247006D3483 /* main.m in Sources */,
 				C1D673AB14F4D247006D3483 /* AppDelegate.m in Sources */,
 				C1D673AE14F4D247006D3483 /* ViewController.m in Sources */,
+				C1D673BA14F4D35B006D3483 /* GSBookShelfView.m in Sources */,
+				C1D673E714F62283006D3483 /* GSBookView.m in Sources */,
+				C1D673EA14F67DA4006D3483 /* GSBookShelfCellView.m in Sources */,
+				C12BFCDC14F7CEF600206AFC /* GSBookViewContainerView.m in Sources */,
+				C12BFCE014F7CF3A00206AFC /* GSCellContainerView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +338,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BookShelf/BookShelf-Prefix.pch";
 				INFOPLIST_FILE = "BookShelf/BookShelf-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -251,6 +350,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BookShelf/BookShelf-Prefix.pch";
 				INFOPLIST_FILE = "BookShelf/BookShelf-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -275,6 +375,7 @@
 				C1D673B614F4D247006D3483 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
