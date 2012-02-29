@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GSBookView : UIView
+@interface GSBookView : UIView {
+    
+    UIImage *_image;
+    @private 
+    UIButton *_button;
+}
+
+@property (nonatomic, strong) UIImage *image;
 
 @end

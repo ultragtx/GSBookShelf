@@ -10,22 +10,30 @@
 
 @implementation GSBookView
 
+@synthesize image = _image;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        _button = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_button setFrame:frame];
+        [_button setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+        [_button.imageView setContentMode:UIViewContentModeBottom];
+        [self addSubview:_button];
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
+
+- (void)setImage:(UIImage *)image {
+    if ([_image isEqual:image]) {
+        return;
+    }
+    _image = image;
+    
+    [_button setImage:_image forState:UIControlStateNormal];
 }
-*/
 
 @end

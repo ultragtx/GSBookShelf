@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GSBookShelfView.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <GSBookShelfViewDelegate, GSBookShelfViewDataSource>{
+    GSBookShelfView *_bookShelfView;
+}
 
 @end

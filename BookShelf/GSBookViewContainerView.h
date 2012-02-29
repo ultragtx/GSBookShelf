@@ -8,6 +8,35 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GSBookViewContainerView : UIView
+@class GSBookShelfView;
+
+@protocol GSBookShelfViewDelegate;
+@protocol GSBookShelfViewDataSource;
+
+@interface GSBookViewContainerView : UIView {
+    GSBookShelfView __unsafe_unretained *_parentBookShelfView;
+    
+    NSMutableArray *_booksArray;
+    
+    NSMutableSet *_reuseableBookViews;
+    
+    @private
+    
+    NSInteger _firstVisibleRow;
+    NSInteger _lastVisibleRow;
+    
+    CGFloat _bookViewWidth;
+    CGFloat _bookViewHeight;
+    CGFloat _bookViewSpacingWidth;
+    
+    
+}
+
+@property (nonatomic, unsafe_unretained) GSBookShelfView *parentBookShelfView;
+
+@property (nonatomic, strong) NSMutableArray *booksArray;
+
+
+- (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect;
 
 @end
