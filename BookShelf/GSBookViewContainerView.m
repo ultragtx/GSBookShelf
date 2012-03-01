@@ -86,7 +86,7 @@ typedef enum {
 
 #pragma mark - Layout 
 
-- (GSBookView *)addBookViewAsSubviewWith:(NSInteger)index col:(int)col row:(int)row {
+- (GSBookView *)addBookViewAsSubviewWith:(NSInteger)index row:(int)row col:(int)col {
     
     CGFloat cellHeight = _parentBookShelfView.cellHeight;
     CGFloat bookViewBottomOffset = _parentBookShelfView.bookViewBottomOffset;
@@ -110,7 +110,7 @@ typedef enum {
 
 - (void)addBookViewAtIndex:(NSInteger)index row:(int)row col:(int)col addType:(AddType)addType {
     
-    GSBookView *bookView = [self addBookViewAsSubviewWith:index col:col row:row];
+    GSBookView *bookView = [self addBookViewAsSubviewWith:index row:row col:col];
     
     switch (addType) {
         case ADD_TYPE_FIRSTTIME:
@@ -124,6 +124,21 @@ typedef enum {
             break;
 
     }
+}
+
+- (void)removeBookViewWithType:(RemoveType)rmType {
+    NSInteger rmIndex;
+    switch (rmType) {
+        case RM_TYPE_HEAD:
+            rmIndex = 0;
+            break;
+        case RM_TYPE_TAIL:
+            rmIndex = [_visibleBookViews count] - 1;
+    }
+    GSBookView *bookView = [_visibleBookViews objectAtIndex:rmIndex];
+    [_reuseableBookViews addObject:bookView];
+    [bookView removeFromSuperview];
+    [_visibleBookViews removeObjectAtIndex:rmIndex];
 }
 
 
@@ -154,9 +169,7 @@ typedef enum {
                 if (index >= numberOfBooks) {
                     break;
                 }
-                
-                GSBookView *bookView = [self addBookViewAsSubviewWith:index col:col row:row];
-                [_visibleBookViews addObject:bookView];
+                [self addBookViewAtIndex:index row:row col:col addType:ADD_TYPE_FIRSTTIME];
             }
         }
     }
@@ -171,11 +184,7 @@ typedef enum {
                 for (int col = numberOfBooksInCell - 1; col >= 0; col--) {
                     NSInteger index = row * numberOfBooksInCell + col;
                     if (index < numberOfBooks) {
-                        GSBookView *bookView = [self addBookViewAsSubviewWith:index col:col row:row];
-                        
-                        // Add to _visibleBookView
-                        [_visibleBookViews insertObject:bookView atIndex:0];
-                        
+                        [self addBookViewAtIndex:index row:row col:col addType:ADD_TYPE_HEAD];
                     }
                 }
             }
@@ -189,12 +198,7 @@ typedef enum {
                 for (int col = numberOfBooksInCell - 1; col >= 0; col--) {
                     NSInteger index = row * numberOfBooksInCell + col;
                     if (index < numberOfBooks) {
-                        // remove bookView form subViews
-                        NSInteger lastIndex = [_visibleBookViews count] - 1;
-                        GSBookView *bookView = [_visibleBookViews objectAtIndex:lastIndex];
-                        [_reuseableBookViews addObject:bookView];
-                        [bookView removeFromSuperview];
-                        [_visibleBookViews removeObjectAtIndex:lastIndex];
+                        [self removeBookViewWithType:RM_TYPE_TAIL];
                     }
                 }
             }
@@ -209,9 +213,7 @@ typedef enum {
                     if (index >= numberOfBooks) {
                         break;
                     }
-                    
-                    GSBookView *bookView = [self addBookViewAsSubviewWith:index col:col row:row];
-                    [_visibleBookViews addObject:bookView];
+                    [self addBookViewAtIndex:index row:row col:col addType:ADD_TYPE_TAIL];
                 }
             }
         }
@@ -225,16 +227,13 @@ typedef enum {
                     if (index >= numberOfBooks) {
                         break;
                     }
-                    GSBookView *bookView = [_visibleBookViews objectAtIndex:0];
-                    [_reuseableBookViews addObject:bookView];
-                    [bookView removeFromSuperview];
-                    [_visibleBookViews removeObjectAtIndex:0];
+                    [self removeBookViewWithType:RM_TYPE_HEAD];
                 }
             }
         }
     }
     
-    //[self checkVisibleBookViewsValid];
+    [self checkVisibleBookViewsValid];
     
     _firstVisibleRow = firstNeededRow;
     _lastVisibleRow = lastNeededRow;
@@ -294,15 +293,15 @@ typedef enum {
 #pragma mark - test
 
 - (void)checkVisibleBookViewsValid {
-    NSLog(@"---------------------------");
+    //NSLog(@"---------------------------");
     int i = ((UIView *)[_visibleBookViews objectAtIndex:0]).tag;
     for (UIView *view in _visibleBookViews) {
         if (i != view.tag) {
-            NSLog(@"error");
+            NSLog(@"$$$$$$ checkVisibleBookViewsValid error");
         }
         i++;
     }
-    NSLog(@"***************************");
+    //NSLog(@"***************************");
 }
 
 @end
