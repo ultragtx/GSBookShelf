@@ -13,16 +13,24 @@
 @protocol GSBookShelfViewDelegate;
 @protocol GSBookShelfViewDataSource;
 
+typedef struct BookViewPostion {
+    NSInteger row;
+    NSInteger col;
+    NSInteger index;
+}BookViewPostion;
+
 @interface GSBookViewContainerView : UIView {
     GSBookShelfView __unsafe_unretained *_parentBookShelfView;    
     
     @private
     
+    CGRect _visibleRect;
+    
     NSInteger _firstVisibleRow;
     NSInteger _lastVisibleRow;
     
-    NSInteger _firstVisibleIndex;
-    NSInteger _lastVisibleIndex;
+    //NSInteger _firstVisibleIndex;
+    //NSInteger _lastVisibleIndex;
     
     NSMutableArray *_visibleBookViews;
     NSMutableSet *_reuseableBookViews;
@@ -33,7 +41,7 @@
     
     // Drag and Drop
     BOOL _isDragViewPickedUp;
-    UIView __unsafe_unretained *_dragView;
+    UIView *_dragView;
     
     
     
