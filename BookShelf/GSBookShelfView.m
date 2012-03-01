@@ -73,6 +73,7 @@
 }
 
 - (void)resetContentSize {
+    //NSLog(@"resetContentSize");
     NSInteger numberOfBooks = [_dataSource numberOfBooksInBookShelfView:self];
     // plus one cell for scrollView bounces
     NSInteger numberOfCells = ceilf((float)numberOfBooks / (float)_numberOfBooksInCell);
@@ -96,9 +97,10 @@
 #pragma mark Layout
 
 - (void)layoutSubviews {
+    //NSLog(@"layout");
     [super layoutSubviews];
     
-    [_bookViewContainerView layoutSubviewsWithVisibleRect:[self visibleRect]];
+    [_bookViewContainerView setNeedsLayout];
 }
 
 

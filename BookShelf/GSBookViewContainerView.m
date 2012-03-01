@@ -13,6 +13,15 @@
 #define kRatio_width_spacing 2.2f
 #define kRatio_height_width 1.414f
 
+#define kGrow_animation_duration 0.15
+#define kSrink_animation_duration 0.15
+
+@interface GSBookViewContainerView (Private)
+
+// Animation
+- (void)growAnimationAtPoint:(CGPoint)point forView:(UIView *)view;
+@end
+
 @implementation GSBookViewContainerView
 
 @synthesize parentBookShelfView = _parentBookShelfView;
@@ -28,7 +37,12 @@
         _firstVisibleRow = NSIntegerMax;
         _lastVisibleRow = NSIntegerMin;
         
+        // dragAndDrop
+        _isDragViewPickedUp = NO;
         
+        // GestureRecognizer
+        UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+        [self addGestureRecognizer:longPressGestureRecognizer];
         
     }
     return self;
@@ -49,10 +63,10 @@
     _bookViewHeight = _bookViewWidth * kRatio_height_width;
 }
 
-- (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect {
+- (void)layoutSubviews {
+    //NSLog(@"bookViewContainer layout");
+    CGRect visibleRect = [self bounds];
     //NSLog(@"visibleRect %@", NSStringFromCGRect(visibleRect));
-    
-    
     
     NSInteger numberOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
     
@@ -66,12 +80,13 @@
     
     //NSLog(@"\n------------\nfirstNeededRow:%d firstVisibleRow:%d\nlastNeededRow: %d lastVisibleRow: %d\n************", firstNeededRow, _firstVisibleRow, lastNeededRow, _lastVisibleRow);
     
-    
     CGFloat cellHeight = _parentBookShelfView.cellHeight;
     CGFloat bookViewBottomOffset = _parentBookShelfView.bookViewBottomOffset;
     CGFloat cellMarginWidth = _parentBookShelfView.cellMarginWidth;
     
+    // Discussion: Use the visible rect to remove invisible bookView currently. Also can use the row to remove
     for (GSBookView *bookView in [self subviews]) {
+        // the bookView's frame is not unified with the row, but the cell's frame is. So use the cellFrame to see if it's needed to remove the bookView
         CGRect cellFrame = CGRectMake(0, CGRectGetMaxY(bookView.frame) - bookViewBottomOffset, visibleRect.size.width, cellHeight);
         if (!CGRectIntersectsRect(cellFrame, visibleRect)) {
             [_reuseableBookViews addObject:bookView];
@@ -108,6 +123,56 @@
     
     _firstVisibleRow = firstNeededRow;
     _lastVisibleRow = lastNeededRow;
+}
+
+#pragma mark - View For Point
+
+- (UIView *)bookViewAtPoint:(CGPoint)point {
+    CGRect visibleRect = [self bounds];
+    
+    return nil;
+}
+
+#pragma mark - Gesture Recognizer
+
+- (void)handleLongPressGesture:(UILongPressGestureRecognizer *)gestureRecognizer {
+    
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        CGPoint touchPoint = [gestureRecognizer locationInView:self];
+        BOOL dragAndDropEnable = _parentBookShelfView.dragAndDropEnabled;
+        UIView *view = [self hitTest:touchPoint withEvent:nil];
+        
+        NSLog(@"viewClass:%@", NSStringFromClass([view class]));
+        if (dragAndDropEnable && view != self) {
+            _dragView = view;
+            [self growAnimationAtPoint:touchPoint forView:_dragView];
+            _isDragViewPickedUp = YES;
+        }
+    }
+    else if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
+        if (_isDragViewPickedUp) {
+            CGPoint touchPoint = [gestureRecognizer locationInView:self];
+            _dragView.center = touchPoint;
+        }
+    }
+    else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        if (_isDragViewPickedUp) {
+            
+        }
+    }
+}
+
+#pragma mark - Animation 
+
+- (void)growAnimationAtPoint:(CGPoint)point forView:(UIView *)view {
+    [UIView animateWithDuration:kGrow_animation_duration animations:^{
+        view.transform = CGAffineTransformMakeScale(1.2, 1.2);
+        view.center = point;
+    }];
+}
+
+- (void)shrinkAnimationToPoint:(CGPoint)point forView:(UIView *)view {
+    
 }
 
 @end

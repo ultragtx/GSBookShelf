@@ -41,7 +41,7 @@
 #pragma mark GSBookShelfViewDataSource
 
 - (NSInteger)numberOfBooksInBookShelfView:(GSBookShelfView *)bookShelfView {
-    return 20;
+    return 200;
 }
 
 - (GSBookView *)bookShelfView:(GSBookShelfView *)bookShelfView bookViewAtIndex:(NSInteger)index {

@@ -16,7 +16,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+        [self setBackgroundColor:[UIColor blueColor]];
         _button = [UIButton buttonWithType:UIButtonTypeCustom];
         [_button setFrame:frame];
         [_button setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];

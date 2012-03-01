@@ -29,6 +29,9 @@
     CGFloat _bookViewHeight;
     CGFloat _bookViewSpacingWidth;
     
+    // Drag and Drop
+    BOOL _isDragViewPickedUp;
+    UIView __unsafe_unretained *_dragView;
     
 }
 
@@ -36,7 +39,5 @@
 
 @property (nonatomic, strong) NSMutableArray *booksArray;
 
-
-- (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect;
 
 @end
