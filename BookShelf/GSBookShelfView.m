@@ -100,7 +100,8 @@
     //NSLog(@"layout");
     [super layoutSubviews];
     
-    [_bookViewContainerView setNeedsLayout];
+    //[_bookViewContainerView setNeedsLayout];
+    [_bookViewContainerView layoutSubviewsWithVisibleRect:[self visibleRect]];
 }
 
 

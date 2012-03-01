@@ -16,26 +16,45 @@
 #define kGrow_animation_duration 0.15
 #define kSrink_animation_duration 0.15
 
+typedef enum {
+    ADD_TYPE_FIRSTTIME,
+    ADD_TYPE_HEAD,
+    ADD_TYPE_TAIL
+}AddType;
+
+typedef enum {
+    RM_TYPE_HEAD,
+    RM_TYPE_TAIL
+}RemoveType;
+
 @interface GSBookViewContainerView (Private)
 
 // Animation
 - (void)growAnimationAtPoint:(CGPoint)point forView:(UIView *)view;
 @end
 
+@interface GSBookViewContainerView (Test)
+
+- (void)checkVisibleBookViewsValid;
+@end
+
 @implementation GSBookViewContainerView
 
 @synthesize parentBookShelfView = _parentBookShelfView;
-@synthesize booksArray = _booksArray;
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _booksArray = [[NSMutableArray alloc] initWithCapacity:0];
+
         _reuseableBookViews = [[NSMutableSet alloc] initWithCapacity:0];
         
-        _firstVisibleRow = NSIntegerMax;
-        _lastVisibleRow = NSIntegerMin;
+        _firstVisibleRow = -1;
+        _lastVisibleRow = -1;
+        
+        _firstVisibleIndex = -1;
+        _lastVisibleIndex = -1;
+        _visibleBookViews = [[NSMutableArray alloc] initWithCapacity:0];
         
         // dragAndDrop
         _isDragViewPickedUp = NO;
@@ -47,6 +66,8 @@
     }
     return self;
 }
+
+#pragma mark - Accessors
 
 - (void)setParentBookShelfView:(GSBookShelfView *)parentBookShelfView {
     _parentBookShelfView = parentBookShelfView;
@@ -63,9 +84,52 @@
     _bookViewHeight = _bookViewWidth * kRatio_height_width;
 }
 
-- (void)layoutSubviews {
+#pragma mark - Layout 
+
+- (GSBookView *)addBookViewAsSubviewWith:(NSInteger)index col:(int)col row:(int)row {
+    
+    CGFloat cellHeight = _parentBookShelfView.cellHeight;
+    CGFloat bookViewBottomOffset = _parentBookShelfView.bookViewBottomOffset;
+    CGFloat cellMarginWidth = _parentBookShelfView.cellMarginWidth;
+    
+    // Add bookView as subview
+    GSBookView *bookView = [_parentBookShelfView.dataSource bookShelfView:_parentBookShelfView bookViewAtIndex:index];
+    
+    bookView.tag = index; // set the tag as the index
+    
+    CGFloat originX = cellMarginWidth + col * (_bookViewWidth + _bookViewSpacingWidth);
+    CGFloat originY = row * cellHeight + bookViewBottomOffset - _bookViewHeight;
+    
+    [bookView setFrame:CGRectMake(originX, originY, _bookViewWidth, _bookViewHeight)];
+    
+    //NSLog(@"bookView Frame:%@", NSStringFromCGRect(bookView.frame));
+    
+    [self addSubview:bookView];
+    return bookView;
+}
+
+- (void)addBookViewAtIndex:(NSInteger)index row:(int)row col:(int)col addType:(AddType)addType {
+    
+    GSBookView *bookView = [self addBookViewAsSubviewWith:index col:col row:row];
+    
+    switch (addType) {
+        case ADD_TYPE_FIRSTTIME:
+        case ADD_TYPE_TAIL:
+            
+            [_visibleBookViews addObject:bookView];
+            break;
+            
+        case ADD_TYPE_HEAD:
+            [_visibleBookViews insertObject:bookView atIndex:0];
+            break;
+
+    }
+}
+
+
+- (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect {
     //NSLog(@"bookViewContainer layout");
-    CGRect visibleRect = [self bounds];
+    //CGRect visibleRect = [self bounds];
     //NSLog(@"visibleRect %@", NSStringFromCGRect(visibleRect));
     
     NSInteger numberOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
@@ -80,46 +144,97 @@
     
     //NSLog(@"\n------------\nfirstNeededRow:%d firstVisibleRow:%d\nlastNeededRow: %d lastVisibleRow: %d\n************", firstNeededRow, _firstVisibleRow, lastNeededRow, _lastVisibleRow);
     
-    CGFloat cellHeight = _parentBookShelfView.cellHeight;
-    CGFloat bookViewBottomOffset = _parentBookShelfView.bookViewBottomOffset;
-    CGFloat cellMarginWidth = _parentBookShelfView.cellMarginWidth;
-    
-    // Discussion: Use the visible rect to remove invisible bookView currently. Also can use the row to remove
-    for (GSBookView *bookView in [self subviews]) {
-        // the bookView's frame is not unified with the row, but the cell's frame is. So use the cellFrame to see if it's needed to remove the bookView
-        CGRect cellFrame = CGRectMake(0, CGRectGetMaxY(bookView.frame) - bookViewBottomOffset, visibleRect.size.width, cellHeight);
-        if (!CGRectIntersectsRect(cellFrame, visibleRect)) {
-            [_reuseableBookViews addObject:bookView];
-            [bookView removeFromSuperview];
-        }
-    }
-    
-    for (int row = firstNeededRow; row <= lastNeededRow; row++) {
-        BOOL isRowMissing = (_firstVisibleRow > row || _lastVisibleRow < row);
-        if (isRowMissing) {
+    // remove and add bookview according to the row
+    if (_firstVisibleRow == -1) {
+        // First time 
+        for (int row = firstNeededRow; row <= lastNeededRow; row++) {
+            // add firstTime
             for (int col = 0; col < numberOfBooksInCell; col++) {
                 NSInteger index = row * numberOfBooksInCell + col;
                 if (index >= numberOfBooks) {
                     break;
                 }
                 
-                GSBookView *bookView = [_parentBookShelfView.dataSource bookShelfView:_parentBookShelfView bookViewAtIndex:index];
-                
-                bookView.tag = index; // set the tag as the index
-                
-                CGFloat originX = cellMarginWidth + col * (_bookViewWidth + _bookViewSpacingWidth);
-                CGFloat originY = row * cellHeight + bookViewBottomOffset - _bookViewHeight;
-                
-                [bookView setFrame:CGRectMake(originX, originY, _bookViewWidth, _bookViewHeight)];
-                
-                //NSLog(@"bookView Frame:%@", NSStringFromCGRect(bookView.frame));
-                
-                [self addSubview:bookView];
-                
+                GSBookView *bookView = [self addBookViewAsSubviewWith:index col:col row:row];
+                [_visibleBookViews addObject:bookView];
+            }
+        }
+    }
+    else {
+        // Not first time
+        if (firstNeededRow < _firstVisibleRow) {
+            NSInteger addToRow = (_firstVisibleRow - 1 < lastNeededRow) ? _firstVisibleRow - 1 : lastNeededRow; 
+            
+            for (int row = addToRow; row >= firstNeededRow; row--) {
+                // add to head of the _visibileBookView
+                // use reversed row to always add to index 0
+                for (int col = numberOfBooksInCell - 1; col >= 0; col--) {
+                    NSInteger index = row * numberOfBooksInCell + col;
+                    if (index < numberOfBooks) {
+                        GSBookView *bookView = [self addBookViewAsSubviewWith:index col:col row:row];
+                        
+                        // Add to _visibleBookView
+                        [_visibleBookViews insertObject:bookView atIndex:0];
+                        
+                    }
+                }
             }
         }
         
+        if (lastNeededRow < _lastVisibleRow) {
+            NSInteger rmFromRow = (_firstVisibleRow > lastNeededRow + 1) ? _firstVisibleRow : lastNeededRow + 1;
+            for (int row = _lastVisibleRow; row >= rmFromRow; row--) {
+                // rm from tail of the _visibleBookView
+                // use reversed row to always remove at tile
+                for (int col = numberOfBooksInCell - 1; col >= 0; col--) {
+                    NSInteger index = row * numberOfBooksInCell + col;
+                    if (index < numberOfBooks) {
+                        // remove bookView form subViews
+                        NSInteger lastIndex = [_visibleBookViews count] - 1;
+                        GSBookView *bookView = [_visibleBookViews objectAtIndex:lastIndex];
+                        [_reuseableBookViews addObject:bookView];
+                        [bookView removeFromSuperview];
+                        [_visibleBookViews removeObjectAtIndex:lastIndex];
+                    }
+                }
+            }
+        }
+        
+        if (lastNeededRow > _lastVisibleRow) {
+            NSInteger addFromRow = (_lastVisibleRow + 1 > firstNeededRow) ? _lastVisibleRow + 1 : firstNeededRow;
+            for (int row = addFromRow; row <= lastNeededRow; row++) {
+                // add to tail
+                for (int col = 0; col < numberOfBooksInCell; col++) {
+                    NSInteger index = row * numberOfBooksInCell + col;
+                    if (index >= numberOfBooks) {
+                        break;
+                    }
+                    
+                    GSBookView *bookView = [self addBookViewAsSubviewWith:index col:col row:row];
+                    [_visibleBookViews addObject:bookView];
+                }
+            }
+        }
+        
+        if (firstNeededRow > _firstVisibleRow) {
+            NSInteger rmToRow = (_lastVisibleRow  <= firstNeededRow - 1) ? _lastVisibleRow : firstNeededRow - 1;
+            for (int row = _firstVisibleRow; row <= rmToRow; row++) {
+                // rm from head
+                for (int col = 0; col < numberOfBooksInCell; col++) {
+                    NSInteger index = row * numberOfBooksInCell + col;
+                    if (index >= numberOfBooks) {
+                        break;
+                    }
+                    GSBookView *bookView = [_visibleBookViews objectAtIndex:0];
+                    [_reuseableBookViews addObject:bookView];
+                    [bookView removeFromSuperview];
+                    [_visibleBookViews removeObjectAtIndex:0];
+                }
+            }
+        }
     }
+    
+    //[self checkVisibleBookViewsValid];
     
     _firstVisibleRow = firstNeededRow;
     _lastVisibleRow = lastNeededRow;
@@ -173,6 +288,21 @@
 
 - (void)shrinkAnimationToPoint:(CGPoint)point forView:(UIView *)view {
     
+}
+
+
+#pragma mark - test
+
+- (void)checkVisibleBookViewsValid {
+    NSLog(@"---------------------------");
+    int i = ((UIView *)[_visibleBookViews objectAtIndex:0]).tag;
+    for (UIView *view in _visibleBookViews) {
+        if (i != view.tag) {
+            NSLog(@"error");
+        }
+        i++;
+    }
+    NSLog(@"***************************");
 }
 
 @end

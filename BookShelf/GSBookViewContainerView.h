@@ -14,16 +14,18 @@
 @protocol GSBookShelfViewDataSource;
 
 @interface GSBookViewContainerView : UIView {
-    GSBookShelfView __unsafe_unretained *_parentBookShelfView;
-    
-    NSMutableArray *_booksArray;
-    
-    NSMutableSet *_reuseableBookViews;
+    GSBookShelfView __unsafe_unretained *_parentBookShelfView;    
     
     @private
     
     NSInteger _firstVisibleRow;
     NSInteger _lastVisibleRow;
+    
+    NSInteger _firstVisibleIndex;
+    NSInteger _lastVisibleIndex;
+    
+    NSMutableArray *_visibleBookViews;
+    NSMutableSet *_reuseableBookViews;
     
     CGFloat _bookViewWidth;
     CGFloat _bookViewHeight;
@@ -33,11 +35,14 @@
     BOOL _isDragViewPickedUp;
     UIView __unsafe_unretained *_dragView;
     
+    
+    
 }
 
 @property (nonatomic, unsafe_unretained) GSBookShelfView *parentBookShelfView;
 
-@property (nonatomic, strong) NSMutableArray *booksArray;
 
+
+- (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect;
 
 @end
