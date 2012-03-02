@@ -33,7 +33,7 @@ typedef enum {
 - (void)growAnimationAtPoint:(CGPoint)point forView:(UIView *)view;
 
 // BookView Rect
-- (CGRect)bookViewRectAtRow:(NSInteger)row col:(NSInteger)col;
+- (CGRect)bookViewRectAtBookViewPosition:(BookViewPostion)position;
 
 @end
 
@@ -88,13 +88,13 @@ typedef enum {
 
 #pragma mark - Layout 
 
-- (GSBookView *)addBookViewAsSubviewWith:(NSInteger)index row:(NSInteger)row col:(NSInteger)col {
+- (GSBookView *)addBookViewAsSubviewWithBookViewPosition:(BookViewPostion)position {
     
-    GSBookView *bookView = [_parentBookShelfView.dataSource bookShelfView:_parentBookShelfView bookViewAtIndex:index];
+    GSBookView *bookView = [_parentBookShelfView.dataSource bookShelfView:_parentBookShelfView bookViewAtIndex:position.index];
     
-    bookView.tag = index; // set the tag as the index
+    bookView.tag = position.index; // set the tag as the index
     
-    [bookView setFrame:[self bookViewRectAtRow:row col:col]];
+    [bookView setFrame:[self bookViewRectAtBookViewPosition:position]];
     
     //NSLog(@"bookView Frame:%@", NSStringFromCGRect(bookView.frame));
     
@@ -102,10 +102,9 @@ typedef enum {
     return bookView;
 }
 
-- (void)addBookViewAtIndex:(NSInteger)index row:(NSInteger)row col:(NSInteger)col addType:(AddType)addType {
+- (void)addBookViewAtBookViewPosition:(BookViewPostion) position addType:(AddType)addType {
     
-    GSBookView *bookView = [self addBookViewAsSubviewWith:index row:row col:col];
-    
+    GSBookView *bookView = [self addBookViewAsSubviewWithBookViewPosition:position];    
     switch (addType) {
         case ADD_TYPE_FIRSTTIME:
         case ADD_TYPE_TAIL:
@@ -116,7 +115,7 @@ typedef enum {
         case ADD_TYPE_HEAD:
             [_visibleBookViews insertObject:bookView atIndex:0];
             break;
-
+            
     }
 }
 
@@ -164,7 +163,8 @@ typedef enum {
                 if (index >= numberOfBooks) {
                     break;
                 }
-                [self addBookViewAtIndex:index row:row col:col addType:ADD_TYPE_FIRSTTIME];
+                BookViewPostion position = {row, col, index};
+                [self addBookViewAtBookViewPosition:position addType:ADD_TYPE_FIRSTTIME];
             }
         }
     }
@@ -179,7 +179,8 @@ typedef enum {
                 for (NSInteger col = numberOfBooksInCell - 1; col >= 0; col--) {
                     NSInteger index = row * numberOfBooksInCell + col;
                     if (index < numberOfBooks) {
-                        [self addBookViewAtIndex:index row:row col:col addType:ADD_TYPE_HEAD];
+                        BookViewPostion position = {row, col, index};
+                        [self addBookViewAtBookViewPosition:position addType:ADD_TYPE_HEAD];
                     }
                 }
             }
@@ -208,7 +209,8 @@ typedef enum {
                     if (index >= numberOfBooks) {
                         break;
                     }
-                    [self addBookViewAtIndex:index row:row col:col addType:ADD_TYPE_TAIL];
+                    BookViewPostion position = {row, col, index};
+                    [self addBookViewAtBookViewPosition:position addType:ADD_TYPE_TAIL];
                 }
             }
         }
@@ -236,18 +238,38 @@ typedef enum {
 
 #pragma mark - BookView Rect
 
-- (CGRect)bookViewRectAtRow:(NSInteger)row col:(NSInteger)col {
+- (NSInteger)converToIndexOfVisibleBookViewsFromBookViewPosition:(BookViewPostion)position {
+    
+    NSInteger numberOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
+    
+    NSInteger indexOfVisibleBookViews = numberOfBooksInCell * (position.row - _firstVisibleRow) + position.col;
+    
+    return indexOfVisibleBookViews;
+}
+
+- (BOOL)isBookViewPositionValid:(BookViewPostion)position {
+    NSInteger numberOfBooks = [_parentBookShelfView.dataSource numberOfBooksInBookShelfView:_parentBookShelfView];
+    
+    if (position.index < numberOfBooks) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (CGRect)bookViewRectAtBookViewPosition:(BookViewPostion)position {
     CGFloat cellHeight = _parentBookShelfView.cellHeight;
     CGFloat bookViewBottomOffset = _parentBookShelfView.bookViewBottomOffset;
     CGFloat cellMarginWidth = _parentBookShelfView.cellMarginWidth;
     
-    CGFloat originX = cellMarginWidth + col * (_bookViewWidth + _bookViewSpacingWidth);
-    CGFloat originY = row * cellHeight + bookViewBottomOffset - _bookViewHeight;
+    CGFloat originX = cellMarginWidth + position.col * (_bookViewWidth + _bookViewSpacingWidth);
+    CGFloat originY = position.row * cellHeight + bookViewBottomOffset - _bookViewHeight;
     
     return CGRectMake(originX, originY, _bookViewWidth, _bookViewHeight);
 }
 
-- (CGRect)bookViewRectAtPoint:(CGPoint)point {
+- (BookViewPostion)bookViewPositionAtPoint:(CGPoint)point {
+    // Always return a valid BookViewPosition
     CGFloat cellHeight = _parentBookShelfView.cellHeight;
     
     NSInteger currentRow = floorf(point.y / cellHeight);
@@ -256,8 +278,17 @@ typedef enum {
     
     NSInteger currentCol = floorf((point.x - cellMarginWidth) / (_bookViewWidth + _bookViewSpacingWidth));
     
-    CGRect bookViewRect = [self bookViewRectAtRow:currentRow col:currentCol];
+    NSInteger numberOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
     
+    BookViewPostion position = {currentRow, currentCol, currentRow * numberOfBooksInCell + currentCol};
+    
+    return position;
+}
+
+- (CGRect)bookViewRectAtPoint:(CGPoint)point {
+    // Return an CGRectZero if the point is not in any bookView's frame
+    BookViewPostion position = [self bookViewPositionAtPoint:point];
+    CGRect bookViewRect = [self bookViewRectAtBookViewPosition:position];    
 
     if (!CGRectContainsPoint(bookViewRect, point)) {
         bookViewRect = CGRectZero;
@@ -269,30 +300,14 @@ typedef enum {
 - (UIView *)bookViewAtPoint:(CGPoint)point {
     UIView *bookView = nil;
     
-    CGFloat cellHeight = _parentBookShelfView.cellHeight;
+    BookViewPostion position = [self bookViewPositionAtPoint:point];
+    CGRect bookViewRect = [self bookViewRectAtBookViewPosition:position];
     
-    NSInteger numberOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
-    
-    NSInteger numberOfBooks = [_parentBookShelfView.dataSource numberOfBooksInBookShelfView:_parentBookShelfView];
-    
-    NSInteger currentRow = floorf(point.y / cellHeight);
-    
-    for (NSInteger col = 0; col < numberOfBooksInCell; col++) {
-        NSInteger index = currentRow * numberOfBooksInCell + col;
-        if (index >= numberOfBooks) {
-            break;
-        }
-        CGRect bookViewRect = [self bookViewRectAtRow:currentRow col:col];
-        if (CGRectContainsPoint(bookViewRect, point)) {
-            
-            NSInteger indexOfVisibleBookViews = numberOfBooksInCell * (currentRow - _firstVisibleRow) + col;
-            bookView = [_visibleBookViews objectAtIndex:indexOfVisibleBookViews];
-            
-            //NSInteger firstVisibleIndex = _firstVisibleRow * numberOfBooksInCell;
-            //NSLog(@"indexOfVisible: %d", indexOfVisibleBookViews);
-            //NSLog(@"index: %d", indexOfVisibleBookViews + firstVisibleIndex);
-            break;
-        }
+    if (!CGRectEqualToRect(bookViewRect, CGRectZero) && [self isBookViewPositionValid:position]) {
+        // a valid bookViewRect
+        NSInteger indexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:position];
+        
+        bookView = [_visibleBookViews objectAtIndex:indexOfVisibleBookViews];
     }
     return bookView;
 }
