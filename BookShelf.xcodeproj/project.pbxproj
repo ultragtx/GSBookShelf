@@ -29,6 +29,7 @@
 		C1D673DF14F60896006D3483 /* 0.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C1D673D614F60896006D3483 /* 0.tiff */; };
 		C1D673E714F62283006D3483 /* GSBookView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D673E614F62282006D3483 /* GSBookView.m */; };
 		C1D673EA14F67DA4006D3483 /* GSBookShelfCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D673E914F67DA4006D3483 /* GSBookShelfCellView.m */; };
+		C1DAD8061500A466004B4BD5 /* NSMutableArray+Rearrange.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DAD8051500A466004B4BD5 /* NSMutableArray+Rearrange.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,8 @@
 		C1D673E614F62282006D3483 /* GSBookView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSBookView.m; sourceTree = "<group>"; };
 		C1D673E814F67DA4006D3483 /* GSBookShelfCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBookShelfCellView.h; sourceTree = "<group>"; };
 		C1D673E914F67DA4006D3483 /* GSBookShelfCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSBookShelfCellView.m; sourceTree = "<group>"; };
+		C1DAD8041500A466004B4BD5 /* NSMutableArray+Rearrange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Rearrange.h"; sourceTree = "<group>"; };
+		C1DAD8051500A466004B4BD5 /* NSMutableArray+Rearrange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Rearrange.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +163,7 @@
 		C1D673B714F4D317006D3483 /* BookShelf */ = {
 			isa = PBXGroup;
 			children = (
+				C1DAD8021500A41B004B4BD5 /* Utilities */,
 				C12BFCE214F7D29C00206AFC /* Private */,
 				C12BFCE114F7D29300206AFC /* Public */,
 			);
@@ -180,6 +184,15 @@
 				C1D673D614F60896006D3483 /* 0.tiff */,
 			);
 			name = ImagesForTest;
+			sourceTree = "<group>";
+		};
+		C1DAD8021500A41B004B4BD5 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				C1DAD8041500A466004B4BD5 /* NSMutableArray+Rearrange.h */,
+				C1DAD8051500A466004B4BD5 /* NSMutableArray+Rearrange.m */,
+			);
+			name = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,6 +275,7 @@
 				C1D673EA14F67DA4006D3483 /* GSBookShelfCellView.m in Sources */,
 				C12BFCDC14F7CEF600206AFC /* GSBookViewContainerView.m in Sources */,
 				C12BFCE014F7CF3A00206AFC /* GSCellContainerView.m in Sources */,
+				C1DAD8061500A466004B4BD5 /* NSMutableArray+Rearrange.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

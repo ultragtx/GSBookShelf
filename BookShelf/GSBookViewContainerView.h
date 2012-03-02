@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @class GSBookShelfView;
 
 @protocol GSBookShelfViewDelegate;
@@ -42,8 +43,10 @@ typedef struct BookViewPostion {
     // Drag and Drop
     BOOL _isDragViewPickedUp;
     UIView *_dragView;
+    BookViewPostion _pickUpPosition;
+    CGRect _pickUpRect;
     
-    
+    BOOL _isBooksMoving;
     
 }
 

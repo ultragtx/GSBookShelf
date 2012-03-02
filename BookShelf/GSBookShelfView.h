@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NSMutableArray+Rearrange.h"
 
 @class GSBookViewContainerView;
 @class GSCellContainerView;

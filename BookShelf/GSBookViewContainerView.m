@@ -31,6 +31,7 @@ typedef enum {
 
 // Animation
 - (void)growAnimationAtPoint:(CGPoint)point forView:(UIView *)view;
+- (void)animateBookViewToBookViewPostion:(BookViewPostion)toPosition rect:(CGRect)toRect;
 
 // BookView Rect
 - (CGRect)bookViewRectAtBookViewPosition:(BookViewPostion)position;
@@ -60,6 +61,7 @@ typedef enum {
         
         // dragAndDrop
         _isDragViewPickedUp = NO;
+        _isBooksMoving = NO;
         
         // GestureRecognizer
         UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
@@ -230,11 +232,13 @@ typedef enum {
         }
     }
     
-    [self checkVisibleBookViewsValid];
+    //[self checkVisibleBookViewsValid];
     
     _firstVisibleRow = firstNeededRow;
     _lastVisibleRow = lastNeededRow;
 }
+
+#pragma mark - BookViewPosition 
 
 #pragma mark - BookView Rect
 
@@ -319,14 +323,21 @@ typedef enum {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         CGPoint touchPoint = [gestureRecognizer locationInView:self];
         BOOL dragAndDropEnable = _parentBookShelfView.dragAndDropEnabled;
-
-        UIView *view = [self bookViewAtPoint:touchPoint];
-
-        if (dragAndDropEnable && view != nil) {
-            [self bringSubviewToFront:view];
-            _dragView = view;
-            [self growAnimationAtPoint:touchPoint forView:_dragView];
-            _isDragViewPickedUp = YES;
+        if (dragAndDropEnable) {
+            
+            BookViewPostion position = [self bookViewPositionAtPoint:touchPoint];
+            CGRect bookViewRect = [self bookViewRectAtBookViewPosition:position];
+            
+            if (!CGRectEqualToRect(bookViewRect, CGRectZero) && [self isBookViewPositionValid:position]) {
+                NSInteger indexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:position];
+                _dragView = [_visibleBookViews objectAtIndex:indexOfVisibleBookViews];
+                [self bringSubviewToFront:_dragView];
+                [self growAnimationAtPoint:touchPoint forView:_dragView];
+                
+                _pickUpPosition = position;
+                _pickUpRect = bookViewRect;
+                _isDragViewPickedUp = YES;
+            }
         }
     }
     else if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
@@ -334,17 +345,32 @@ typedef enum {
             CGPoint touchPoint = [gestureRecognizer locationInView:self];
             _dragView.center = touchPoint;
             
-            UIView *targetView = [self bookViewAtPoint:touchPoint];
-            if (targetView != nil && targetView != _dragView) {
-                // Rerange _visibleBookViews
+            BookViewPostion position = [self bookViewPositionAtPoint:touchPoint];
+            CGRect bookViewRect = [self bookViewRectAtBookViewPosition:position];
+            
+            if (!CGRectEqualToRect(bookViewRect, CGRectZero) && [self isBookViewPositionValid:position]) {
+                if (!CGRectEqualToRect(bookViewRect, _pickUpRect)) {
+                    // Rerange _visibleBookViews
+                    [self animateBookViewToBookViewPostion:position rect:bookViewRect];
+                }
             }
         }
     }
     else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         if (_isDragViewPickedUp) {
-            
+            [UIView animateWithDuration:0.3
+                                  delay:0.0
+                                options:UIViewAnimationCurveLinear
+                             animations:^{
+                                 _dragView.frame = _pickUpRect;
+                             }
+                             completion:^(BOOL finished) {
+                                 
+                             }];
+
         }
     }
+
 }
 
 #pragma mark - Animation 
@@ -360,6 +386,71 @@ typedef enum {
     
 }
 
+- (void)moveBookView:(UIView *)bookView steps:(NSInteger)steps {
+    BookViewPostion position = [self bookViewPositionAtPoint:bookView.center];
+    NSInteger nPerCell = _parentBookShelfView.numberOfBooksInCell;
+    CGFloat horizontalDisPerStep = _bookViewWidth + _bookViewSpacingWidth;
+    CGFloat verticalDisPerStep = _parentBookShelfView.cellHeight;
+    
+    NSInteger horizontalSteps = ((position.col + steps) % nPerCell + nPerCell) % nPerCell - position.col;
+    NSInteger verticalSteps = floorf((position.col + steps) / (float) nPerCell);
+    CGFloat newCenterX = bookView.center.x + horizontalSteps * horizontalDisPerStep;
+    CGFloat newCenterY = bookView.center.y + verticalSteps * verticalDisPerStep;
+    bookView.center = CGPointMake(newCenterX, newCenterY);
+}
+
+/*- (CGPoint)targetCenterOffsetMoveBookViewAtPosition:(BookViewPostion)position steps:(NSInteger)steps {
+    NSInteger nPerCell = _parentBookShelfView.numberOfBooksInCell;
+    CGFloat horizontalDisPerStep = _bookViewWidth + _bookViewSpacingWidth;
+    CGFloat verticalDisPerStep = _parentBookShelfView.cellHeight;
+    
+    NSInteger horizontalSteps = ((position.col + steps) % nPerCell + nPerCell) % nPerCell - position.col;
+    NSInteger verticalSteps = floorf((position.col + steps) / (float) nPerCell);
+    
+    return CGPointMake(horizontalSteps * horizontalDisPerStep, verticalSteps * verticalDisPerStep);
+}*/
+
+- (void)animateBookViewToBookViewPostion:(BookViewPostion)toPosition rect:(CGRect)toRect {
+    if (!_isBooksMoving) {
+        if (_pickUpPosition.index < toPosition.index) {
+            // drag forward/down
+            
+            [UIView animateWithDuration:0.3
+                                  delay:0.0
+                                options:UIViewAnimationCurveLinear | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews
+                             animations:^{
+                                 _isBooksMoving = YES;
+                                 NSInteger fromIndexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:_pickUpPosition];
+                                 NSInteger toIndexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:toPosition];
+                                 
+                                 for (NSInteger index = MAX(0, fromIndexOfVisibleBookViews + 1); index <= MIN(toIndexOfVisibleBookViews, [_visibleBookViews count] - 1); index++) {
+                                     UIView *bookView = [_visibleBookViews objectAtIndex:index];
+                                     [self moveBookView:bookView steps:-1];
+                                 }
+                                 
+                                 // FIXME:out of range problem
+                                 [_visibleBookViews moveObjectFromIndex:fromIndexOfVisibleBookViews toIndex:toIndexOfVisibleBookViews];
+                                 
+                                 
+                                 _pickUpPosition = toPosition;
+                                 _pickUpRect = toRect;
+                             }
+                             completion:^(BOOL finished) {
+                                 _isBooksMoving = NO;
+                                 
+                             }];
+            
+            
+        }
+        else {
+            // drag backward/up
+        }
+
+    }
+        
+}
+
+//- (void)animateBookView:(UIView *)bookView fromBookViewPostion:(BookViewPostion)fromPosition rect:(CGRect)fromRect toBookViewPostion:(BookViewPostion)toPosition rect:(CGRect)toRect {}
 
 #pragma mark - test
 
