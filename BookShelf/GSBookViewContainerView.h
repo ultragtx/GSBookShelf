@@ -48,6 +48,8 @@ typedef struct BookViewPostion {
     
     BOOL _isBooksMoving;
     
+    NSTimer *_scrollTimer;
+    
 }
 
 @property (nonatomic, unsafe_unretained) GSBookShelfView *parentBookShelfView;
