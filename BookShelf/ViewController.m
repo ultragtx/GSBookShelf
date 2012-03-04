@@ -46,7 +46,8 @@
 
 - (GSBookView *)bookShelfView:(GSBookShelfView *)bookShelfView bookViewAtIndex:(NSInteger)index {
     GSBookView *bookView = [[GSBookView alloc] initWithFrame:CGRectZero];
-    [bookView setImage:[UIImage imageNamed:@"0.tiff"]];
+    int imageNO = index % 9;
+    [bookView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%d.tiff", imageNO]]];
     return bookView;
 }
 

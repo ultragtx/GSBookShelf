@@ -8,9 +8,8 @@
 
 #import "GSBookViewContainerView.h"
 #import "GSBookShelfView.h"
-#import "GSBookView.h"
 
-#define kRatio_width_spacing 2.2f
+#define kRatio_width_spacing 1.2f
 #define kRatio_height_width 1.414f
 
 #define kGrow_animation_duration 0.15
@@ -28,6 +27,13 @@ typedef enum {
 }RemoveType;
 
 @interface GSBookViewContainerView (Private)
+
+// Scroll
+- (void)stopScrollTimer;
+- (void)scrollIfNecessary;
+
+// Move
+- (void)moveBooksIfNecessary;
 
 // Animation
 - (void)growAnimationAtPoint:(CGPoint)point forView:(UIView *)view;
@@ -62,6 +68,7 @@ typedef enum {
         // dragAndDrop
         _isDragViewPickedUp = NO;
         _isBooksMoving = NO;
+        _isDragViewRemovedFromVisibleBookViews = NO;
         
         // GestureRecognizer
         UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
@@ -90,23 +97,29 @@ typedef enum {
 
 #pragma mark - Layout 
 
-- (GSBookView *)addBookViewAsSubviewWithBookViewPosition:(BookViewPostion)position {
+- (UIView *)addBookViewAsSubviewWithBookViewPosition:(BookViewPostion)position {
     
-    GSBookView *bookView = [_parentBookShelfView.dataSource bookShelfView:_parentBookShelfView bookViewAtIndex:position.index];
-    
-    bookView.tag = position.index; // set the tag as the index
-    
-    [bookView setFrame:[self bookViewRectAtBookViewPosition:position]];
-    
-    //NSLog(@"bookView Frame:%@", NSStringFromCGRect(bookView.frame));
-    
-    [self addSubview:bookView];
+    UIView *bookView = [_parentBookShelfView.dataSource bookShelfView:_parentBookShelfView bookViewAtIndex:position.index];
+    // Take a look at the "Discussion" in removeBookViewWithType:
+    // Since _dragView won't be removed from supervie, we should not add it or change the frame either. And although the new bookView returned from dataSource have the same position with _dragView, but they are not the same view, so set _dragView to bookView, ignore the bookView returned from dataSource.
+    if (_isDragViewPickedUp && position.index == _pickUpPosition.index) {
+        _isDragViewRemovedFromVisibleBookViews = NO;
+        bookView = _dragView;
+    }
+    else {
+        bookView.tag = position.index; // set the tag as the index
+        [bookView setFrame:[self bookViewRectAtBookViewPosition:position]];
+        
+        //NSLog(@"bookView Frame:%@", NSStringFromCGRect(bookView.frame));
+        
+        [self addSubview:bookView];
+    }
     return bookView;
 }
 
 - (void)addBookViewAtBookViewPosition:(BookViewPostion) position addType:(AddType)addType {
     
-    GSBookView *bookView = [self addBookViewAsSubviewWithBookViewPosition:position];    
+    UIView *bookView = [self addBookViewAsSubviewWithBookViewPosition:position];    
     switch (addType) {
         case ADD_TYPE_FIRSTTIME:
         case ADD_TYPE_TAIL:
@@ -130,9 +143,15 @@ typedef enum {
         case RM_TYPE_TAIL:
             rmIndex = [_visibleBookViews count] - 1;
     }
-    GSBookView *bookView = [_visibleBookViews objectAtIndex:rmIndex];
-    [_reuseableBookViews addObject:bookView];
-    [bookView removeFromSuperview];
+    UIView *bookView = [_visibleBookViews objectAtIndex:rmIndex];
+    // Discusstion:When Drag And Scroll happends,somtimes _dragView's pickupPosition may have not changed. Then it may be told to be removed from superView, and this will cause the _dragView dissappear. So here we prevent the removeFromSuperview from happening, but still remove it from the _visibleBookViews. _visibleBookViews tells which view is visible except the _dragView, which means _dragView is "invisible" for _visibleBookViews when it's original position scroll out of the _visibleRect.
+    if (_isDragViewPickedUp && bookView == _dragView) {
+        _isDragViewRemovedFromVisibleBookViews = YES;
+    }
+    else {
+        [_reuseableBookViews addObject:bookView];
+        [bookView removeFromSuperview];
+    }
     [_visibleBookViews removeObjectAtIndex:rmIndex];
 }
 
@@ -172,21 +191,6 @@ typedef enum {
     }
     else {
         // Not first time
-        if (firstNeededRow < _firstVisibleRow) {
-            NSInteger addToRow = (_firstVisibleRow - 1 < lastNeededRow) ? _firstVisibleRow - 1 : lastNeededRow; 
-            
-            for (NSInteger row = addToRow; row >= firstNeededRow; row--) {
-                // add to head of the _visibileBookView
-                // use reversed row to always add to index 0
-                for (NSInteger col = numberOfBooksInCell - 1; col >= 0; col--) {
-                    NSInteger index = row * numberOfBooksInCell + col;
-                    if (index < numberOfBooks) {
-                        BookViewPostion position = {row, col, index};
-                        [self addBookViewAtBookViewPosition:position addType:ADD_TYPE_HEAD];
-                    }
-                }
-            }
-        }
         
         if (lastNeededRow < _lastVisibleRow) {
             NSInteger rmFromRow = (_firstVisibleRow > lastNeededRow + 1) ? _firstVisibleRow : lastNeededRow + 1;
@@ -202,17 +206,18 @@ typedef enum {
             }
         }
         
-        if (lastNeededRow > _lastVisibleRow) {
-            NSInteger addFromRow = (_lastVisibleRow + 1 > firstNeededRow) ? _lastVisibleRow + 1 : firstNeededRow;
-            for (NSInteger row = addFromRow; row <= lastNeededRow; row++) {
-                // add to tail
-                for (NSInteger col = 0; col < numberOfBooksInCell; col++) {
+        if (firstNeededRow < _firstVisibleRow) {
+            NSInteger addToRow = (_firstVisibleRow - 1 < lastNeededRow) ? _firstVisibleRow - 1 : lastNeededRow; 
+            
+            for (NSInteger row = addToRow; row >= firstNeededRow; row--) {
+                // add to head of the _visibileBookView
+                // use reversed row to always add to index 0
+                for (NSInteger col = numberOfBooksInCell - 1; col >= 0; col--) {
                     NSInteger index = row * numberOfBooksInCell + col;
-                    if (index >= numberOfBooks) {
-                        break;
+                    if (index < numberOfBooks) {
+                        BookViewPostion position = {row, col, index};
+                        [self addBookViewAtBookViewPosition:position addType:ADD_TYPE_HEAD];
                     }
-                    BookViewPostion position = {row, col, index};
-                    [self addBookViewAtBookViewPosition:position addType:ADD_TYPE_TAIL];
                 }
             }
         }
@@ -230,10 +235,26 @@ typedef enum {
                 }
             }
         }
+
+        
+        if (lastNeededRow > _lastVisibleRow) {
+            NSInteger addFromRow = (_lastVisibleRow + 1 > firstNeededRow) ? _lastVisibleRow + 1 : firstNeededRow;
+            for (NSInteger row = addFromRow; row <= lastNeededRow; row++) {
+                // add to tail
+                for (NSInteger col = 0; col < numberOfBooksInCell; col++) {
+                    NSInteger index = row * numberOfBooksInCell + col;
+                    if (index >= numberOfBooks) {
+                        break;
+                    }
+                    BookViewPostion position = {row, col, index};
+                    [self addBookViewAtBookViewPosition:position addType:ADD_TYPE_TAIL];
+                }
+            }
+        }
     }
     
     //[self checkVisibleBookViewsValid];
-    
+    //NSLog(@"visible count:%d", [_visibleBookViews count]);
     _firstVisibleRow = firstNeededRow;
     _lastVisibleRow = lastNeededRow;
 }
@@ -251,10 +272,13 @@ typedef enum {
     return indexOfVisibleBookViews;
 }
 
-- (BOOL)isBookViewPositionValid:(BookViewPostion)position {
+- (BOOL)isBookViewPositionVisible:(BookViewPostion)position {
     NSInteger numberOfBooks = [_parentBookShelfView.dataSource numberOfBooksInBookShelfView:_parentBookShelfView];
     
-    if (position.index < numberOfBooks) {
+    /*if (position.index < numberOfBooks && position.index >= 0) {
+        return YES;
+    }*/
+    if (position.row >= _firstVisibleRow && position.row <= _lastVisibleRow && position.index < numberOfBooks && position.index >= 0) {
         return YES;
     }
     
@@ -307,7 +331,7 @@ typedef enum {
     BookViewPostion position = [self bookViewPositionAtPoint:point];
     CGRect bookViewRect = [self bookViewRectAtBookViewPosition:position];
     
-    if (!CGRectEqualToRect(bookViewRect, CGRectZero) && [self isBookViewPositionValid:position]) {
+    if (!CGRectEqualToRect(bookViewRect, CGRectZero) && [self isBookViewPositionVisible:position]) {
         // a valid bookViewRect
         NSInteger indexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:position];
         
@@ -328,7 +352,7 @@ typedef enum {
             BookViewPostion position = [self bookViewPositionAtPoint:touchPoint];
             CGRect bookViewRect = [self bookViewRectAtBookViewPosition:position];
             
-            if (!CGRectEqualToRect(bookViewRect, CGRectZero) && [self isBookViewPositionValid:position]) {
+            if (CGRectContainsPoint(bookViewRect, touchPoint) && [self isBookViewPositionVisible:position]) {
                 NSInteger indexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:position];
                 _dragView = [_visibleBookViews objectAtIndex:indexOfVisibleBookViews];
                 [self bringSubviewToFront:_dragView];
@@ -337,6 +361,7 @@ typedef enum {
                 _pickUpPosition = position;
                 _pickUpRect = bookViewRect;
                 _isDragViewPickedUp = YES;
+                _isDragViewRemovedFromVisibleBookViews = NO;
             }
         }
     }
@@ -344,19 +369,12 @@ typedef enum {
         if (_isDragViewPickedUp) {
             CGPoint touchPoint = [gestureRecognizer locationInView:self];
             _dragView.center = touchPoint;
+            [self moveBooksIfNecessary];
+            [self scrollIfNecessary];
             
-            BookViewPostion position = [self bookViewPositionAtPoint:touchPoint];
-            CGRect bookViewRect = [self bookViewRectAtBookViewPosition:position];
-            
-            if (!CGRectEqualToRect(bookViewRect, CGRectZero) && [self isBookViewPositionValid:position]) {
-                if (!CGRectEqualToRect(bookViewRect, _pickUpRect)) {
-                    // Rerange _visibleBookViews
-                    [self animateBookViewToBookViewPostion:position rect:bookViewRect];
-                }
-            }
         }
     }
-    else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+    /*else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         if (_isDragViewPickedUp) {
             [UIView animateWithDuration:0.3
                                   delay:0.0
@@ -365,12 +383,122 @@ typedef enum {
                                  _dragView.frame = _pickUpRect;
                              }
                              completion:^(BOOL finished) {
-                                 
+                                 _isDragViewPickedUp = NO;
                              }];
-
+            
+            
         }
+        [self stopScrollTimer];
+    }*/
+    else {
+        if (_isDragViewPickedUp) {
+            [UIView animateWithDuration:0.3
+                                  delay:0.0
+                                options:UIViewAnimationCurveLinear | UIViewAnimationOptionLayoutSubviews
+                             animations:^{
+                                 _dragView.frame = _pickUpRect;
+                             }
+                             completion:^(BOOL finished) {
+                                 _isDragViewPickedUp = NO;
+                                 if (_isDragViewRemovedFromVisibleBookViews) {
+                                     [_reuseableBookViews addObject:_dragView];
+                                     [_dragView removeFromSuperview];
+                                 }
+                                 _dragView = nil;
+                             }];
+            
+            
+        }
+        [self stopScrollTimer];
     }
 
+}
+
+#pragma mark - Scroll While Draging
+
+#define kScroll_trigger_dis 40.0f
+#define kScroll_interval_max 0.0125
+#define kScroll_interval_min 0.00050
+
+- (void)stopScrollTimer {
+    [_scrollTimer invalidate];
+}
+
+- (void)scrollIfNecessary {
+    if (_parentBookShelfView.scrollWhileDragingEnabled) {
+        [self stopScrollTimer];
+        CGFloat distanceFromTop = _dragView.center.y - _visibleRect.origin.y;
+        if (distanceFromTop < kScroll_trigger_dis) {
+            double rate = (kScroll_trigger_dis - distanceFromTop) / 4.0;
+            NSTimeInterval interval = fmax(kScroll_interval_min, kScroll_interval_max / rate);
+            _scrollTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(dragScroll:) userInfo:[NSNumber numberWithBool:YES] repeats:YES];
+            
+        }
+        else if (distanceFromTop > _visibleRect.size.height - kScroll_trigger_dis) {
+            
+            double rate = (kScroll_trigger_dis - (_visibleRect.size.height - distanceFromTop)) / 4;
+            NSTimeInterval interval = fmax(kScroll_interval_min, kScroll_interval_max / rate);
+            _scrollTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(dragScroll:) userInfo:[NSNumber numberWithBool:NO] repeats:YES];
+            
+        }
+    }
+}
+
+- (BOOL)canScroll:(BOOL)isScrollUp {
+    if (isScrollUp) {
+        if (_parentBookShelfView.contentOffset.y <= 0) {
+            return NO;
+        }
+    }
+    else {
+        if (_parentBookShelfView.contentOffset.y + _visibleRect.size.height >=_parentBookShelfView.contentSize.height) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
+- (void)dragScroll:(NSTimer *)timer {
+    // contentOffset +/- 1
+    BOOL isScrollUp = ((NSNumber *)timer.userInfo).boolValue;
+    if ([self canScroll:isScrollUp]) {
+        CGPoint newOffset = _parentBookShelfView.contentOffset;
+        newOffset.y = newOffset.y + (isScrollUp ? -1 : 1);
+        [_parentBookShelfView setContentOffset:newOffset];
+        
+        CGPoint newDragViewCenter = _dragView.center;
+        newDragViewCenter.y = newDragViewCenter.y + (isScrollUp ? -1 : 1);
+        _dragView.center = newDragViewCenter;
+        [self moveBooksIfNecessary];
+    }
+}
+
+#pragma mark - Move 
+
+- (void)moveBooksIfNecessary {
+    [self bringSubviewToFront:_dragView];
+    BookViewPostion position = [self bookViewPositionAtPoint:_dragView.center];
+    CGRect bookViewRect = [self bookViewRectAtBookViewPosition:position];
+
+    if (CGRectContainsPoint(bookViewRect, _dragView.center) && [self isBookViewPositionVisible:position]) {
+        if (!CGRectEqualToRect(bookViewRect, _pickUpRect)) {
+            // Rerange _visibleBookViews
+            [self animateBookViewToBookViewPostion:position rect:bookViewRect];
+        }
+    }
+}
+
+- (void)moveBookView:(UIView *)bookView steps:(NSInteger)steps {
+    BookViewPostion position = [self bookViewPositionAtPoint:bookView.center];
+    NSInteger nPerCell = _parentBookShelfView.numberOfBooksInCell;
+    CGFloat horizontalDisPerStep = _bookViewWidth + _bookViewSpacingWidth;
+    CGFloat verticalDisPerStep = _parentBookShelfView.cellHeight;
+    
+    NSInteger horizontalSteps = ((position.col + steps) % nPerCell + nPerCell) % nPerCell - position.col;
+    NSInteger verticalSteps = floorf((position.col + steps) / (float) nPerCell);
+    CGFloat newCenterX = bookView.center.x + horizontalSteps * horizontalDisPerStep;
+    CGFloat newCenterY = bookView.center.y + verticalSteps * verticalDisPerStep;
+    bookView.center = CGPointMake(newCenterX, newCenterY);
 }
 
 #pragma mark - Animation 
@@ -390,90 +518,37 @@ typedef enum {
     
 }
 
-- (void)moveBookView:(UIView *)bookView steps:(NSInteger)steps {
-    BookViewPostion position = [self bookViewPositionAtPoint:bookView.center];
-    NSInteger nPerCell = _parentBookShelfView.numberOfBooksInCell;
-    CGFloat horizontalDisPerStep = _bookViewWidth + _bookViewSpacingWidth;
-    CGFloat verticalDisPerStep = _parentBookShelfView.cellHeight;
-    
-    NSInteger horizontalSteps = ((position.col + steps) % nPerCell + nPerCell) % nPerCell - position.col;
-    NSInteger verticalSteps = floorf((position.col + steps) / (float) nPerCell);
-    CGFloat newCenterX = bookView.center.x + horizontalSteps * horizontalDisPerStep;
-    CGFloat newCenterY = bookView.center.y + verticalSteps * verticalDisPerStep;
-    bookView.center = CGPointMake(newCenterX, newCenterY);
-}
-
-/*- (CGPoint)targetCenterOffsetMoveBookViewAtPosition:(BookViewPostion)position steps:(NSInteger)steps {
-    NSInteger nPerCell = _parentBookShelfView.numberOfBooksInCell;
-    CGFloat horizontalDisPerStep = _bookViewWidth + _bookViewSpacingWidth;
-    CGFloat verticalDisPerStep = _parentBookShelfView.cellHeight;
-    
-    NSInteger horizontalSteps = ((position.col + steps) % nPerCell + nPerCell) % nPerCell - position.col;
-    NSInteger verticalSteps = floorf((position.col + steps) / (float) nPerCell);
-    
-    return CGPointMake(horizontalSteps * horizontalDisPerStep, verticalSteps * verticalDisPerStep);
-}*/
-
-/*- (void)moveBookViewToBookViewPosition:(BookViewPostion)toPosition rect:(CGRect)toRect animate:(BOOL)animate {
-    BOOL isDragingForward = _pickUpPosition.index < toPosition.index ? YES : NO;
-    [UIView animateWithDuration:animate ? 0.3 : 0.0
-                          delay:0.0
-                        options:UIViewAnimationCurveLinear | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews
-                     animations:^{
-                         _isBooksMoving = YES;
-                         NSInteger fromIndexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:isDragingForward ? _pickUpPosition : toPosition];
-                         NSInteger toIndexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:isDragingForward ? toPosition : _pickUpPosition];
-                         
-                         assert(toIndexOfVisibleBookViews < [_visibleBookViews count] && toIndexOfVisibleBookViews >= 0);
-                         
-                         for (NSInteger index = MAX(0, fromIndexOfVisibleBookViews + 1); index <= MIN(toIndexOfVisibleBookViews, [_visibleBookViews count] - 1); index++) {
-                             UIView *bookView = [_visibleBookViews objectAtIndex:index];
-                             [self moveBookView:bookView steps:-1];
-                         }
-                         
-                         NSInteger indexOfBookViewToBeRemoved = isDragingForward ? MAX(0, fromIndexOfVisibleBookViews) : MIN([_visibleBookViews count] - 1, fromIndexOfVisibleBookViews);
-                         //UIView *bookViewToRemove = [_visibleBookViews objectAtIndex:indexOfBookViewToBeRemoved];
-                         [_visibleBookViews removeObjectAtIndex:indexOfBookViewToBeRemoved];
-                         if (toIndexOfVisibleBookViews < [_visibleBookViews count]) {
-                             [_visibleBookViews insertObject:_dragView atIndex:toIndexOfVisibleBookViews];
-                         }
-                         else {
-                             [_visibleBookViews addObject:_dragView];
-                         }
-                         
-                         
-                         _pickUpPosition = toPosition;
-                         _pickUpRect = toRect;
-                     }
- 
-                     completion:^(BOOL finished) {
-                         _isBooksMoving = NO;
-                         
-                     }];
-}*/
-
 - (void)animateBookViewToBookViewPostion:(BookViewPostion)toPosition rect:(CGRect)toRect {
     if (!_isBooksMoving) {
+        BOOL shouldRemoveHeadOrTailFromVisibleBookViews = NO;
+        if (_isDragViewRemovedFromVisibleBookViews) {
+            // Take a look at the "Discussion" in removeBookViewWithType:
+            // Discussion: if the _dragView is "invisible". _dragView maybe insert into the _visibleBookViews and the head or tail in _visibleBookViews should be removedFromSuperview to keep the _visibleBookViews contains only bookViews in visible rows.
+            _isDragViewRemovedFromVisibleBookViews = NO;
+            shouldRemoveHeadOrTailFromVisibleBookViews = YES;
+        }
+        
         if (_pickUpPosition.index < toPosition.index) {
             // drag forward/down
+            
+            NSInteger fromIndexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:_pickUpPosition];
+            NSInteger toIndexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:toPosition];
+            
+            NSInteger indexOfBookViewToBeRemoved = MAX(0, fromIndexOfVisibleBookViews);
+            UIView *bookViewToRemove = [_visibleBookViews objectAtIndex:indexOfBookViewToBeRemoved];
             
             [UIView animateWithDuration:0.3
                                   delay:0.0
                                 options:UIViewAnimationCurveLinear | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews
                              animations:^{
                                  _isBooksMoving = YES;
-                                 NSInteger fromIndexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:_pickUpPosition];
-                                 NSInteger toIndexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:toPosition];
                                  
                                  assert(toIndexOfVisibleBookViews < [_visibleBookViews count]);
-                                 
                                  for (NSInteger index = MAX(0, fromIndexOfVisibleBookViews + 1); index <= MIN(toIndexOfVisibleBookViews, [_visibleBookViews count] - 1); index++) {
                                      UIView *bookView = [_visibleBookViews objectAtIndex:index];
                                      [self moveBookView:bookView steps:-1];
                                  }
                                  
-                                 NSInteger indexOfBookViewToBeRemoved = MAX(0, fromIndexOfVisibleBookViews);
-                                 //UIView *bookViewToRemove = [_visibleBookViews objectAtIndex:indexOfBookViewToBeRemoved];
                                  [_visibleBookViews removeObjectAtIndex:indexOfBookViewToBeRemoved];
                                  [_visibleBookViews insertObject:_dragView atIndex:toIndexOfVisibleBookViews];
                                  
@@ -482,28 +557,36 @@ typedef enum {
                              }
                              completion:^(BOOL finished) {
                                  _isBooksMoving = NO;
+                                 if (shouldRemoveHeadOrTailFromVisibleBookViews) {
+                                     [bookViewToRemove removeFromSuperview];
+                                 }
                                  
                              }];
+            
         }
+        
+        
         else {
             // drag backward/up
+            
+            NSInteger fromIndexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:_pickUpPosition];
+            NSInteger toIndexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:toPosition];
+            
+            NSInteger indexOfBookViewToBeRemoved = MIN([_visibleBookViews count] - 1, fromIndexOfVisibleBookViews);
+            UIView *bookViewToRemove = [_visibleBookViews objectAtIndex:indexOfBookViewToBeRemoved];
+            
             [UIView animateWithDuration:0.3
                                   delay:0.0
                                 options:UIViewAnimationCurveLinear | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews
                              animations:^{
                                  _isBooksMoving = YES;
-                                 NSInteger fromIndexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:_pickUpPosition];
-                                 NSInteger toIndexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:toPosition];
                                  
                                  assert(toIndexOfVisibleBookViews >= 0);
-                                 
                                  for (NSInteger index = MAX(0, toIndexOfVisibleBookViews); index <= MIN(fromIndexOfVisibleBookViews - 1, [_visibleBookViews count] - 1); index++) {
                                      UIView *bookView = [_visibleBookViews objectAtIndex:index];
                                      [self moveBookView:bookView steps:1];
                                  }
                                  
-                                 NSInteger indexOfBookViewToBeRemoved = MIN([_visibleBookViews count] - 1, fromIndexOfVisibleBookViews);
-                                 //UIView *bookViewToRemove = [_visibleBookViews objectAtIndex:indexOfBookViewToBeRemoved];
                                  [_visibleBookViews removeObjectAtIndex:indexOfBookViewToBeRemoved];
                                  [_visibleBookViews insertObject:_dragView atIndex:toIndexOfVisibleBookViews];
                                  
@@ -512,7 +595,10 @@ typedef enum {
                              }
                              completion:^(BOOL finished) {
                                  _isBooksMoving = NO;
-                                 
+                                 if (shouldRemoveHeadOrTailFromVisibleBookViews) {
+                                     [bookViewToRemove removeFromSuperview];
+                                 }
+
                              }];
         }
     }

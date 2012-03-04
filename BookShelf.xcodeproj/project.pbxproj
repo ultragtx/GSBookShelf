@@ -349,6 +349,10 @@
 		C1D673B514F4D247006D3483 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					armv6,
+					armv7,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BookShelf/BookShelf-Prefix.pch";
 				INFOPLIST_FILE = "BookShelf/BookShelf-Info.plist";
@@ -361,6 +365,10 @@
 		C1D673B614F4D247006D3483 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					armv6,
+					armv7,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BookShelf/BookShelf-Prefix.pch";
 				INFOPLIST_FILE = "BookShelf/BookShelf-Info.plist";

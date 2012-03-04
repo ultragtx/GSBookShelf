@@ -45,10 +45,13 @@ typedef struct BookViewPostion {
     UIView *_dragView;
     BookViewPostion _pickUpPosition;
     CGRect _pickUpRect;
+    BOOL _isDragViewRemovedFromVisibleBookViews;
     
     BOOL _isBooksMoving;
     
+    // Scroll While Drag
     NSTimer *_scrollTimer;
+    
     
 }
 

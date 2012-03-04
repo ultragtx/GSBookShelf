@@ -22,6 +22,7 @@
 @synthesize shelfViewDelegate = _shelfViewDelegate;
 @synthesize dataSource = _dataSource;
 @synthesize dragAndDropEnabled = _dragAndDropEnabled;
+@synthesize scrollWhileDragingEnabled = _scrollWhileDragingEnabled;
 @synthesize cellHeight = _cellHeight;
 @synthesize cellMarginWidth = _cellMarginWidth;
 @synthesize bookViewBottomOffset = _bookViewBottomOffset;
@@ -44,6 +45,7 @@
         _numberOfBooksInCell = numberOfBooksInCell;
         
         _dragAndDropEnabled = YES;
+        _scrollWhileDragingEnabled = YES;
         
         _bookViewContainerView = [[GSBookViewContainerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
         _bookViewContainerView.parentBookShelfView = self;

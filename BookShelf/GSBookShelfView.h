@@ -27,6 +27,7 @@
     // Function Enabler
     
     BOOL _dragAndDropEnabled;
+    BOOL _scrollWhileDragingEnabled;
     //BOOL _editModeEnabled; //only support Delete Now, May add a AddButton Like Book at index 0 to support add
     
     
@@ -48,6 +49,7 @@
 @property (nonatomic, unsafe_unretained) id<GSBookShelfViewDataSource> dataSource;
 
 @property (nonatomic, assign) BOOL dragAndDropEnabled;
+@property (nonatomic, assign) BOOL scrollWhileDragingEnabled;
 
 @property (nonatomic, readonly) CGFloat cellHeight;
 @property (nonatomic, readonly) CGFloat cellMarginWidth;
@@ -68,7 +70,7 @@
 
 - (NSInteger)numberOfBooksInBookShelfView:(GSBookShelfView *)bookShelfView; // Total number of Books
 
-- (GSBookView *)bookShelfView:(GSBookShelfView *)bookShelfView bookViewAtIndex:(NSInteger)index;
+- (UIView *)bookShelfView:(GSBookShelfView *)bookShelfView bookViewAtIndex:(NSInteger)index;
 - (GSBookShelfCellView *)bookShelfView:(GSBookShelfView *)bookShelfView cellForRow:(NSInteger)row;
 
 @end
