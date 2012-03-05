@@ -552,6 +552,10 @@ typedef enum {
                                  [_visibleBookViews removeObjectAtIndex:indexOfBookViewToBeRemoved];
                                  [_visibleBookViews insertObject:_dragView atIndex:toIndexOfVisibleBookViews];
                                  
+                                 if ([_parentBookShelfView.dataSource respondsToSelector:@selector(bookShelfView:moveBookFromIndex:toIndex:)]) {
+                                     [_parentBookShelfView.dataSource bookShelfView:_parentBookShelfView moveBookFromIndex:_pickUpPosition.index toIndex:toPosition.index];
+                                 }
+                                 
                                  _pickUpPosition = toPosition;
                                  _pickUpRect = toRect;
                              }
@@ -589,6 +593,10 @@ typedef enum {
                                  
                                  [_visibleBookViews removeObjectAtIndex:indexOfBookViewToBeRemoved];
                                  [_visibleBookViews insertObject:_dragView atIndex:toIndexOfVisibleBookViews];
+                                 
+                                 if ([_parentBookShelfView.dataSource respondsToSelector:@selector(bookShelfView:moveBookFromIndex:toIndex:)]) {
+                                     [_parentBookShelfView.dataSource bookShelfView:_parentBookShelfView moveBookFromIndex:_pickUpPosition.index toIndex:toPosition.index];
+                                 }
                                  
                                  _pickUpPosition = toPosition;
                                  _pickUpRect = toRect;

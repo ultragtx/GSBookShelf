@@ -11,6 +11,8 @@
 
 @interface ViewController : UIViewController <GSBookShelfViewDelegate, GSBookShelfViewDataSource>{
     GSBookShelfView *_bookShelfView;
+    
+    NSMutableArray *_bookArray;
 }
 
 @end

@@ -66,6 +66,15 @@
     
 }
 
+#pragma mark - Accessors
+
+- (void)setDataSource:(id<GSBookShelfViewDataSource>)dataSource {
+    _dataSource = dataSource;
+    if (![_dataSource respondsToSelector:@selector(bookShelfView:moveBookFromIndex:toIndex:)]) {
+        _dragAndDropEnabled = NO;
+    }
+}
+
 #pragma mark - Private Methods
 
 - (CGRect)visibleRect {

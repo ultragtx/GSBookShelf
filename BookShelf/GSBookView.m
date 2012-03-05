@@ -20,7 +20,7 @@
         _button = [UIButton buttonWithType:UIButtonTypeCustom];
         [_button setFrame:frame];
         [_button setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
-        [_button.imageView setContentMode:UIViewContentModeBottom];
+        [_button.imageView setContentMode:UIViewContentModeScaleAspectFit];
         [self addSubview:_button];
     }
     return self;
