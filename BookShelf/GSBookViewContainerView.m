@@ -8,6 +8,7 @@
 
 #import "GSBookViewContainerView.h"
 #import "GSBookShelfView.h"
+#import "GSBookView.h"
 
 #define kRatio_width_spacing 1.2f
 #define kRatio_height_width 1.414f
@@ -27,6 +28,10 @@ typedef enum {
 }RemoveType;
 
 @interface GSBookViewContainerView (Private)
+
+// reuse
+
+- (void)addReuseableBookView:(UIView *)bookView;
 
 // Scroll
 - (void)stopScrollTimer;
@@ -58,7 +63,7 @@ typedef enum {
     self = [super initWithFrame:frame];
     if (self) {
 
-        _reuseableBookViews = [[NSMutableSet alloc] initWithCapacity:0];
+        _reuseableBookViews = [[NSMutableDictionary alloc] initWithCapacity:0];
         
         _firstVisibleRow = -1;
         _lastVisibleRow = -1;
@@ -93,6 +98,36 @@ typedef enum {
     
     _bookViewWidth = _bookViewSpacingWidth * kRatio_width_spacing;
     _bookViewHeight = _bookViewWidth * kRatio_height_width;
+}
+
+#pragma mark - Reuse
+
+- (void)addReuseableBookView:(UIView *)bookView {
+    NSString *reuseIdentifier = nil;
+    if ([bookView respondsToSelector:@selector(reuseIdentifier)]) {
+        reuseIdentifier = [(id<GSBookView>)bookView reuseIdentifier];
+    }
+    
+    if (reuseIdentifier == nil) {
+        reuseIdentifier = @"";
+    }
+    
+    NSMutableSet *bookViewSet = [_reuseableBookViews objectForKey:reuseIdentifier];
+    if (!bookViewSet) {
+        bookViewSet = [[NSMutableSet alloc] initWithCapacity:0];
+        [_reuseableBookViews setObject:bookViewSet forKey:reuseIdentifier];
+    }
+    [bookViewSet addObject:bookView];
+    //NSLog(@"bookViewSet count:%d", [bookViewSet count]);
+}
+
+- (UIView *)dequeueReusableBookViewWithIdentifier:(NSString *)identifier {
+    NSMutableSet *bookViewSet = (NSMutableSet *)[_reuseableBookViews objectForKey:identifier];
+    UIView *bookView = [bookViewSet anyObject];
+    if (bookView) {
+        [bookViewSet removeObject:bookView];
+    }
+    return bookView;
 }
 
 #pragma mark - Layout 
@@ -149,7 +184,7 @@ typedef enum {
         _isDragViewRemovedFromVisibleBookViews = YES;
     }
     else {
-        [_reuseableBookViews addObject:bookView];
+        [self addReuseableBookView:bookView];
         [bookView removeFromSuperview];
     }
     [_visibleBookViews removeObjectAtIndex:rmIndex];
@@ -286,6 +321,7 @@ typedef enum {
 }
 
 - (CGRect)bookViewRectAtBookViewPosition:(BookViewPostion)position {
+    // Dose not need position.index here
     CGFloat cellHeight = _parentBookShelfView.cellHeight;
     CGFloat bookViewBottomOffset = _parentBookShelfView.bookViewBottomOffset;
     CGFloat cellMarginWidth = _parentBookShelfView.cellMarginWidth;
@@ -401,7 +437,7 @@ typedef enum {
                              completion:^(BOOL finished) {
                                  _isDragViewPickedUp = NO;
                                  if (_isDragViewRemovedFromVisibleBookViews) {
-                                     [_reuseableBookViews addObject:_dragView];
+                                     [self addReuseableBookView:_dragView];
                                      [_dragView removeFromSuperview];
                                  }
                                  _dragView = nil;

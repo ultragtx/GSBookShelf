@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "GSBookView.h"
+#import "BookView.h"
 
 @implementation ViewController
 
@@ -18,7 +18,7 @@
 }
 
 - (void)initBooks {
-    NSInteger numberOfBooks = 20;
+    NSInteger numberOfBooks = 200;
     _bookArray = [[NSMutableArray alloc] initWithCapacity:numberOfBooks];
     for (int i = 0; i < numberOfBooks; i++) {
         NSNumber *number = [NSNumber numberWithInt:i];
@@ -53,14 +53,20 @@
     return [_bookArray count];
 }
 
-- (GSBookView *)bookShelfView:(GSBookShelfView *)bookShelfView bookViewAtIndex:(NSInteger)index {
-    GSBookView *bookView = [[GSBookView alloc] initWithFrame:CGRectZero];
+- (BookView *)bookShelfView:(GSBookShelfView *)bookShelfView bookViewAtIndex:(NSInteger)index {
+    static NSString *identifier = @"bookView";
+    BookView *bookView = (BookView *)[bookShelfView dequeueReuseableBookViewWithIdentifier:identifier];
+    if (bookView == nil) {
+        bookView = [[BookView alloc] initWithFrame:CGRectZero];
+        bookView.reuseIdentifier = identifier;
+    }
+    
     int imageNO = [(NSNumber *)[_bookArray objectAtIndex:index] intValue] % 9;
     [bookView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%d.tiff", imageNO]]];
     return bookView;
 }
 
-- (GSBookShelfCellView *)bookShelfView:(GSBookShelfView *)bookShelfView cellForRow:(NSInteger)row {
+- (UIView *)bookShelfView:(GSBookShelfView *)bookShelfView cellForRow:(NSInteger)row {
     return nil;
 }
 

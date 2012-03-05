@@ -34,7 +34,7 @@ typedef struct BookViewPostion {
     //NSInteger _lastVisibleIndex;
     
     NSMutableArray *_visibleBookViews;
-    NSMutableSet *_reuseableBookViews;
+    NSMutableDictionary *_reuseableBookViews;
     
     CGFloat _bookViewWidth;
     CGFloat _bookViewHeight;
@@ -58,7 +58,8 @@ typedef struct BookViewPostion {
 @property (nonatomic, unsafe_unretained) GSBookShelfView *parentBookShelfView;
 
 
-
 - (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect;
+
+- (UIView *)dequeueReusableBookViewWithIdentifier:(NSString *)identifier;
 
 @end

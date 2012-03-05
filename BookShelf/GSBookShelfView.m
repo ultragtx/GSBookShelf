@@ -105,7 +105,7 @@
     //NSLog(@"cellContainerView frame:%@", NSStringFromCGRect(_cellContainerView.frame));
 }
 
-#pragma mark Layout
+#pragma mark - Layout
 
 - (void)layoutSubviews {
     //NSLog(@"layout");
@@ -115,6 +115,10 @@
     [_bookViewContainerView layoutSubviewsWithVisibleRect:[self visibleRect]];
 }
 
+#pragma mark - Public
 
+- (UIView *)dequeueReuseableBookViewWithIdentifier:(NSString *)identifier {
+    return [_bookViewContainerView dequeueReusableBookViewWithIdentifier:identifier];
+}
 
 @end

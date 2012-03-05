@@ -11,8 +11,6 @@
 
 @class GSBookViewContainerView;
 @class GSCellContainerView;
-@class GSBookView;
-@class GSBookShelfCellView;
 
 @protocol GSBookShelfViewDelegate;
 @protocol GSBookShelfViewDataSource;
@@ -48,7 +46,7 @@
 @property (nonatomic, unsafe_unretained) id<GSBookShelfViewDelegate> shelfViewDelegate;
 @property (nonatomic, unsafe_unretained) id<GSBookShelfViewDataSource> dataSource;
 
-@property (nonatomic, assign) BOOL dragAndDropEnabled;
+@property (nonatomic, readonly) BOOL dragAndDropEnabled;
 @property (nonatomic, assign) BOOL scrollWhileDragingEnabled;
 
 @property (nonatomic, readonly) CGFloat cellHeight;
@@ -58,6 +56,15 @@
 
 - (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset numberOfBooksInCell:(NSInteger)numberOfBooksInCell;
 
+- (UIView *)dequeueReuseableBookViewWithIdentifier:(NSString *)identifier;
+- (UIView *)dequeueReuseableCellViewWithIdentifier:(NSString *)identifier;
+
+- (NSArray *)visibleBooks;
+- (NSArray *)visibleCells;
+
+- (void)deleteBookAtIndex:(NSInteger)index animate:(BOOL)animate;
+- (void)deleteBookAtIndexs:(NSArray *)indexs animate:(BOOL)animate;
+- (void)addBookAtIndex:(NSInteger)index animate:(BOOL)animate;
 @end
 
 @protocol GSBookShelfViewDataSource <NSObject>
@@ -71,9 +78,10 @@
 - (NSInteger)numberOfBooksInBookShelfView:(GSBookShelfView *)bookShelfView; // Total number of Books
 
 - (UIView *)bookShelfView:(GSBookShelfView *)bookShelfView bookViewAtIndex:(NSInteger)index;
-- (GSBookShelfCellView *)bookShelfView:(GSBookShelfView *)bookShelfView cellForRow:(NSInteger)row;
+- (UIView *)bookShelfView:(GSBookShelfView *)bookShelfView cellForRow:(NSInteger)row;
 
 @optional
+// Override to support rearranging.
 - (void)bookShelfView:(GSBookShelfView *)bookShelfView moveBookFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
 
 @end

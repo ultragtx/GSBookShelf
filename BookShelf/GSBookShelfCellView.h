@@ -1,13 +1,15 @@
 //
-//  GSBookShelfCellView.h
+//  GSBookShelfCell.h
 //  BookShelf
 //
-//  Created by 鑫容 郭 on 12-2-23.
+//  Created by 鑫容 郭 on 12-3-5.
 //  Copyright (c) 2012年 FoOTOo. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-@interface GSBookShelfCellView : UIView
+@protocol GSBookShelfCellView <NSObject>
+
+@property (nonatomic, strong) NSString *reuseIdentifier;
 
 @end
