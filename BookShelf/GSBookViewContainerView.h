@@ -54,6 +54,7 @@ typedef struct BookViewPostion {
     
     // Remove Book
     NSMutableIndexSet *_indexsOfBookViewToBeRemoved;
+    NSMutableIndexSet *_indexsOfBookViewNotShown;
     NSMutableArray *_tempVisibleBookViewCollector;
     BOOL _isRemoving;
     

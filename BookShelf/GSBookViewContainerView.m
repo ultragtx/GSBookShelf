@@ -77,6 +77,7 @@ typedef enum {
         
         // Remove
         _isRemoving = NO;
+        _indexsOfBookViewNotShown = [NSMutableIndexSet indexSet];
         _tempVisibleBookViewCollector = [[NSMutableArray alloc] initWithCapacity:0];
         
         // GestureRecognizer
@@ -153,7 +154,7 @@ typedef enum {
         /*if (![_indexsOfBookViewToBeRemoved containsIndex:position.index] && !_isRemoving) {
             [self addSubview:bookView];
         }*/
-        if (![_indexsOfBookViewToBeRemoved containsIndex:position.index]) {
+        if (!([_indexsOfBookViewToBeRemoved containsIndex:position.index] || [_indexsOfBookViewNotShown containsIndex:position.index])) {
             [self addSubview:bookView];
         }
         
@@ -164,31 +165,17 @@ typedef enum {
 - (void)addBookViewAtBookViewPosition:(BookViewPostion) position addType:(AddType)addType {
     
     UIView *bookView = [self addBookViewAsSubviewWithBookViewPosition:position];
-    /*if (_isRemoving) {
-        [_tempVisibleBookViewCollector addObject:bookView];
-    }
-    else {
-        switch (addType) {
-            case ADD_TYPE_FIRSTTIME:
-            case ADD_TYPE_TAIL:
-                [_visibleBookViews addObject:bookView];
-                break;
-                
-            case ADD_TYPE_HEAD:
-                [_visibleBookViews insertObject:bookView atIndex:0];
-                break;
-                
-        }
-    }*/
+    
+    NSMutableArray *visibleBookViews = _isRemoving ? _tempVisibleBookViewCollector : _visibleBookViews;
     
     switch (addType) {
         case ADD_TYPE_FIRSTTIME:
         case ADD_TYPE_TAIL:
-            [_visibleBookViews addObject:bookView];
+            [visibleBookViews addObject:bookView];
             break;
             
         case ADD_TYPE_HEAD:
-            [_visibleBookViews insertObject:bookView atIndex:0];
+            [visibleBookViews insertObject:bookView atIndex:0];
             break;
     }
             
@@ -220,9 +207,9 @@ typedef enum {
     //NSLog(@"bookViewContainer layout");
     //CGRect visibleRect = [self bounds];
     //NSLog(@"visibleRect %@", NSStringFromCGRect(visibleRect));
-    if (_isRemoving) {
+    /*if (_isRemoving) {
         return;
-    }
+    }*/
     _visibleRect = visibleRect;
     
     NSInteger numberOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
@@ -695,6 +682,8 @@ typedef enum {
     _isRemoving = YES;
     _indexsOfBookViewToBeRemoved = [[NSMutableIndexSet alloc] initWithIndexSet:indexs];
     
+    NSMutableArray *stepsArray = [[NSMutableArray alloc] initWithCapacity:[_visibleBookViews count]];
+    
     // Record the bookViews to be remvoed
     [UIView animateWithDuration:animate ? 0.15 : 0.0
                           delay:0.0
@@ -702,6 +691,10 @@ typedef enum {
                      animations:^{
                          // Dissmiss BookView
                          //NSLog(@"disappear animation");
+                         
+                         __block NSInteger steps = 0;
+                         __block NSInteger moveFromIndex = 0;
+                         
                          [indexs enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
                              BookViewPostion position = [self convertToBookViewPositionFromIndex:index];
                              NSInteger indexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:position];
@@ -710,12 +703,39 @@ typedef enum {
                                      *stop = YES;
                                  }
                                  else {
+                                     // shrink
                                      UIView *bookView = [_visibleBookViews objectAtIndex:indexOfVisibleBookViews];
                                      CGAffineTransform transform = bookView.transform;
                                      bookView.transform = CGAffineTransformScale(transform, 0.001f, 0.001f);
+                                     
+                                     // record _indexsOfBookViewNotShown
+                                     BOOL overVisible = indexOfVisibleBookViews >= [_visibleBookViews count];
+                                     NSInteger moveToIndex = overVisible ? [_visibleBookViews count] - 1 : indexOfVisibleBookViews;
+                                     while (moveFromIndex <= moveToIndex) {
+                                         NSInteger realIndex = [self convertToIndexFromVisibleBookViewIndex:moveFromIndex] - steps;
+                                         [_indexsOfBookViewNotShown addIndex:realIndex];
+                                         
+                                         [stepsArray addObject:[NSNumber numberWithInt:-steps]];
+                                         
+                                         moveFromIndex++;
+                                     }
+                                     steps++;
                                  }
                              }
+                             else {
+                                 steps++;
+                             }
+                             
+                             NSLog(@"index not shown: %@", [_indexsOfBookViewNotShown description]);
                          }];
+                         while (moveFromIndex < [_visibleBookViews count]) {
+                             NSInteger realIndex = [self convertToIndexFromVisibleBookViewIndex:moveFromIndex] - steps;
+                             [_indexsOfBookViewNotShown addIndex:realIndex];
+                             
+                             [stepsArray addObject:[NSNumber numberWithInt:-steps]];
+                              
+                             moveFromIndex++;
+                         }
                      }completion:^(BOOL finished) {
                          // Scroll to a visible row if needed without animation (written in removeCompletion);
                          //removeCompletion(); // put set contentoffset here will cause the layoutSubviews happends after the move animation
@@ -726,6 +746,12 @@ typedef enum {
                                              options:UIViewAnimationCurveLinear
                                           animations:^ {
                                               //NSLog(@"move animation");
+                                              for (int i = 0; i < [_visibleBookViews count]; i++) {
+                                                  UIView *bookView = [_visibleBookViews objectAtIndex:i];
+                                                  [self moveBookView:bookView steps:[(NSNumber *)[stepsArray objectAtIndex:i] intValue]];
+                                              }
+                                              return;
+                                              
                                               __block NSInteger steps = 0;
                                               __block NSInteger moveFromIndex = 0;
                                               
@@ -761,6 +787,7 @@ typedef enum {
                                           completion:^(BOOL finished) {
                                               //NSLog(@"move animation completion");
                                               [_indexsOfBookViewToBeRemoved removeAllIndexes];
+                                              [_indexsOfBookViewNotShown removeAllIndexes];
                                               
                                               _isRemoving = NO;
                                               for (UIView *view in _tempVisibleBookViewCollector) {
