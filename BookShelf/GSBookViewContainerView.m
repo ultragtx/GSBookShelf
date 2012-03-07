@@ -220,6 +220,9 @@ typedef enum {
     //NSLog(@"bookViewContainer layout");
     //CGRect visibleRect = [self bounds];
     //NSLog(@"visibleRect %@", NSStringFromCGRect(visibleRect));
+    if (_isRemoving) {
+        return;
+    }
     _visibleRect = visibleRect;
     
     NSInteger numberOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
@@ -322,6 +325,11 @@ typedef enum {
 #pragma mark - BookViewPosition 
 
 #pragma mark - BookView Rect
+
+- (NSInteger)convertToIndexFromVisibleBookViewIndex:(NSInteger)index {
+    // not safe for some events
+    return _firstVisibleRow * _parentBookShelfView.numberOfBooksInCell + index;
+}
 
 - (BookViewPostion)convertToBookViewPositionFromIndex:(NSInteger)index {
     NSInteger row = index / _parentBookShelfView.numberOfBooksInCell;
