@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GSBookShelfCellView.h"
+#import "GSBookShelfCell.h"
 
-@interface BookShelfCellView : UIView <GSBookShelfCellView>
+@interface BookShelfCellView : UIView <GSBookShelfCell>
 
 @property (nonatomic, strong) NSString *reuseIdentifier;
 

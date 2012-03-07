@@ -121,4 +121,17 @@
     return [_bookViewContainerView dequeueReusableBookViewWithIdentifier:identifier];
 }
 
+- (void)removeBookViewAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; {
+    [self resetContentSize];
+    CGPoint contentOffset = [self contentOffset];
+    if (contentOffset.y + self.bounds.size.height > self.contentSize.height) {
+        contentOffset.y = self.contentSize.height - self.bounds.size.height;
+    }
+    [self setContentOffset:contentOffset animated:NO];
+    [_bookViewContainerView removeBookViewAtIndexs:indexs
+                                  removeCompletion:^ {
+                                      
+                                  }animate:animate];
+}
+
 @end

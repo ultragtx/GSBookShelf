@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		C12BFCDC14F7CEF600206AFC /* GSBookViewContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C12BFCDB14F7CEF600206AFC /* GSBookViewContainerView.m */; };
 		C12BFCE014F7CF3A00206AFC /* GSCellContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C12BFCDF14F7CF3A00206AFC /* GSCellContainerView.m */; };
+		C1B905D61506575E00513802 /* BookViewChecked.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B905D41506575E00513802 /* BookViewChecked.png */; };
+		C1B905D71506575E00513802 /* BookViewChecked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B905D51506575E00513802 /* BookViewChecked@2x.png */; };
 		C1D6739B14F4D247006D3483 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D6739A14F4D247006D3483 /* UIKit.framework */; };
 		C1D6739D14F4D247006D3483 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D6739C14F4D247006D3483 /* Foundation.framework */; };
 		C1D6739F14F4D247006D3483 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D6739E14F4D247006D3483 /* CoreGraphics.framework */; };
@@ -38,7 +40,9 @@
 		C12BFCDE14F7CF3A00206AFC /* GSCellContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSCellContainerView.h; sourceTree = "<group>"; };
 		C12BFCDF14F7CF3A00206AFC /* GSCellContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSCellContainerView.m; sourceTree = "<group>"; };
 		C1B905CC1504B75800513802 /* GSBookView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBookView.h; sourceTree = "<group>"; };
-		C1B905CE1504B77000513802 /* GSBookShelfCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBookShelfCellView.h; sourceTree = "<group>"; };
+		C1B905CE1504B77000513802 /* GSBookShelfCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBookShelfCell.h; sourceTree = "<group>"; };
+		C1B905D41506575E00513802 /* BookViewChecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BookViewChecked.png; path = ../../../MainProject/BookAssistant_iOS_ForContest/BookAssistant/BookViewChecked.png; sourceTree = "<group>"; };
+		C1B905D51506575E00513802 /* BookViewChecked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "BookViewChecked@2x.png"; path = "../../../MainProject/BookAssistant_iOS_ForContest/BookAssistant/BookViewChecked@2x.png"; sourceTree = "<group>"; };
 		C1D6739614F4D247006D3483 /* BookShelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookShelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1D6739A14F4D247006D3483 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C1D6739C14F4D247006D3483 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -91,7 +95,7 @@
 				C1D673B814F4D35B006D3483 /* GSBookShelfView.h */,
 				C1D673B914F4D35B006D3483 /* GSBookShelfView.m */,
 				C1B905CC1504B75800513802 /* GSBookView.h */,
-				C1B905CE1504B77000513802 /* GSBookShelfCellView.h */,
+				C1B905CE1504B77000513802 /* GSBookShelfCell.h */,
 			);
 			name = Public;
 			sourceTree = "<group>";
@@ -194,6 +198,8 @@
 				C1D673D414F60896006D3483 /* 2.tiff */,
 				C1D673D514F60896006D3483 /* 1.tiff */,
 				C1D673D614F60896006D3483 /* 0.tiff */,
+				C1B905D41506575E00513802 /* BookViewChecked.png */,
+				C1B905D51506575E00513802 /* BookViewChecked@2x.png */,
 			);
 			name = ImagesForTest;
 			sourceTree = "<group>";
@@ -269,6 +275,8 @@
 				C1D673DD14F60896006D3483 /* 2.tiff in Resources */,
 				C1D673DE14F60896006D3483 /* 1.tiff in Resources */,
 				C1D673DF14F60896006D3483 /* 0.tiff in Resources */,
+				C1B905D61506575E00513802 /* BookViewChecked.png in Resources */,
+				C1B905D71506575E00513802 /* BookViewChecked@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

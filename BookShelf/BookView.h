@@ -12,12 +12,21 @@
 @interface BookView : UIView <GSBookView>{
     
     UIImage *_image;
-    @private 
+
     UIButton *_button;
+    
+    UIImageView *_checkedImageView;
+    
 }
 
 @property (nonatomic, strong) UIImage *image;
 
 @property (nonatomic, strong) NSString *reuseIdentifier;
+
+@property (nonatomic, strong) UIButton *button;
+
+@property (nonatomic, assign) BOOL selected;
+
+@property (nonatomic, assign) NSInteger index;
 
 @end

@@ -59,12 +59,14 @@
 - (UIView *)dequeueReuseableBookViewWithIdentifier:(NSString *)identifier;
 - (UIView *)dequeueReuseableCellViewWithIdentifier:(NSString *)identifier;
 
-- (NSArray *)visibleBooks;
+- (NSArray *)visibleBookViews;
 - (NSArray *)visibleCells;
 
-- (void)deleteBookAtIndex:(NSInteger)index animate:(BOOL)animate;
-- (void)deleteBookAtIndexs:(NSArray *)indexs animate:(BOOL)animate;
-- (void)addBookAtIndex:(NSInteger)index animate:(BOOL)animate;
+//- (void)deleteBookAtIndex:(NSInteger)index animate:(BOOL)animate;
+//- (void)removeBookViewAtIndexs:(NSArray *)indexs animate:(BOOL)animate; // Array of indexs and an index should be an NSNumber
+- (void)removeBookViewAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate;
+//- (void)addBookAtIndex:(NSInteger)index animate:(BOOL)animate;
+- (void)addBookViewAtIndexs:(NSArray *)indexs animate:(BOOL)animate; // Array of indexs and an index should be an NSNumber
 @end
 
 @protocol GSBookShelfViewDataSource <NSObject>

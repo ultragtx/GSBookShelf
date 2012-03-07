@@ -52,6 +52,11 @@ typedef struct BookViewPostion {
     // Scroll While Drag
     NSTimer *_scrollTimer;
     
+    // Remove Book
+    NSMutableIndexSet *_indexsOfBookViewToBeRemoved;
+    NSMutableArray *_tempVisibleBookViewCollector;
+    BOOL _isRemoving;
+    
     
 }
 
@@ -61,5 +66,7 @@ typedef struct BookViewPostion {
 - (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect;
 
 - (UIView *)dequeueReusableBookViewWithIdentifier:(NSString *)identifier;
+
+- (void)removeBookViewAtIndexs:(NSIndexSet *)indexs removeCompletion:(void (^)(void))removeCompletion animate:(BOOL)animate;
 
 @end
