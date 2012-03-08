@@ -68,6 +68,8 @@ typedef struct BookViewPostion {
 
 - (UIView *)dequeueReusableBookViewWithIdentifier:(NSString *)identifier;
 
-- (void)removeBookViewAtIndexs:(NSIndexSet *)indexs removeCompletion:(void (^)(void))removeCompletion animate:(BOOL)animate;
+//- (void)removeBookViewAtIndexs:(NSIndexSet *)indexs removeCompletion:(void (^)(void))removeCompletion animate:(BOOL)animate;
+
+- (void)removeBookViewAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate;
 
 @end

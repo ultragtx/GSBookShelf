@@ -128,10 +128,7 @@
         contentOffset.y = self.contentSize.height - self.bounds.size.height;
     }
     [self setContentOffset:contentOffset animated:NO];
-    [_bookViewContainerView removeBookViewAtIndexs:indexs
-                                  removeCompletion:^ {
-                                      
-                                  }animate:animate];
+    [_bookViewContainerView removeBookViewAtIndexs:indexs animate:animate];
 }
 
 @end

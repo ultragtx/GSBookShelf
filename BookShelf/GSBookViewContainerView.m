@@ -204,12 +204,28 @@ typedef enum {
 
 
 - (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect {
+    // To reduce memory usage, we only add visible bookViews to the subviews. So every time it scrolls, we shoud add and remove some bookViews.You can check the sample project (ScrollView Suit >> Tiling) for information.
+    
+    // Discussion: the layout sequence is easy to understand. There are 6 situation we should consider.  You can draw these condition on a papper to get it more clear.
+    
+    // 1. lastNeededRow < _firstVisibleRow
+    // 2. firstNeededRow < _firstVisibleRow && lastNeededRow > _firstVisibleRow && lastNeededRow < _lastVisibleRow
+    // 3. firstNeededRow < _firstVisibleRow && lastNeededRow > _lastVisibleRow
+    // 4. firstNeededRow > _firstVisibleRow && lastNeededRow < _lastVisibleRow
+    // 5. firstNeededRow > _firstVisibleRow && firstNeededRow < _lastVisibleRow && lastNeededRow > _lastVisibleRow
+    // 6. firstNeededRow > _lastVisibleRow
+    
+    // We deal with these situations with a sequence of operation:
+    // 1. if (lastNeededRow < _lastVisibleRow) remove some from the tail of _visibleBookViews
+    // 2. if (firstNeededRow < _firstVisibleRow) add some to the head of _visibleBookViews
+    // 3. if (firstNeededRow > _firstVisibleRow) remove some from the head of _visibleBookViews
+    // 4. if (lastNeededRow > _lastVisibleRow) add some to the tail of _visibleBookViews
+    
+    // only two of these four steps will happen for each situation. Thanks to these we don't need to consider about where to insert or remove a propper bookView. Just add or remove then at the head or tail.
+
+    
     //NSLog(@"bookViewContainer layout");
-    //CGRect visibleRect = [self bounds];
     //NSLog(@"visibleRect %@", NSStringFromCGRect(visibleRect));
-    /*if (_isRemoving) {
-        return;
-    }*/
     _visibleRect = visibleRect;
     
     NSInteger numberOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
@@ -677,8 +693,21 @@ typedef enum {
 
 #pragma mark - Delete and Add
 
-- (void)removeBookViewAtIndexs:(NSIndexSet *)indexs removeCompletion:(void (^)(void))removeCompletion animate:(BOOL)animate {
-    // Make removed bookViews disappera >> setContentOffset to a proper row >> move related books
+- (void)removeBookViewAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; {
+    // The animation Sequence is:
+    // 1. make bookViews disappear (a scale to (0.001, 0.001) in fact)
+    // 2. because some rows may be removed, we will set the contentOffset to a propper postition
+    // 3. move bookViews to fill blank
+    
+    // Discussion 1: _parentBookShelfView's remove.... method did step 2 above before coming in to the current method. Seems the layoutSubviews called by setContentOffset(step 2) should occour before step 1. But the true is:layoutSubvies occour after step 1. I think it's "runloop" that cause this. Animation was set and then main thread enter next loop and layoutSubviews occour.(I'm not so sure about this.)
+    
+    // Discussion 2: 
+    // step 1. in the first animation we scale the bookViews to be removed. The current visible bookVie will move to some position in step 3 so we record the steps for each visible bookView(stepsArray), and record the positions(indexs) they will move to(_indexsOfBookViewNotShown).
+    // step 2. in the layoutSubviews. we add all new added bookView to  _tempVisibleBookViewCollector instead of _visibleBookViews to keep _visibleBookViews "clean"(contains only bookViews showed in step 1). And check if the added bookview index is in _indexsOfBookViewNotShown (not add them to subviews). After layoutSubviews, the contentOffset has been set properly, and the proper bookViews will show up with some blank waiting for some bookViews moving to.
+    // step 3. This is simple, just let each bookViews move with the steps record in stepsArray. After all animation. We clean the Arrays and Sets and refresh the current contents to make some bookView visible and keep everything go back to normal status.
+    
+    // PS. The code to achieve the remove function is really ugly(If you are trying to read this). I tried to make it beautiful. But still can't get a better one which can make the remove animation looks the same as iBooks. So, don't blame at me.
+    
     _isRemoving = YES;
     _indexsOfBookViewToBeRemoved = [[NSMutableIndexSet alloc] initWithIndexSet:indexs];
     
@@ -726,7 +755,7 @@ typedef enum {
                                  steps++;
                              }
                              
-                             NSLog(@"index not shown: %@", [_indexsOfBookViewNotShown description]);
+                             //NSLog(@"index not shown: %@", [_indexsOfBookViewNotShown description]);
                          }];
                          while (moveFromIndex < [_visibleBookViews count]) {
                              NSInteger realIndex = [self convertToIndexFromVisibleBookViewIndex:moveFromIndex] - steps;
@@ -737,8 +766,6 @@ typedef enum {
                              moveFromIndex++;
                          }
                      }completion:^(BOOL finished) {
-                         // Scroll to a visible row if needed without animation (written in removeCompletion);
-                         //removeCompletion(); // put set contentoffset here will cause the layoutSubviews happends after the move animation
                          //NSLog(@"disappear animation completion");
                          
                          [UIView animateWithDuration:animate ? 0.3 : 0.0
@@ -751,38 +778,6 @@ typedef enum {
                                                   [self moveBookView:bookView steps:[(NSNumber *)[stepsArray objectAtIndex:i] intValue]];
                                               }
                                               return;
-                                              
-                                              __block NSInteger steps = 0;
-                                              __block NSInteger moveFromIndex = 0;
-                                              
-                                              [indexs enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
-                                                  if (moveFromIndex >= [_visibleBookViews count]) {
-                                                      *stop = YES;
-                                                  }
-                                                  BookViewPostion position = [self convertToBookViewPositionFromIndex:index];
-                                                  NSInteger indexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:position];
-                                                  
-                                                  if (indexOfVisibleBookViews < 0) {
-                                                      steps++;
-                                                  }
-                                                  else {
-                                                      BOOL overVisible = indexOfVisibleBookViews >= [_visibleBookViews count];
-                                                      NSInteger moveToIndex = overVisible ? [_visibleBookViews count] - 1 : indexOfVisibleBookViews;
-                                                      while (moveFromIndex <= moveToIndex) {
-                                                          UIView *bookView = [_visibleBookViews objectAtIndex:moveFromIndex];
-                                                          [self moveBookView:bookView steps:-steps];
-                                                          moveFromIndex++;
-                                                      }
-                                                      steps++;
-                                                  }
-
-                                              }];
-                                              
-                                              while (moveFromIndex < [_visibleBookViews count]) {
-                                                  UIView *bookView = [_visibleBookViews objectAtIndex:moveFromIndex];
-                                                  [self moveBookView:bookView steps:-steps];
-                                                  moveFromIndex++;
-                                              }
                                           }
                                           completion:^(BOOL finished) {
                                               //NSLog(@"move animation completion");
@@ -804,7 +799,6 @@ typedef enum {
                                               [_parentBookShelfView setNeedsLayout];
                                           }];
                      }];
-    
 }
 
 
