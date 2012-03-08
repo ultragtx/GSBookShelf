@@ -112,7 +112,7 @@
 - (void)trashButtonClicked:(id)sender {
     [_bookArray removeObjectsAtIndexes:_booksIndexsToBeRemoved];
     [_bookStatus removeObjectsAtIndexes:_booksIndexsToBeRemoved];
-    [_bookShelfView removeBookViewAtIndexs:_booksIndexsToBeRemoved animate:YES];
+    [_bookShelfView removeBookViewsAtIndexs:_booksIndexsToBeRemoved animate:YES];
 }
 
 #pragma mark - BookView Listener

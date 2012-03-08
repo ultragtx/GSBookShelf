@@ -693,7 +693,7 @@ typedef enum {
 
 #pragma mark - Delete and Add
 
-- (void)removeBookViewAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; {
+- (void)removeBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; {
     // The animation Sequence is:
     // 1. make bookViews disappear (a scale to (0.001, 0.001) in fact)
     // 2. because some rows may be removed, we will set the contentOffset to a propper postition
