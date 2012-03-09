@@ -131,8 +131,9 @@
     [_bookViewContainerView removeBookViewsAtIndexs:indexs animate:animate];
 }
 
-- (void)addBookViewsAtIndexs:(NSArray *)indexs animate:(BOOL)animate {
-    
+- (void)addBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate {
+    [self resetContentSize];
+    [_bookViewContainerView addBookViewsAtIndexs:indexs animate:animate];
 }
 
 @end

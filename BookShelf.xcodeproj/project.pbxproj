@@ -239,7 +239,7 @@
 		C1D6738D14F4D247006D3483 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = FoOTOo;
 			};
 			buildConfigurationList = C1D6739014F4D247006D3483 /* Build configuration list for PBXProject "BookShelf" */;
@@ -375,6 +375,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BookShelf/BookShelf-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = "BookShelf/BookShelf-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -391,6 +392,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BookShelf/BookShelf-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = "BookShelf/BookShelf-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";

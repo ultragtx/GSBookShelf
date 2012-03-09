@@ -35,12 +35,14 @@
     _cancleBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancleButtonClicked:)];
     
     _trashBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(trashButtonClicked:)];
+    _addBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addButtonClicked:)];
 }
 
 - (void)switchToNormalMode {
     _editMode = NO;
     
     [self.navigationItem setLeftBarButtonItem:_editBarButton];
+    [self.navigationItem setRightBarButtonItem:_addBarButton];
 }
 
 - (void)switchToEditMode {
@@ -113,6 +115,22 @@
     [_bookArray removeObjectsAtIndexes:_booksIndexsToBeRemoved];
     [_bookStatus removeObjectsAtIndexes:_booksIndexsToBeRemoved];
     [_bookShelfView removeBookViewsAtIndexs:_booksIndexsToBeRemoved animate:YES];
+    [self switchToNormalMode];
+}
+
+- (void)addButtonClicked:(id)sender {
+    int a[6] = {1, 2, 5, 7, 9, 22};
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    NSMutableArray *arr = [NSMutableArray array];
+    NSMutableArray *stat = [NSMutableArray array];
+    for (int i = 0; i < 6; i++) {
+        [indexSet addIndex:a[i]];
+        [arr addObject:[NSNumber numberWithInt:1]];
+        [stat addObject:[NSNumber numberWithInt:BOOK_UNSELECTED]];
+    }
+    [_bookArray insertObjects:arr atIndexes:indexSet];
+    [_bookStatus insertObjects:stat atIndexes:indexSet];
+    [_bookShelfView addBookViewsAtIndexs:indexSet animate:YES];
 }
 
 #pragma mark - BookView Listener

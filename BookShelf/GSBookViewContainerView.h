@@ -71,6 +71,6 @@ typedef struct BookViewPostion {
 //- (void)removeBookViewAtIndexs:(NSIndexSet *)indexs removeCompletion:(void (^)(void))removeCompletion animate:(BOOL)animate;
 
 - (void)removeBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate;
-- (void)addBookViewsAtIndexs:(NSArray *)indexs animate:(BOOL)animate;
+- (void)addBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate;
 
 @end

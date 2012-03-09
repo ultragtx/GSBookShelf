@@ -27,6 +27,7 @@ typedef enum {
     UIBarButtonItem *_editBarButton;
     UIBarButtonItem *_cancleBarButton;
     UIBarButtonItem *_trashBarButton;
+    UIBarButtonItem *_addBarButton;
 }
 
 @end

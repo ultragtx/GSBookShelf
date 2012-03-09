@@ -706,8 +706,6 @@ typedef enum {
     // step 2. in the layoutSubviews. we add all new added bookView to  _tempVisibleBookViewCollector instead of _visibleBookViews to keep _visibleBookViews "clean"(contains only bookViews showed in step 1). And check if the added bookview index is in _indexsOfBookViewNotShown (not add them to subviews). After layoutSubviews, the contentOffset has been set properly, and the proper bookViews will show up with some blank waiting for some bookViews moving to.
     // step 3. This is simple, just let each bookViews move with the steps record in stepsArray. After all animation. We clean the Arrays and Sets and refresh the current contents to make some bookView visible and keep everything go back to normal status.
     
-    // PS. The code to achieve the remove function is really ugly(If you are trying to read this). I tried to make it beautiful. But still can't get a better one which can make the remove animation looks the same as iBooks. So, don't blame at me.
-    
     _isRemoving = YES;
     _indexsOfBookViewToBeRemoved = [[NSMutableIndexSet alloc] initWithIndexSet:indexs];
     
@@ -734,8 +732,7 @@ typedef enum {
                                  else {
                                      // shrink
                                      UIView *bookView = [_visibleBookViews objectAtIndex:indexOfVisibleBookViews];
-                                     CGAffineTransform transform = bookView.transform;
-                                     bookView.transform = CGAffineTransformScale(transform, 0.001f, 0.001f);
+                                     bookView.transform = CGAffineTransformMakeScale(0.001f, 0.001f);
                                      
                                      // record _indexsOfBookViewNotShown
                                      BOOL overVisible = indexOfVisibleBookViews >= [_visibleBookViews count];
@@ -748,12 +745,10 @@ typedef enum {
                                          
                                          moveFromIndex++;
                                      }
-                                     steps++;
                                  }
                              }
-                             else {
-                                 steps++;
-                             }
+
+                             steps++;
                              
                              //NSLog(@"index not shown: %@", [_indexsOfBookViewNotShown description]);
                          }];
@@ -802,8 +797,164 @@ typedef enum {
 }
 
 
-- (void)addBookAtIndexs:(NSArray *)indexs animate:(BOOL)animate {
-    
+- (void)addBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; {
+    [UIView animateWithDuration:animate ? 0.3 : 0.0
+                          delay:0.0
+                        options:UIViewAnimationCurveLinear
+                     animations:^{
+                         __block NSInteger steps = 0;
+                         __block NSInteger moveFromIndex = 0;
+                         __block NSInteger lastIndexInIndexs = -1;
+                         __block NSInteger tempIndex = 0;
+                         
+                         [indexs enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
+                             NSInteger diff = index - lastIndexInIndexs;
+                             if (lastIndexInIndexs < 0) {
+                                 tempIndex = index;
+                                 
+                                 
+                             }
+                             else if (diff <= 1) {
+                                 lastIndexInIndexs = index;
+                                 steps++;
+                                 return;
+                             }
+                             else {
+                                 tempIndex = moveFromIndex + diff - 1;
+                             }
+                             while (moveFromIndex < tempIndex) {
+                                 BookViewPostion position = [self convertToBookViewPositionFromIndex:moveFromIndex];
+                                 NSInteger indexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:position];
+                                 if (indexOfVisibleBookViews > (NSInteger)[_visibleBookViews count] - 1) {
+                                     *stop = YES;
+                                     break;
+                                 }
+                                 else if (indexOfVisibleBookViews >= 0) {
+                                     UIView *bookView = [_visibleBookViews objectAtIndex:indexOfVisibleBookViews];
+                                     [self moveBookView:bookView steps:steps];
+                                 }
+                                 moveFromIndex++;
+                             }
+                             steps++;
+                             lastIndexInIndexs = index;
+                             
+                             
+                             
+                             
+                             /*BookViewPostion position = [self convertToBookViewPositionFromIndex:index];
+                             NSInteger indexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:position];
+                             if (indexOfVisibleBookViews >= 0) {
+                                 if (moveFromIndex >= [_visibleBookViews count]) {
+                                     *stop = YES;
+                                 }
+                                 else {
+                                     //BOOL overVisible = indexOfVisibleBookViews >= [_visibleBookViews count];
+                                     //NSInteger moveToIndex = overVisible ? [_visibleBookViews count] - 1 : indexOfVisibleBookViews;
+                                     NSInteger numberOfBookViewsToMove = (NSInteger)index - lastIndexInIndexs - 1;
+                                     if (lastIndexInIndexs < 0) {
+                                         numberOfBookViewsToMove = (NSInteger)index - moveFromIndex;
+                                     }
+                                     numberOfBookViewsToMove = MIN(numberOfBookViewsToMove, [_visibleBookViews count] - 1 - moveFromIndex);
+                                     for (int i = 0; i < numberOfBookViewsToMove; i++) {
+                                         UIView *bookView = [_visibleBookViews objectAtIndex:moveFromIndex];
+                                         [self moveBookView:bookView steps:steps];
+                                         moveFromIndex++;
+                                     }
+                                 }
+                                 lastIndexInIndexs = index;
+                             }
+                             steps++;*/
+                         }];
+                         while (YES) {
+                             BookViewPostion position = [self convertToBookViewPositionFromIndex:moveFromIndex];
+                             NSInteger indexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:position];
+                             if (indexOfVisibleBookViews > (NSInteger)[_visibleBookViews count] - 1) {
+                                 break;
+                             }
+                             else if (indexOfVisibleBookViews >= 0) {
+                                 UIView *bookView = [_visibleBookViews objectAtIndex:indexOfVisibleBookViews];
+                                 [self moveBookView:bookView steps:steps];
+                             }
+                             moveFromIndex++;
+                         }
+                         
+                         /*[indexs enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
+                             
+                             BookViewPostion position = [self convertToBookViewPositionFromIndex:index];
+                             NSInteger indexOfVisibleBookViews = [self converToIndexOfVisibleBookViewsFromBookViewPosition:position];
+                             if (indexOfVisibleBookViews >= 0) {
+                                 if (moveFromIndex >= [_visibleBookViews count]) {
+                                     *stop = YES;
+                                 }
+                                 else {
+                                     //BOOL overVisible = indexOfVisibleBookViews >= [_visibleBookViews count];
+                                     //NSInteger moveToIndex = overVisible ? [_visibleBookViews count] - 1 : indexOfVisibleBookViews;
+                                     NSInteger numberOfBookViewsToMove = (NSInteger)index - lastIndexInIndexs - 1;
+                                     if (lastIndexInIndexs < 0) {
+                                         numberOfBookViewsToMove = (NSInteger)index - moveFromIndex;
+                                     }
+                                     numberOfBookViewsToMove = MIN(numberOfBookViewsToMove, [_visibleBookViews count] - 1 - moveFromIndex);
+                                     for (int i = 0; i < numberOfBookViewsToMove; i++) {
+                                         UIView *bookView = [_visibleBookViews objectAtIndex:moveFromIndex];
+                                         [self moveBookView:bookView steps:steps];
+                                         moveFromIndex++;
+                                     }
+                                 }
+                                 lastIndexInIndexs = index;
+                             }
+                             steps++;
+                         }];*/
+                         
+                         
+                         /*while (moveFromIndex < [_visibleBookViews count]) {
+                             UIView *bookView = [_visibleBookViews objectAtIndex:moveFromIndex];
+                             [self moveBookView:bookView steps:steps];
+                             moveFromIndex++;
+                         }*/
+                     }
+                     completion:^(BOOL finished) {
+                         NSMutableArray *tempBookViewArray = [[NSMutableArray alloc] initWithCapacity:0];
+                         [indexs enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
+                             BookViewPostion position = [self convertToBookViewPositionFromIndex:index];
+                             if (position.row > _lastVisibleRow) {
+                                 *stop = YES;
+                             }
+                             else if (position.row >= _firstVisibleRow) {
+                                 UIView *bookView = [_parentBookShelfView.dataSource bookShelfView:_parentBookShelfView bookViewAtIndex:index];
+                                 CGRect bookViewFrame = [self bookViewRectAtBookViewPosition:position];
+                                 [bookView setFrame:bookViewFrame];
+                                 [self addSubview:bookView];
+                                 bookView.transform = CGAffineTransformMakeScale(0.001f, 0.001f);
+                                 
+                                 [tempBookViewArray addObject:bookView];
+                             }
+                         }];
+                         [UIView animateWithDuration:animate ? 0.15 : 0.0
+                                               delay:0.0
+                                             options:UIViewAnimationCurveLinear | UIViewAnimationOptionLayoutSubviews
+                                          animations:^{
+                                              for (UIView *bookView in tempBookViewArray) {
+                                                  bookView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+                                              }
+                                          }
+                                          completion:^(BOOL finished) {
+                                              for (UIView *bookView in tempBookViewArray) {
+                                                  [bookView removeFromSuperview];
+                                                  [self addReuseableBookView:bookView];
+                                              }
+                                              [tempBookViewArray removeAllObjects];
+                                              
+                                              for (UIView *bookView in _visibleBookViews) {
+                                                  [bookView removeFromSuperview];
+                                                  [self addReuseableBookView:bookView];
+                                              }
+                                              [_visibleBookViews removeAllObjects];
+                                              _firstVisibleRow = -1;
+                                              _lastVisibleRow = -1;
+                                              [_parentBookShelfView setNeedsLayout];
+                                          }];
+                         
+                     }];
 }
 
 #pragma mark - test

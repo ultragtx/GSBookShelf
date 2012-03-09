@@ -66,7 +66,7 @@
 //- (void)removeBookViewAtIndexs:(NSArray *)indexs animate:(BOOL)animate; // Array of indexs and an index should be an NSNumber
 - (void)removeBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate;
 //- (void)addBookAtIndex:(NSInteger)index animate:(BOOL)animate;
-- (void)addBookViewsAtIndexs:(NSArray *)indexs animate:(BOOL)animate; // Array of indexs and an index should be an NSNumber
+- (void)addBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; // Array of indexs and an index should be an NSNumber
 @end
 
 @protocol GSBookShelfViewDataSource <NSObject>
