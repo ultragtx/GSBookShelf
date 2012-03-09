@@ -130,7 +130,7 @@
     }
     [_bookArray insertObjects:arr atIndexes:indexSet];
     [_bookStatus insertObjects:stat atIndexes:indexSet];
-    [_bookShelfView addBookViewsAtIndexs:indexSet animate:YES];
+    [_bookShelfView insertBookViewsAtIndexs:indexSet animate:YES];
 }
 
 #pragma mark - BookView Listener

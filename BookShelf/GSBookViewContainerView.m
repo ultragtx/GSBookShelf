@@ -797,7 +797,7 @@ typedef enum {
 }
 
 
-- (void)addBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; {
+- (void)insertBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; {
     // The animation Sequence is:
     // 1. move to get blanks for bookViews will be added
     // 2. show the added bookViews
