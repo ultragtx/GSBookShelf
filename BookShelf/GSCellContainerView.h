@@ -8,6 +8,25 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GSCellContainerView : UIView
+@class GSBookShelfView;
+
+@interface GSCellContainerView : UIView {
+    GSBookShelfView __unsafe_unretained *_parentBookShelfView;
+    
+    @private
+    
+    NSInteger _firstVisibleRow;
+    NSInteger _lastVisibleRow;
+    
+    NSMutableArray *_visibleCells;
+    NSMutableDictionary *_reuseableCells;
+    
+    
+}
+
+@property (nonatomic, unsafe_unretained) GSBookShelfView *parentBookShelfView;
+
+- (UIView *)dequeueReuseableCellWithIdentifier:(NSString *)identifier;
+- (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect;
 
 @end

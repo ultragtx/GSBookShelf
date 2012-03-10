@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "BookView.h"
+#import "BookShelfCellView.h"
 
 @implementation ViewController
 
@@ -63,7 +64,7 @@
     
 	[self initBooks];
     
-    _bookShelfView = [[GSBookShelfView alloc] initWithFrame:CGRectMake(0, 0, 320, 460 - 44) cellHeight:120 cellMarginWidth:20 bookViewBottomOffset:110 numberOfBooksInCell:3];
+    _bookShelfView = [[GSBookShelfView alloc] initWithFrame:CGRectMake(0, 0, 320, 460 - 44) cellHeight:139 cellMarginWidth:20 bookViewBottomOffset:110 shelfShadowHeight:56 numberOfBooksInCell:3];
     [_bookShelfView setDataSource:self];
     [_bookShelfView setShelfViewDelegate:self];
     
@@ -94,7 +95,13 @@
 }
 
 - (UIView *)bookShelfView:(GSBookShelfView *)bookShelfView cellForRow:(NSInteger)row {
-    return nil;
+    static NSString *identifier = @"cell";
+    BookShelfCellView *cellView = (BookShelfCellView *)[bookShelfView dequeueReuseableCellViewWithIdentifier:identifier];
+    if (cellView == nil) {
+        cellView = [[BookShelfCellView alloc] initWithFrame:CGRectZero woodPart:row % 2];
+        cellView.reuseIdentifier = identifier;
+    }
+    return cellView;
 }
 
 - (void)bookShelfView:(GSBookShelfView *)bookShelfView moveBookFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex {

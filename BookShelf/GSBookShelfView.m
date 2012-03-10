@@ -26,6 +26,7 @@
 @synthesize cellHeight = _cellHeight;
 @synthesize cellMarginWidth = _cellMarginWidth;
 @synthesize bookViewBottomOffset = _bookViewBottomOffset;
+@synthesize shelfShadowHeight = _shelfShadowHeight;
 @synthesize numberOfBooksInCell = _numberOfBooksInCell;
 
 // init 
@@ -35,13 +36,14 @@
     return nil;
 }
 
-- (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset numberOfBooksInCell:(NSInteger)numberOfBooksInCell {
+- (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset shelfShadowHeight:(CGFloat)shelfShadowHeight numberOfBooksInCell:(NSInteger)numberOfBooksInCell {
     
     self = [super initWithFrame:frame];
     if (self) {
         _cellHeight = cellHeight;
         _cellMarginWidth = cellMarginWidth;
         _bookViewBottomOffset = bookViewBottomOffset;
+        _shelfShadowHeight = shelfShadowHeight;
         _numberOfBooksInCell = numberOfBooksInCell;
         
         _dragAndDropEnabled = YES;
@@ -50,6 +52,7 @@
         _bookViewContainerView = [[GSBookViewContainerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
         _bookViewContainerView.parentBookShelfView = self;
         _cellContainerView = [[GSCellContainerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
+        _cellContainerView.parentBookShelfView = self;
         
         [self addSubview:_cellContainerView];
         [self addSubview:_bookViewContainerView];
@@ -113,12 +116,17 @@
     
     //[_bookViewContainerView setNeedsLayout];
     [_bookViewContainerView layoutSubviewsWithVisibleRect:[self visibleRect]];
+    [_cellContainerView layoutSubviewsWithVisibleRect:[self visibleRect]];
 }
 
 #pragma mark - Public
 
 - (UIView *)dequeueReuseableBookViewWithIdentifier:(NSString *)identifier {
     return [_bookViewContainerView dequeueReusableBookViewWithIdentifier:identifier];
+}
+
+- (UIView *)dequeueReuseableCellViewWithIdentifier:(NSString *)identifier {
+    return [_cellContainerView dequeueReuseableCellWithIdentifier:identifier];
 }
 
 - (void)removeBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; {

@@ -147,7 +147,7 @@ typedef enum {
         bookView = _dragView;
     }
     else {
-        bookView.tag = position.index; // set the tag as the index
+        //bookView.tag = position.index; // set the tag as the index
         [bookView setFrame:[self bookViewRectAtBookViewPosition:position]];
         
         //NSLog(@"bookView Frame:%@", NSStringFromCGRect(bookView.frame));

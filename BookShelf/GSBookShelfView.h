@@ -36,6 +36,8 @@
     
     CGFloat _bookViewBottomOffset;  // distance from the bottom of bookview to the top of cell, which means where the books should put on the shelf
     
+    CGFloat _shelfShadowHeight; // the shadow heigt of cell
+    
     NSInteger _numberOfBooksInCell;
     
     @private
@@ -52,9 +54,10 @@
 @property (nonatomic, readonly) CGFloat cellHeight;
 @property (nonatomic, readonly) CGFloat cellMarginWidth;
 @property (nonatomic, readonly) CGFloat bookViewBottomOffset;
+@property (nonatomic, readonly) CGFloat shelfShadowHeight;
 @property (nonatomic, readonly) NSInteger numberOfBooksInCell;
 
-- (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset numberOfBooksInCell:(NSInteger)numberOfBooksInCell;
+- (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset shelfShadowHeight:(CGFloat)shelfShadowHeight numberOfBooksInCell:(NSInteger)numberOfBooksInCell;
 
 - (UIView *)dequeueReuseableBookViewWithIdentifier:(NSString *)identifier;
 - (UIView *)dequeueReuseableCellViewWithIdentifier:(NSString *)identifier;
