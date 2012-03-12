@@ -106,7 +106,7 @@
     [bookView setIndex:index];
     [bookView setSelected:[(NSNumber *)[_bookStatus objectAtIndex:index] intValue]];
     int imageNO = [(NSNumber *)[_bookArray objectAtIndex:index] intValue] % 4 + 1;
-    [bookView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%d.png", imageNO]] forState:UIControlStateNormal];
+    [bookView setBackgroundImage:[UIImage imageNamed:[NSString stringWithFormat:@"%d.png", imageNO]] forState:UIControlStateNormal];
     return bookView;
 }
 

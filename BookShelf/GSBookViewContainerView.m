@@ -10,8 +10,8 @@
 #import "GSBookShelfView.h"
 #import "GSBookView.h"
 
-#define kRatio_width_spacing 1.2f
-#define kRatio_height_width 1.414f
+#define kRatio_width_spacing 2.5f
+#define kRatio_height_width 1.2f
 
 #define kGrow_animation_duration 0.15
 #define kSrink_animation_duration 0.15
