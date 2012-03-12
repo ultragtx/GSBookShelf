@@ -63,12 +63,11 @@ typedef struct BookViewPostion {
 
 @property (nonatomic, unsafe_unretained) GSBookShelfView *parentBookShelfView;
 
+- (void)reloadData;
 
 - (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect;
 
 - (UIView *)dequeueReusableBookViewWithIdentifier:(NSString *)identifier;
-
-//- (void)removeBookViewAtIndexs:(NSIndexSet *)indexs removeCompletion:(void (^)(void))removeCompletion animate:(BOOL)animate;
 
 - (void)removeBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate;
 - (void)insertBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate;

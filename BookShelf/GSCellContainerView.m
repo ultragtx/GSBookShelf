@@ -38,6 +38,18 @@ typedef enum {
     return self;
 }
 
+- (void)reloadData {
+    _firstVisibleRow = -1;
+    _lastVisibleRow = -1;
+    
+    for (UIView *view in _visibleCells) {
+        [view removeFromSuperview];
+    }
+    [_visibleCells removeAllObjects];
+    
+    [_reuseableCells removeAllObjects];
+}
+
 #pragma mark - Reuse
 
 - (void)addReuseableCell:(UIView *)cell {

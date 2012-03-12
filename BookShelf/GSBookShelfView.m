@@ -19,7 +19,7 @@
 
 @implementation GSBookShelfView
 
-@synthesize shelfViewDelegate = _shelfViewDelegate;
+//@synthesize shelfViewDelegate = _shelfViewDelegate;
 @synthesize dataSource = _dataSource;
 @synthesize dragAndDropEnabled = _dragAndDropEnabled;
 @synthesize scrollWhileDragingEnabled = _scrollWhileDragingEnabled;
@@ -28,6 +28,10 @@
 @synthesize bookViewBottomOffset = _bookViewBottomOffset;
 @synthesize shelfShadowHeight = _shelfShadowHeight;
 @synthesize numberOfBooksInCell = _numberOfBooksInCell;
+
+@synthesize headerView = _headerView;
+@synthesize aboveTopView = _aboveTopView;
+@synthesize belowBottomView = _belowBottomView;
 
 // init 
 
@@ -38,6 +42,10 @@
 
 - (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset shelfShadowHeight:(CGFloat)shelfShadowHeight numberOfBooksInCell:(NSInteger)numberOfBooksInCell {
     
+    return [self initWithFrame:frame cellHeight:cellHeight cellMarginWidth:cellMarginWidth bookViewBottomOffset:bookViewBottomOffset shelfShadowHeight:shelfShadowHeight numberOfBooksInCell:numberOfBooksInCell aboveTopView:nil belowBottomView:nil searchBar:nil];
+}
+
+- (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset shelfShadowHeight:(CGFloat)shelfShadowHeight numberOfBooksInCell:(NSInteger)numberOfBooksInCell aboveTopView:(UIView *)aboveTopView belowBottomView:(UIView *)belowBottomView searchBar:(UIView *)headerView {
     self = [super initWithFrame:frame];
     if (self) {
         _cellHeight = cellHeight;
@@ -54,19 +62,32 @@
         _cellContainerView = [[GSCellContainerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
         _cellContainerView.parentBookShelfView = self;
         
+        _headerView = headerView;
+        _aboveTopView = aboveTopView;
+        _belowBottomView = belowBottomView;
+        
+        [self addSubview:_belowBottomView];
+        [self addSubview:_aboveTopView];
+        [self addSubview:_headerView];
+
         [self addSubview:_cellContainerView];
         [self addSubview:_bookViewContainerView];
-        
-
     }
     return self;
+    
+}
+
+- (void)resetContentOffset {
+    CGFloat headerHeight = _headerView.frame.size.height;
+    CGPoint offset = CGPointMake(0, headerHeight);
+    [self setContentOffset:offset];
 }
 
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
     
     [self resetContentSize];
-    
+    [self resetContentOffset];
 }
 
 #pragma mark - Accessors
@@ -81,29 +102,38 @@
 #pragma mark - Private Methods
 
 - (CGRect)visibleRect {
+    // visibleRect for the two container views
     CGRect visibleRect = [self bounds];
-    
+    CGFloat headerHeight = _headerView.frame.size.height;
+    visibleRect.size.height -= fmaxf(headerHeight - visibleRect.origin.y, 0.0f);
+    visibleRect.origin.y = fmaxf(visibleRect.origin.y - headerHeight, 0.0f);
     return visibleRect;
 }
 
 - (void)resetContentSize {
     //NSLog(@"resetContentSize");
+    CGFloat headerHeight = _headerView.frame.size.height;
+    
     NSInteger numberOfBooks = [_dataSource numberOfBooksInBookShelfView:self];
     // plus one cell for scrollView bounces
     NSInteger numberOfCells = ceilf((float)numberOfBooks / (float)_numberOfBooksInCell);
     
-    CGRect visibleRect = [self visibleRect];
+    CGRect bounds = [self bounds];
     // fill the visible rect with cells and plus one cell for scrollView bounces
-    float minNumberOfCells = floorf(visibleRect.size.height / _cellHeight);
+    float minNumberOfCells = floorf(bounds.size.height / _cellHeight);
     
     
-    CGFloat contentSizeHeight = MAX(numberOfCells, minNumberOfCells) * _cellHeight;;
+    CGFloat contentSizeHeight = MAX(numberOfCells, minNumberOfCells) * _cellHeight + headerHeight;
     
     [self setContentSize:CGSizeMake(self.frame.size.width, contentSizeHeight)];
     
     // Set Bounds For the two container view
-    [_cellContainerView setFrame:CGRectMake(_cellContainerView.frame.origin.x, _cellContainerView.frame.origin.y, self.contentSize.width, self.contentSize.height)];
-    [_bookViewContainerView setFrame:CGRectMake(_bookViewContainerView.frame.origin.x, _bookViewContainerView.frame.origin.y, self.contentSize.width, self.contentSize.height)];
+    [_cellContainerView setFrame:CGRectMake(0, 0 + headerHeight, self.contentSize.width, self.contentSize.height - headerHeight)];
+    [_bookViewContainerView setFrame:CGRectMake(0, 0 + headerHeight, self.contentSize.width, self.contentSize.height - headerHeight)];
+    
+    [_aboveTopView setFrame:CGRectMake(0, -_aboveTopView.frame.size.height, _aboveTopView.frame.size.width, _aboveTopView.frame.size.height)];
+    
+    [_belowBottomView setFrame:CGRectMake(0, self.contentSize.height, _belowBottomView.frame.size.width, _belowBottomView.frame.size.height)];
     
     //NSLog(@"cellContainerView frame:%@", NSStringFromCGRect(_cellContainerView.frame));
 }
@@ -120,6 +150,14 @@
 }
 
 #pragma mark - Public
+
+- (void)reloadData {
+    [_cellContainerView reloadData];
+    [_bookViewContainerView reloadData];
+    [self resetContentSize];
+    [self resetContentOffset];
+    [self setNeedsLayout];
+}
 
 - (UIView *)dequeueReuseableBookViewWithIdentifier:(NSString *)identifier {
     return [_bookViewContainerView dequeueReusableBookViewWithIdentifier:identifier];

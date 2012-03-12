@@ -16,6 +16,12 @@
 		C1554A01150B921400D0F3E6 /* WoodTile-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C15549FF150B921400D0F3E6 /* WoodTile-iPhone@2x.png */; };
 		C1554A04150B937600D0F3E6 /* SideShading-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1554A02150B937600D0F3E6 /* SideShading-iPhone.png */; };
 		C1554A05150B937600D0F3E6 /* SideShading-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1554A03150B937600D0F3E6 /* SideShading-iPhone@2x.png */; };
+		C1554A11150C9B1E00D0F3E6 /* applelogo~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = C1554A0F150C9B1E00D0F3E6 /* applelogo~ipad.png */; };
+		C1554A12150C9B1E00D0F3E6 /* applelogo~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1554A10150C9B1E00D0F3E6 /* applelogo~iphone.png */; };
+		C1554A15150C9B5E00D0F3E6 /* AboveTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1554A14150C9B5E00D0F3E6 /* AboveTopView.m */; };
+		C1554A18150C9B6E00D0F3E6 /* BelowBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1554A17150C9B6D00D0F3E6 /* BelowBottomView.m */; };
+		C1554A1F150DAFEA00D0F3E6 /* topshelf side shading-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1554A1D150DAFEA00D0F3E6 /* topshelf side shading-iPhone.png */; };
+		C1554A20150DAFEA00D0F3E6 /* topshelf side shading-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1554A1E150DAFEA00D0F3E6 /* topshelf side shading-iPhone@2x.png */; };
 		C1B905D61506575E00513802 /* BookViewChecked.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B905D41506575E00513802 /* BookViewChecked.png */; };
 		C1B905D71506575E00513802 /* BookViewChecked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B905D51506575E00513802 /* BookViewChecked@2x.png */; };
 		C1D6739B14F4D247006D3483 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D6739A14F4D247006D3483 /* UIKit.framework */; };
@@ -53,6 +59,14 @@
 		C15549FF150B921400D0F3E6 /* WoodTile-iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "WoodTile-iPhone@2x.png"; sourceTree = "<group>"; };
 		C1554A02150B937600D0F3E6 /* SideShading-iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SideShading-iPhone.png"; sourceTree = "<group>"; };
 		C1554A03150B937600D0F3E6 /* SideShading-iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SideShading-iPhone@2x.png"; sourceTree = "<group>"; };
+		C1554A0F150C9B1E00D0F3E6 /* applelogo~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "applelogo~ipad.png"; sourceTree = "<group>"; };
+		C1554A10150C9B1E00D0F3E6 /* applelogo~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "applelogo~iphone.png"; sourceTree = "<group>"; };
+		C1554A13150C9B5E00D0F3E6 /* AboveTopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboveTopView.h; sourceTree = "<group>"; };
+		C1554A14150C9B5E00D0F3E6 /* AboveTopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboveTopView.m; sourceTree = "<group>"; };
+		C1554A16150C9B6D00D0F3E6 /* BelowBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BelowBottomView.h; sourceTree = "<group>"; };
+		C1554A17150C9B6D00D0F3E6 /* BelowBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BelowBottomView.m; sourceTree = "<group>"; };
+		C1554A1D150DAFEA00D0F3E6 /* topshelf side shading-iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "topshelf side shading-iPhone.png"; sourceTree = "<group>"; };
+		C1554A1E150DAFEA00D0F3E6 /* topshelf side shading-iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "topshelf side shading-iPhone@2x.png"; sourceTree = "<group>"; };
 		C1B905CC1504B75800513802 /* GSBookView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBookView.h; sourceTree = "<group>"; };
 		C1B905CE1504B77000513802 /* GSBookShelfCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBookShelfCell.h; sourceTree = "<group>"; };
 		C1B905D41506575E00513802 /* BookViewChecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BookViewChecked.png; path = ../../../MainProject/BookAssistant_iOS_ForContest/BookAssistant/BookViewChecked.png; sourceTree = "<group>"; };
@@ -133,6 +147,10 @@
 				C1D673E614F62282006D3483 /* BookView.m */,
 				C1D673E814F67DA4006D3483 /* BookShelfCellView.h */,
 				C1D673E914F67DA4006D3483 /* BookShelfCellView.m */,
+				C1554A13150C9B5E00D0F3E6 /* AboveTopView.h */,
+				C1554A14150C9B5E00D0F3E6 /* AboveTopView.m */,
+				C1554A16150C9B6D00D0F3E6 /* BelowBottomView.h */,
+				C1554A17150C9B6D00D0F3E6 /* BelowBottomView.m */,
 			);
 			name = Sample;
 			sourceTree = "<group>";
@@ -222,6 +240,10 @@
 				C15549FF150B921400D0F3E6 /* WoodTile-iPhone@2x.png */,
 				C1554A02150B937600D0F3E6 /* SideShading-iPhone.png */,
 				C1554A03150B937600D0F3E6 /* SideShading-iPhone@2x.png */,
+				C1554A0F150C9B1E00D0F3E6 /* applelogo~ipad.png */,
+				C1554A10150C9B1E00D0F3E6 /* applelogo~iphone.png */,
+				C1554A1D150DAFEA00D0F3E6 /* topshelf side shading-iPhone.png */,
+				C1554A1E150DAFEA00D0F3E6 /* topshelf side shading-iPhone@2x.png */,
 			);
 			name = ImagesForTest;
 			sourceTree = "<group>";
@@ -305,6 +327,10 @@
 				C1554A01150B921400D0F3E6 /* WoodTile-iPhone@2x.png in Resources */,
 				C1554A04150B937600D0F3E6 /* SideShading-iPhone.png in Resources */,
 				C1554A05150B937600D0F3E6 /* SideShading-iPhone@2x.png in Resources */,
+				C1554A11150C9B1E00D0F3E6 /* applelogo~ipad.png in Resources */,
+				C1554A12150C9B1E00D0F3E6 /* applelogo~iphone.png in Resources */,
+				C1554A1F150DAFEA00D0F3E6 /* topshelf side shading-iPhone.png in Resources */,
+				C1554A20150DAFEA00D0F3E6 /* topshelf side shading-iPhone@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +350,8 @@
 				C12BFCDC14F7CEF600206AFC /* GSBookViewContainerView.m in Sources */,
 				C12BFCE014F7CF3A00206AFC /* GSCellContainerView.m in Sources */,
 				C1DAD8061500A466004B4BD5 /* NSMutableArray+Rearrange.m in Sources */,
+				C1554A15150C9B5E00D0F3E6 /* AboveTopView.m in Sources */,
+				C1554A18150C9B6E00D0F3E6 /* BelowBottomView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import "BookView.h"
 #import "BookShelfCellView.h"
+#import "AboveTopView.h"
+#import "BelowBottomView.h"
 
 @implementation ViewController
 
@@ -64,7 +66,11 @@
     
 	[self initBooks];
     
-    _bookShelfView = [[GSBookShelfView alloc] initWithFrame:CGRectMake(0, 0, 320, 460 - 44) cellHeight:139 cellMarginWidth:20 bookViewBottomOffset:110 shelfShadowHeight:56 numberOfBooksInCell:3];
+    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    AboveTopView *aboveTop = [[AboveTopView alloc] initWithFrame:CGRectMake(0, 0, 320, 164)];
+    BelowBottomView *belowBottom = [[BelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, 139 * 2)];
+    
+    _bookShelfView = [[GSBookShelfView alloc] initWithFrame:CGRectMake(0, 0, 320, 460 - 44) cellHeight:139 cellMarginWidth:20 bookViewBottomOffset:110 shelfShadowHeight:56 numberOfBooksInCell:3 aboveTopView:nil belowBottomView:belowBottom searchBar:searchBar];
     [_bookShelfView setDataSource:self];
     [_bookShelfView setShelfViewDelegate:self];
     

@@ -105,6 +105,30 @@ typedef enum {
     _bookViewHeight = _bookViewWidth * kRatio_height_width;
 }
 
+- (void)reloadData {
+    // Flags
+    // visible row
+    _firstVisibleRow = -1;
+    _lastVisibleRow = -1;
+    
+    // dragAndDrop
+    _isDragViewPickedUp = NO;
+    _isBooksMoving = NO;
+    _isDragViewRemovedFromVisibleBookViews = NO;
+    
+    // Remove
+    _isRemoving = NO;
+    
+    
+    
+    for (UIView *view in _visibleBookViews) {
+        [view removeFromSuperview];
+    }
+    [_visibleBookViews removeAllObjects];
+    
+    [_reuseableBookViews removeAllObjects];
+}
+
 #pragma mark - Reuse
 
 - (void)addReuseableBookView:(UIView *)bookView {

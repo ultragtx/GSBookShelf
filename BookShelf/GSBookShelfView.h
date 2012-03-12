@@ -16,11 +16,15 @@
 @protocol GSBookShelfViewDataSource;
 
 @interface GSBookShelfView : UIScrollView {
-    id<GSBookShelfViewDelegate> __unsafe_unretained _shelfViewDelegate;
+    //id<GSBookShelfViewDelegate> __unsafe_unretained _shelfViewDelegate;
     id<GSBookShelfViewDataSource> __unsafe_unretained _dataSource;
     
     GSBookViewContainerView *_bookViewContainerView;
     GSCellContainerView *_cellContainerView;
+    
+    UIView *_headerView;
+    UIView *_aboveTopView;
+    UIView *_belowBottomView;
     
     // Function Enabler
     
@@ -45,8 +49,12 @@
     
 }
 
-@property (nonatomic, unsafe_unretained) id<GSBookShelfViewDelegate> shelfViewDelegate;
+//@property (nonatomic, unsafe_unretained) id<GSBookShelfViewDelegate> shelfViewDelegate;
 @property (nonatomic, unsafe_unretained) id<GSBookShelfViewDataSource> dataSource;
+
+@property (nonatomic, readonly) UIView *headerView;
+@property (nonatomic, readonly) UIView *aboveTopView;
+@property (nonatomic, readonly) UIView *belowBottomView;
 
 @property (nonatomic, readonly) BOOL dragAndDropEnabled;
 @property (nonatomic, assign) BOOL scrollWhileDragingEnabled;
@@ -59,17 +67,21 @@
 
 - (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset shelfShadowHeight:(CGFloat)shelfShadowHeight numberOfBooksInCell:(NSInteger)numberOfBooksInCell;
 
+- (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset shelfShadowHeight:(CGFloat)shelfShadowHeight numberOfBooksInCell:(NSInteger)numberOfBooksInCell aboveTopView:(UIView *)aboveTopView belowBottomView:(UIView *)belowBottomView searchBar:(UIView *)headerView;
+
 - (UIView *)dequeueReuseableBookViewWithIdentifier:(NSString *)identifier;
 - (UIView *)dequeueReuseableCellViewWithIdentifier:(NSString *)identifier;
 
-- (NSArray *)visibleBookViews;
-- (NSArray *)visibleCells;
+//- (NSArray *)visibleBookViews;
+//- (NSArray *)visibleCells;
+//- (UIView *)bookViewAtIndex:(NSInteger)index;
+//- (UIView *)cellAtIndex:(NSInteger)index;
 
-//- (void)deleteBookAtIndex:(NSInteger)index animate:(BOOL)animate;
-//- (void)removeBookViewAtIndexs:(NSArray *)indexs animate:(BOOL)animate; // Array of indexs and an index should be an NSNumber
+- (void)reloadData;
+
 - (void)removeBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate;
-//- (void)addBookAtIndex:(NSInteger)index animate:(BOOL)animate;
-- (void)insertBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; // Array of indexs and an index should be an NSNumber
+- (void)insertBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; 
+
 @end
 
 @protocol GSBookShelfViewDataSource <NSObject>
@@ -93,6 +105,6 @@
 
 @protocol GSBookShelfViewDelegate <NSObject>
 
-
+// no use currently
 
 @end
