@@ -7,10 +7,12 @@
 //
 
 #import "ViewController.h"
-#import "BookView.h"
-#import "BookShelfCellView.h"
-#import "AboveTopView.h"
-#import "BelowBottomView.h"
+
+#import "MyCellView.h"
+#import "MyBookView.h"
+#import "MyBelowBottomView.h"
+
+#define CELL_HEIGHT 125
 
 @implementation ViewController
 
@@ -53,6 +55,14 @@
     [_booksIndexsToBeRemoved removeAllIndexes];
     [self.navigationItem setLeftBarButtonItem:_cancleBarButton];
     [self.navigationItem setRightBarButtonItem:_trashBarButton];
+    
+    for (int i = 0; i < [_bookArray count]; i++) {
+        [_bookStatus addObject:[NSNumber numberWithInt:BOOK_UNSELECTED]];
+    }
+    
+    for (MyBookView *bookView in [_bookShelfView visibleBookViews]) {
+        [bookView setSelected:NO];
+    }
 }
 
 #pragma mark - View lifecycle
@@ -67,12 +77,12 @@
 	[self initBooks];
     
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-    AboveTopView *aboveTop = [[AboveTopView alloc] initWithFrame:CGRectMake(0, 0, 320, 164)];
-    BelowBottomView *belowBottom = [[BelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, 139 * 2)];
+    //AboveTopView *aboveTop = [[AboveTopView alloc] initWithFrame:CGRectMake(0, 0, 320, 164)];
+    MyBelowBottomView *belowBottom = [[MyBelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT * 2)];
     
-    _bookShelfView = [[GSBookShelfView alloc] initWithFrame:CGRectMake(0, 0, 320, 460 - 44) cellHeight:139 cellMarginWidth:20 bookViewBottomOffset:110 shelfShadowHeight:56 numberOfBooksInCell:3 aboveTopView:nil belowBottomView:belowBottom searchBar:searchBar];
+    _bookShelfView = [[GSBookShelfView alloc] initWithFrame:CGRectMake(0, 0, 320, 460 - 44) cellHeight:CELL_HEIGHT cellMarginWidth:20 bookViewBottomOffset:110 shelfShadowHeight:56 numberOfBooksInCell:3 aboveTopView:nil belowBottomView:belowBottom searchBar:searchBar];
     [_bookShelfView setDataSource:self];
-    [_bookShelfView setShelfViewDelegate:self];
+    //[_bookShelfView setShelfViewDelegate:self];
     
     [self.view addSubview:_bookShelfView];
     
@@ -85,26 +95,26 @@
     return [_bookArray count];
 }
 
-- (BookView *)bookShelfView:(GSBookShelfView *)bookShelfView bookViewAtIndex:(NSInteger)index {
+- (UIView *)bookShelfView:(GSBookShelfView *)bookShelfView bookViewAtIndex:(NSInteger)index {
     static NSString *identifier = @"bookView";
-    BookView *bookView = (BookView *)[bookShelfView dequeueReuseableBookViewWithIdentifier:identifier];
+    MyBookView *bookView = (MyBookView *)[bookShelfView dequeueReuseableBookViewWithIdentifier:identifier];
     if (bookView == nil) {
-        bookView = [[BookView alloc] initWithFrame:CGRectZero];
+        bookView = [[MyBookView alloc] initWithFrame:CGRectZero];
         bookView.reuseIdentifier = identifier;
-        [bookView.button addTarget:self action:@selector(bookViewClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [bookView addTarget:self action:@selector(bookViewClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
     [bookView setIndex:index];
     [bookView setSelected:[(NSNumber *)[_bookStatus objectAtIndex:index] intValue]];
-    int imageNO = [(NSNumber *)[_bookArray objectAtIndex:index] intValue] % 9;
-    [bookView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%d.tiff", imageNO]]];
+    int imageNO = [(NSNumber *)[_bookArray objectAtIndex:index] intValue] % 4 + 1;
+    [bookView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%d.png", imageNO]] forState:UIControlStateNormal];
     return bookView;
 }
 
 - (UIView *)bookShelfView:(GSBookShelfView *)bookShelfView cellForRow:(NSInteger)row {
     static NSString *identifier = @"cell";
-    BookShelfCellView *cellView = (BookShelfCellView *)[bookShelfView dequeueReuseableCellViewWithIdentifier:identifier];
+    MyCellView *cellView = (MyCellView *)[bookShelfView dequeueReuseableCellViewWithIdentifier:identifier];
     if (cellView == nil) {
-        cellView = [[BookShelfCellView alloc] initWithFrame:CGRectZero woodPart:row % 2];
+        cellView = [[MyCellView alloc] initWithFrame:CGRectZero];
         cellView.reuseIdentifier = identifier;
     }
     return cellView;
@@ -149,15 +159,21 @@
 #pragma mark - BookView Listener
 
 - (void)bookViewClicked:(UIButton *)button {
-    BookView *bookView = (BookView *)button.superview;
-    NSNumber *status = [NSNumber numberWithInt:bookView.selected];
-    [_bookStatus replaceObjectAtIndex:bookView.index withObject:status];
+    MyBookView *bookView = (MyBookView *)button;
     
-    if (bookView.selected) {
-        [_booksIndexsToBeRemoved addIndex:bookView.index];
+    if (_editMode) {
+        NSNumber *status = [NSNumber numberWithInt:bookView.selected];
+        [_bookStatus replaceObjectAtIndex:bookView.index withObject:status];
+        
+        if (bookView.selected) {
+            [_booksIndexsToBeRemoved addIndex:bookView.index];
+        }
+        else {
+            [_booksIndexsToBeRemoved removeIndex:bookView.index];
+        }
     }
     else {
-        [_booksIndexsToBeRemoved removeIndex:bookView.index];
+        [bookView setSelected:NO];
     }
 }
 

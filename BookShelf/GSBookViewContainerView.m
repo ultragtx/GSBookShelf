@@ -925,6 +925,12 @@ typedef enum {
                      }];
 }
 
+#pragma mark - visible
+
+- (NSArray *)visibleBookViews {
+    return _visibleBookViews;
+}
+
 #pragma mark - test
 
 - (void)checkVisibleBookViewsValid {

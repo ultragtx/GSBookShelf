@@ -35,12 +35,12 @@
     
     // Layout of books and cells
     
-    CGFloat _cellHeight; // height of each cell
-    CGFloat _cellMarginWidth; // margin of cell where to display the first book
+    CGFloat _cellHeight;
+    CGFloat _cellMarginWidth;
     
-    CGFloat _bookViewBottomOffset;  // distance from the bottom of bookview to the top of cell, which means where the books should put on the shelf
+    CGFloat _bookViewBottomOffset;
     
-    CGFloat _shelfShadowHeight; // the shadow heigt of cell
+    CGFloat _shelfShadowHeight;
     
     NSInteger _numberOfBooksInCell;
     
@@ -59,10 +59,11 @@
 @property (nonatomic, readonly) BOOL dragAndDropEnabled;
 @property (nonatomic, assign) BOOL scrollWhileDragingEnabled;
 
-@property (nonatomic, readonly) CGFloat cellHeight;
-@property (nonatomic, readonly) CGFloat cellMarginWidth;
-@property (nonatomic, readonly) CGFloat bookViewBottomOffset;
-@property (nonatomic, readonly) CGFloat shelfShadowHeight;
+@property (nonatomic, readonly) CGFloat cellHeight; // height of each cell
+@property (nonatomic, readonly) CGFloat cellMarginWidth; // margin of cell where to display the first book
+@property (nonatomic, readonly) CGFloat bookViewBottomOffset;  // distance from the bottom of bookview to the top of cell, which means where the books should put on the shelf
+
+@property (nonatomic, readonly) CGFloat shelfShadowHeight; // the shadow heigt of cell (in iBooks the shelf image has a shadow that will cover the cell below it, so if your image of cell has a shadow like this, you can set the shadow's height. If not set it zero
 @property (nonatomic, readonly) NSInteger numberOfBooksInCell;
 
 - (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset shelfShadowHeight:(CGFloat)shelfShadowHeight numberOfBooksInCell:(NSInteger)numberOfBooksInCell;
@@ -72,8 +73,8 @@
 - (UIView *)dequeueReuseableBookViewWithIdentifier:(NSString *)identifier;
 - (UIView *)dequeueReuseableCellViewWithIdentifier:(NSString *)identifier;
 
-//- (NSArray *)visibleBookViews;
-//- (NSArray *)visibleCells;
+- (NSArray *)visibleBookViews;
+- (NSArray *)visibleCells;
 //- (UIView *)bookViewAtIndex:(NSInteger)index;
 //- (UIView *)cellAtIndex:(NSInteger)index;
 

@@ -190,4 +190,10 @@ typedef enum {
     
 }
 
+#pragma mark - visible
+
+- (NSArray *)visibleCells {
+    return _visibleCells;
+}
+
 @end

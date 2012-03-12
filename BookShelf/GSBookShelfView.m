@@ -112,6 +112,11 @@
 
 - (void)resetContentSize {
     //NSLog(@"resetContentSize");
+    // Use the flowing code beteen /* */ to set a custom position for header
+    /*
+     CGFloat headerHeight = 44.0f;
+     [_headerView setFrame:CGRectMake(0, _headerView.frame.size.height - headerHeight, _headerView.frame.size.width, _headerView.frame.size.height)];
+     */
     CGFloat headerHeight = _headerView.frame.size.height;
     
     NSInteger numberOfBooks = [_dataSource numberOfBooksInBookShelfView:self];
@@ -181,6 +186,14 @@
 
     [self resetContentSize];
     [_bookViewContainerView insertBookViewsAtIndexs:indexs animate:animate];
+}
+
+- (NSArray *)visibleBookViews {
+    return [_bookViewContainerView visibleBookViews];
+}
+
+- (NSArray *)visibleCells {
+    return [_cellContainerView visibleCells];
 }
 
 @end
