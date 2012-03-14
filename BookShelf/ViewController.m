@@ -50,7 +50,7 @@
 }
 
 - (void)initBooks {
-    NSInteger numberOfBooks = 200;
+    NSInteger numberOfBooks = 10;
     _bookArray = [[NSMutableArray alloc] initWithCapacity:numberOfBooks];
     _bookStatus = [[NSMutableArray alloc] initWithCapacity:numberOfBooks];
     for (int i = 0; i < numberOfBooks; i++) {

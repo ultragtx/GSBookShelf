@@ -152,7 +152,7 @@
     
     CGRect bounds = [self bounds];
     // fill the visible rect with cells and plus one cell for scrollView bounces
-    float minNumberOfCells = floorf(bounds.size.height / _cellHeight);
+    NSInteger minNumberOfCells = ceilf(bounds.size.height/ _cellHeight);
     
     
     CGFloat contentSizeHeight = MAX(numberOfCells, minNumberOfCells) * _cellHeight + headerHeight;

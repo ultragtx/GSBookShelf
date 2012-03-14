@@ -161,9 +161,12 @@ typedef enum {
     
     NSInteger numberOfCells = ceilf((float)numberOfBooks / (float)numberOfBooksInCell);
     
+    NSInteger minNumberOfCells = ceilf(_parentBookShelfView.bounds.size.height/ _parentBookShelfView.cellHeight);
+    
+    NSInteger maxNumberOfCells = MAX(numberOfCells, minNumberOfCells);
     
     NSInteger firstNeededRow = MAX(0, floorf(CGRectGetMinY(visibleRect) / _parentBookShelfView.cellHeight));
-    NSInteger lastNeededRow = MIN(numberOfCells - 1, floorf(CGRectGetMaxY(visibleRect) / _parentBookShelfView.cellHeight));
+    NSInteger lastNeededRow = MIN(maxNumberOfCells - 1, floorf(CGRectGetMaxY(visibleRect) / _parentBookShelfView.cellHeight));
     
     if (_firstVisibleRow == -1) {
         // First time 
