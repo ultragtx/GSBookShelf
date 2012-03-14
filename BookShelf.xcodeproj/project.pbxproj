@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C12BFCDC14F7CEF600206AFC /* GSBookViewContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C12BFCDB14F7CEF600206AFC /* GSBookViewContainerView.m */; };
 		C12BFCE014F7CF3A00206AFC /* GSCellContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C12BFCDF14F7CF3A00206AFC /* GSCellContainerView.m */; };
+		C1539F4D1510C76A00C6A479 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C1539F4C1510C76A00C6A479 /* README.md */; };
 		C15549FD150B90D800D0F3E6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C15549FC150B90D800D0F3E6 /* QuartzCore.framework */; };
 		C1554A15150C9B5E00D0F3E6 /* AboveTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1554A14150C9B5E00D0F3E6 /* AboveTopView.m */; };
 		C1554A18150C9B6E00D0F3E6 /* BelowBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1554A17150C9B6D00D0F3E6 /* BelowBottomView.m */; };
@@ -46,6 +47,7 @@
 		C12BFCDB14F7CEF600206AFC /* GSBookViewContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSBookViewContainerView.m; sourceTree = "<group>"; };
 		C12BFCDE14F7CF3A00206AFC /* GSCellContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSCellContainerView.h; sourceTree = "<group>"; };
 		C12BFCDF14F7CF3A00206AFC /* GSCellContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSCellContainerView.m; sourceTree = "<group>"; };
+		C1539F4C1510C76A00C6A479 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		C15549FC150B90D800D0F3E6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		C1554A13150C9B5E00D0F3E6 /* AboveTopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboveTopView.h; sourceTree = "<group>"; };
 		C1554A14150C9B5E00D0F3E6 /* AboveTopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboveTopView.m; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 		C1D6738B14F4D247006D3483 = {
 			isa = PBXGroup;
 			children = (
+				C1539F4C1510C76A00C6A479 /* README.md */,
 				C1D673A014F4D247006D3483 /* BookShelf */,
 				C1D6739914F4D247006D3483 /* Frameworks */,
 				C1D6739714F4D247006D3483 /* Products */,
@@ -326,6 +329,7 @@
 				C16047F5150E0908000929CC /* 4@2x.png in Resources */,
 				C16047F8150E0911000929CC /* BookShelfCell.png in Resources */,
 				C16047F9150E0911000929CC /* BookShelfCell@2x.png in Resources */,
+				C1539F4D1510C76A00C6A479 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
