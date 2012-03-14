@@ -148,7 +148,13 @@
 }
 
 - (void)bookShelfView:(GSBookShelfView *)bookShelfView moveBookFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex {
+    if ([(NSNumber *)[_bookStatus objectAtIndex:fromIndex] intValue] == BOOK_SELECTED) {
+        [_booksIndexsToBeRemoved removeIndex:fromIndex];
+        [_booksIndexsToBeRemoved addIndex:toIndex];
+    }
     [_bookArray moveObjectFromIndex:fromIndex toIndex:toIndex];
+    [_bookStatus moveObjectFromIndex:fromIndex toIndex:toIndex];
+    
 }
 
 #pragma mark - BarButtonListener 
