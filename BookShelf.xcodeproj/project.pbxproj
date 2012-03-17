@@ -166,7 +166,7 @@
 			name = Image;
 			sourceTree = "<group>";
 		};
-		C1B905C71504B69200513802 /* Sample */ = {
+		C1B905C71504B69200513802 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
 				C1D673A914F4D247006D3483 /* AppDelegate.h */,
@@ -180,7 +180,7 @@
 				C16047E0150E08CC000929CC /* MyCellView.h */,
 				C16047E1150E08CC000929CC /* MyCellView.m */,
 			);
-			name = Sample;
+			name = Demo;
 			sourceTree = "<group>";
 		};
 		C1D6738B14F4D247006D3483 = {
@@ -219,7 +219,7 @@
 				C1D673CD14F60883006D3483 /* ImagesForTest */,
 				C16047DB150E08AC000929CC /* Useless */,
 				C1D673B714F4D317006D3483 /* BookShelf */,
-				C1B905C71504B69200513802 /* Sample */,
+				C1B905C71504B69200513802 /* Demo */,
 				C1D673AF14F4D247006D3483 /* ViewController.xib */,
 				C1D673A114F4D247006D3483 /* Supporting Files */,
 			);

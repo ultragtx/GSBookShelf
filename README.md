@@ -10,7 +10,7 @@ Features:
 
 How TO:
 
-1. Just take a look at the example.
+1. Just take a look at the demo.
 2. bookView and shelfCell are just UIViews. So you can cutomize them almost whatever you want. But the frame of each view is fixed, if you want to have different size of bookView, you can try adding your content on a transparent UIView.
 3. To enable reusing for bookViews and cells, add the <GSBookView> / <GSBookShelfCell> protocols. (You'd better do this, perfromance will be a lot better).
 
