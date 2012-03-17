@@ -6,6 +6,11 @@ Features:
 2. scroll up/down while draging
 3. add & remove animation
 4. custom header (add a search bar or anything you want)
+5. bookView and shelfCell are just UIViews. if you want to enable reusing, add the protocols.
+
+How TO:
+
+1. Just Take a look at the example.
 
 TODO:
 

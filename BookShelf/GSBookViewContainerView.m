@@ -526,7 +526,9 @@ typedef enum {
                                   delay:0.0
                                 options:UIViewAnimationCurveLinear | UIViewAnimationOptionLayoutSubviews
                              animations:^{
-                                 _dragView.frame = _pickUpRect;
+                                 //_dragView.frame = _pickUpRect;
+                                 _dragView.transform = CGAffineTransformIdentity;
+                                 _dragView.center = CGPointMake(CGRectGetMidX(_pickUpRect), CGRectGetMidY(_pickUpRect));
                              }
                              completion:^(BOOL finished) {
                                  _isDragViewPickedUp = NO;
