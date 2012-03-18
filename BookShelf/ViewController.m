@@ -165,12 +165,6 @@
     if (fromIndex <= toIndex) {
         for (int i = fromIndex; i < toIndex; i++) {
             bookView = (MyBookView *)[_bookShelfView bookViewAtIndex:i];
-            if (bookView == nil) {
-                NSLog(@"nil bookView: %d", i);
-            }
-            else {
-                NSLog(@"bookViewindex: %d of %d", bookView.index, i);
-            }
             [bookView setIndex:bookView.index - 1];
         }
     }
