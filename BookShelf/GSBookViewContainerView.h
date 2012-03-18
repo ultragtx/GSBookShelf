@@ -93,6 +93,7 @@ typedef struct BookViewPostion {
 - (void)reloadData;
 
 - (NSArray *)visibleBookViews;
+- (UIView *)bookViewAtIndex:(NSInteger)index;
 
 - (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect;
 

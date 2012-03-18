@@ -401,6 +401,11 @@ typedef enum {
     return indexOfVisibleBookViews;
 }
 
+- (NSInteger)converToIndexOfVisibleBookViewsFromIndex:(NSInteger)index {
+    BookViewPostion position = [self convertToBookViewPositionFromIndex:index];
+    return [self converToIndexOfVisibleBookViewsFromBookViewPosition:position];
+}
+
 - (BOOL)isBookViewPositionVisible:(BookViewPostion)position {
     NSInteger numberOfBooks = [_parentBookShelfView.dataSource numberOfBooksInBookShelfView:_parentBookShelfView];
     
@@ -958,6 +963,14 @@ typedef enum {
 
 - (NSArray *)visibleBookViews {
     return _visibleBookViews;
+}
+
+- (UIView *)bookViewAtIndex:(NSInteger)index {
+    NSInteger indexOfVisible = [self converToIndexOfVisibleBookViewsFromIndex:index];
+    if (indexOfVisible < 0 || indexOfVisible >= [_visibleBookViews count]) {
+        return nil;
+    }
+    return [_visibleBookViews objectAtIndex:indexOfVisible];
 }
 
 #pragma mark - test

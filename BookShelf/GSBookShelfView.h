@@ -102,6 +102,8 @@
 
 - (NSArray *)visibleBookViews;
 - (NSArray *)visibleCells;
+- (UIView *)bookViewAtIndex:(NSInteger)index;
+- (UIView *)cellAtRow:(NSInteger)row;
 //- (UIView *)bookViewAtIndex:(NSInteger)index;
 //- (UIView *)cellAtIndex:(NSInteger)index;
 

@@ -50,7 +50,7 @@
 }
 
 - (void)initBooks {
-    NSInteger numberOfBooks = 10;
+    NSInteger numberOfBooks = 100;
     _bookArray = [[NSMutableArray alloc] initWithCapacity:numberOfBooks];
     _bookStatus = [[NSMutableArray alloc] initWithCapacity:numberOfBooks];
     for (int i = 0; i < numberOfBooks; i++) {
@@ -152,9 +152,36 @@
         [_booksIndexsToBeRemoved removeIndex:fromIndex];
         [_booksIndexsToBeRemoved addIndex:toIndex];
     }
+    
     [_bookArray moveObjectFromIndex:fromIndex toIndex:toIndex];
     [_bookStatus moveObjectFromIndex:fromIndex toIndex:toIndex];
     
+    // the bookview is recognized by index in the demo, so change all the indexes of affected bookViews here
+    // This is just a example, not a good one.In your code, you'd better use a key to recognize the bookView.
+    // and you won't need to do the following
+    MyBookView *bookView;
+    bookView = (MyBookView *)[_bookShelfView bookViewAtIndex:toIndex];
+    [bookView setIndex:toIndex];
+    if (fromIndex <= toIndex) {
+        for (int i = fromIndex; i < toIndex; i++) {
+            bookView = (MyBookView *)[_bookShelfView bookViewAtIndex:i];
+            if (bookView == nil) {
+                NSLog(@"nil bookView: %d", i);
+            }
+            else {
+                NSLog(@"bookViewindex: %d of %d", bookView.index, i);
+            }
+            [bookView setIndex:bookView.index - 1];
+        }
+    }
+    else {
+        for (int i = toIndex + 1; i <= fromIndex; i++) {
+            bookView = (MyBookView *)[_bookShelfView bookViewAtIndex:i];
+            [bookView setIndex:bookView.index + 1];
+        }
+    }
+
+
 }
 
 #pragma mark - BarButtonListener 

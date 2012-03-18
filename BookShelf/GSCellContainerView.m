@@ -220,10 +220,24 @@ typedef enum {
     
 }
 
+#pragma mark - convert
+
+- (NSInteger)convertToIndexOfVisibleCellsFromRow:(NSInteger)row {
+    return row - _firstVisibleRow;
+}
+
 #pragma mark - visible
 
 - (NSArray *)visibleCells {
     return _visibleCells;
+}
+
+- (UIView *)cellAtRow:(NSInteger)row {
+    NSInteger indexOfVisible = [self convertToIndexOfVisibleCellsFromRow:row];
+    if (indexOfVisible < 0 || indexOfVisible >= [_visibleCells count]) {
+        return nil;
+    }
+    return [_visibleCells objectAtIndex:indexOfVisible];
 }
 
 @end

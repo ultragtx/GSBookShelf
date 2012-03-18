@@ -54,6 +54,7 @@
 @property (nonatomic, unsafe_unretained) GSBookShelfView *parentBookShelfView;
 
 - (NSArray *)visibleCells;
+- (UIView *)cellAtRow:(NSInteger)row;
 - (void)reloadData;
 - (UIView *)dequeueReuseableCellWithIdentifier:(NSString *)identifier;
 - (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect;

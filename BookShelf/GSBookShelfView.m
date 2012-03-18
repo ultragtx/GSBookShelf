@@ -223,4 +223,12 @@
     return [_cellContainerView visibleCells];
 }
 
+- (UIView *)bookViewAtIndex:(NSInteger)index {
+    return [_bookViewContainerView bookViewAtIndex:index];
+}
+
+- (UIView *)cellAtRow:(NSInteger)row {
+    return [_cellContainerView cellAtRow:row];
+}
+
 @end
