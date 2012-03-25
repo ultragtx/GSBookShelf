@@ -1,5 +1,9 @@
 An iBooks style book shelf
 
+Attention:
+
+1. This code should be compiled with ARC turned on;
+
 Features:
 
 1. drag & drop
