@@ -79,43 +79,6 @@
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset shelfShadowHeight:(CGFloat)shelfShadowHeight numberOfBooksInCell:(NSInteger)numberOfBooksInCell {
-    
-    return [self initWithFrame:frame cellHeight:cellHeight cellMarginWidth:cellMarginWidth bookViewBottomOffset:bookViewBottomOffset shelfShadowHeight:shelfShadowHeight numberOfBooksInCell:numberOfBooksInCell aboveTopView:nil belowBottomView:nil searchBar:nil];
-}
-
-- (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset shelfShadowHeight:(CGFloat)shelfShadowHeight numberOfBooksInCell:(NSInteger)numberOfBooksInCell aboveTopView:(UIView *)aboveTopView belowBottomView:(UIView *)belowBottomView searchBar:(UIView *)headerView {
-    self = [super initWithFrame:frame];
-    if (self) {
-        _cellHeight = cellHeight;
-        _cellMargin = cellMarginWidth;
-        _bookViewBottomOffset = bookViewBottomOffset;
-        _shelfShadowHeight = shelfShadowHeight;
-        _numberOfBooksInCell = numberOfBooksInCell;
-        
-        _dragAndDropEnabled = YES;
-        _scrollWhileDragingEnabled = YES;
-        
-        _bookViewContainerView = [[GSBookViewContainerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
-        _bookViewContainerView.parentBookShelfView = self;
-        _cellContainerView = [[GSCellContainerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
-        _cellContainerView.parentBookShelfView = self;
-        
-        _headerView = headerView;
-        _aboveTopView = aboveTopView;
-        _belowBottomView = belowBottomView;
-        
-        [self addSubview:_belowBottomView];
-        [self addSubview:_aboveTopView];
-        [self addSubview:_headerView];
-
-        [self addSubview:_cellContainerView];
-        [self addSubview:_bookViewContainerView];
-    }
-    return self;
-    
-}
-
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
     

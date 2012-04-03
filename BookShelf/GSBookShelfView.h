@@ -44,7 +44,6 @@
 
 @interface GSBookShelfView : UIScrollView {
 @private
-    //id<GSBookShelfViewDelegate> __unsafe_unretained _shelfViewDelegate;
     id<GSBookShelfViewDataSource> __unsafe_unretained _dataSource;
     
     GSBookViewContainerView *_bookViewContainerView;
@@ -71,13 +70,8 @@
     CGFloat _shelfShadowHeight;
     
     NSInteger _numberOfBooksInCell;
-    
-    
-    
-    
 }
 
-//@property (nonatomic, unsafe_unretained) id<GSBookShelfViewDelegate> shelfViewDelegate;
 @property (nonatomic, unsafe_unretained) id<GSBookShelfViewDataSource> dataSource;
 
 @property (nonatomic, readonly) UIView *headerView;
@@ -93,10 +87,6 @@
 
 @property (nonatomic, readonly) CGFloat shelfShadowHeight; // the shadow heigt of cell (in iBooks the shelf image has a shadow that will cover the cell below it, so if your image of cell has a shadow like this, you can set the shadow's height. If not set it zero
 @property (nonatomic, readonly) NSInteger numberOfBooksInCell;
-
-- (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset shelfShadowHeight:(CGFloat)shelfShadowHeight numberOfBooksInCell:(NSInteger)numberOfBooksInCell;
-
-- (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset shelfShadowHeight:(CGFloat)shelfShadowHeight numberOfBooksInCell:(NSInteger)numberOfBooksInCell aboveTopView:(UIView *)aboveTopView belowBottomView:(UIView *)belowBottomView searchBar:(UIView *)headerView;
 
 - (UIView *)dequeueReuseableBookViewWithIdentifier:(NSString *)identifier;
 - (UIView *)dequeueReuseableCellViewWithIdentifier:(NSString *)identifier;

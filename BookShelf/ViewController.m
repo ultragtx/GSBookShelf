@@ -103,14 +103,12 @@
     
 	[self initBooks];
     
-    //UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     //AboveTopView *aboveTop = [[AboveTopView alloc] initWithFrame:CGRectMake(0, 0, 320, 164)];
     _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     _belowBottomView = [[MyBelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT * 2)];
     
     //MyBelowBottomView *belowBottom = [[MyBelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT * 2)];
     
-    //_bookShelfView = [[GSBookShelfView alloc] initWithFrame:CGRectMake(0, 0, 320, 460 - 44) cellHeight:CELL_HEIGHT cellMarginWidth:20 bookViewBottomOffset:110 shelfShadowHeight:0 numberOfBooksInCell:3 aboveTopView:nil belowBottomView:belowBottom searchBar:searchBar];
     _bookShelfView = [[GSBookShelfView alloc] initWithFrame:CGRectMake(0, 0, 320, 460 - 44)];
     [_bookShelfView setDataSource:self];
     //[_bookShelfView setShelfViewDelegate:self];
@@ -122,7 +120,16 @@
     return YES;
 }
 
-
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+    if (UIDeviceOrientationIsLandscape(orientation)) {
+        [_bookShelfView setFrame:CGRectMake(0, 0, 480, 320 - 44)];
+    }
+    else {
+        [_bookShelfView setFrame:CGRectMake(0, 0, 320, 460 - 44)];
+    }
+    [_bookShelfView reloadData];
+}
 
 #pragma mark GSBookShelfViewDataSource
 
@@ -131,7 +138,13 @@
 }
 
 - (NSInteger)numberOFBooksInCellOfBookShelfView:(GSBookShelfView *)bookShelfView {
-    return 3;
+    UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+    if (UIDeviceOrientationIsLandscape(orientation)) {
+        return 4;
+    }
+    else {
+        return 3;
+    }
 }
 
 - (UIView *)bookShelfView:(GSBookShelfView *)bookShelfView bookViewAtIndex:(NSInteger)index {
