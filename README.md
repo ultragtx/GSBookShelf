@@ -35,6 +35,8 @@ TODO:
 
 3. **[NEW 12.04.03]** Maybe there should be some animation for cell when the orientation change.
 
+---
+
 Demo:(Be Patient, some gifs' size > 1M)
 
 ![image](https://github.com/ultragtx/ultragtx.github.com/blob/master/images/Move_s.gif?raw=true)
