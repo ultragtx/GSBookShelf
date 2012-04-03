@@ -22,9 +22,10 @@ How TO:
 1. Just take a look at the demo.
 2. bookView and shelfCell are just UIViews. So you can cutomize them almost whatever you want. But the frame of each view is fixed, if you want to have different size of bookView, you can try adding your content on a transparent UIView.
 3. To enable reusing for bookViews and cells, add the <GSBookView> / <GSBookShelfCell> protocols. (You'd better do this, perfromance will be a lot better).
-4. To support oritation change, you should call the reload method and return different values (if necessary) in the delegate method with different orientation.
+4. **[NEW 12.04.03]** To support oritation change, you should call the reload method and return different values (if necessary) in the delegate method with different orientation.
+5. **[NEW 12.04.03]** For more information about the data GSBookShelf need for layout, take a look at the "[comments.png](https://github.com/ultragtx/GSBookShelf/blob/ReadyTo/BookShelf/comments.png?raw=true)" (also available in the project)
 
---
+---
 
 TODO:
 
