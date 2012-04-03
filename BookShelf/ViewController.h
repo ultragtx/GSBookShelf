@@ -36,6 +36,8 @@
 #import <UIKit/UIKit.h>
 #import "GSBookShelfView.h"
 
+@class MyBelowBottomView;
+
 typedef enum {
     BOOK_UNSELECTED,
     BOOK_SELECTED
@@ -55,6 +57,9 @@ typedef enum {
     UIBarButtonItem *_cancleBarButton;
     UIBarButtonItem *_trashBarButton;
     UIBarButtonItem *_addBarButton;
+    
+    MyBelowBottomView *_belowBottomView;
+    UISearchBar *_searchBar;
 }
 
 @end

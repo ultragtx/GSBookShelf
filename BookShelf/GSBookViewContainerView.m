@@ -115,24 +115,23 @@ typedef enum {
     return self;
 }
 
-#pragma mark - Accessors
+# pragma mark - Reload
 
-- (void)setParentBookShelfView:(GSBookShelfView *)parentBookShelfView {
-    _parentBookShelfView = parentBookShelfView;
-    
-    // calculate bookview's size and spacing
-    
+- (void)calculateLayout {
     CGFloat cellWidth = _parentBookShelfView.frame.size.width;
-    CGFloat cellMarginWidth = _parentBookShelfView.cellMarginWidth;
-    NSInteger numOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
+    CGFloat cellMargin = _parentBookShelfView.cellMargin; //[_parentBookShelfView.dataSource cellMarginOfBookShelfView:_parentBookShelfView];
     
-    _bookViewSpacingWidth = (cellWidth - 2 * cellMarginWidth) / (numOfBooksInCell * kRatio_width_spacing + (numOfBooksInCell - 1));
+    NSInteger numOfBooksInCell = [_parentBookShelfView.dataSource numberOFBooksInCellOfBookShelfView:_parentBookShelfView];
     
-    _bookViewWidth = _bookViewSpacingWidth * kRatio_width_spacing;
-    _bookViewHeight = _bookViewWidth * kRatio_height_width;
+    _bookViewWidth = [_parentBookShelfView.dataSource bookViewWidthOfBookShelfView:_parentBookShelfView];
+    _bookViewHeight = [_parentBookShelfView.dataSource bookViewHeightOfBookShelfView:_parentBookShelfView];
+    
+    _bookViewSpacingWidth = (cellWidth - 2 * cellMargin - numOfBooksInCell * _bookViewWidth) / (numOfBooksInCell - 1);
 }
 
 - (void)reloadData {
+    [self calculateLayout];
+    
     // Flags
     // visible row
     _firstVisibleRow = -1;
@@ -145,8 +144,6 @@ typedef enum {
     
     // Remove
     _isRemoving = NO;
-    
-    
     
     for (UIView *view in _visibleBookViews) {
         [view removeFromSuperview];
@@ -229,7 +226,6 @@ typedef enum {
             [visibleBookViews insertObject:bookView atIndex:0];
             break;
     }
-            
 }
 
 - (void)removeBookViewWithType:(RemoveType)rmType {
@@ -423,7 +419,7 @@ typedef enum {
     // Dose not need position.index here
     CGFloat cellHeight = _parentBookShelfView.cellHeight;
     CGFloat bookViewBottomOffset = _parentBookShelfView.bookViewBottomOffset;
-    CGFloat cellMarginWidth = _parentBookShelfView.cellMarginWidth;
+    CGFloat cellMarginWidth = _parentBookShelfView.cellMargin;
     
     CGFloat originX = cellMarginWidth + position.col * (_bookViewWidth + _bookViewSpacingWidth);
     CGFloat originY = position.row * cellHeight + bookViewBottomOffset - _bookViewHeight;
@@ -437,7 +433,7 @@ typedef enum {
     
     NSInteger currentRow = floorf(point.y / cellHeight);
     
-    CGFloat cellMarginWidth = _parentBookShelfView.cellMarginWidth; 
+    CGFloat cellMarginWidth = _parentBookShelfView.cellMargin; 
     
     NSInteger currentCol = floorf((point.x - cellMarginWidth) / (_bookViewWidth + _bookViewSpacingWidth));
     

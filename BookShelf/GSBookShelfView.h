@@ -43,6 +43,7 @@
 @protocol GSBookShelfViewDataSource;
 
 @interface GSBookShelfView : UIScrollView {
+@private
     //id<GSBookShelfViewDelegate> __unsafe_unretained _shelfViewDelegate;
     id<GSBookShelfViewDataSource> __unsafe_unretained _dataSource;
     
@@ -63,7 +64,7 @@
     // Layout of books and cells
     
     CGFloat _cellHeight;
-    CGFloat _cellMarginWidth;
+    CGFloat _cellMargin;
     
     CGFloat _bookViewBottomOffset;
     
@@ -71,7 +72,7 @@
     
     NSInteger _numberOfBooksInCell;
     
-    @private
+    
     
     
 }
@@ -87,7 +88,7 @@
 @property (nonatomic, assign) BOOL scrollWhileDragingEnabled;
 
 @property (nonatomic, readonly) CGFloat cellHeight; // height of each cell
-@property (nonatomic, readonly) CGFloat cellMarginWidth; // margin of cell where to display the first book
+@property (nonatomic, readonly) CGFloat cellMargin; // margin of cell where to display the first book
 @property (nonatomic, readonly) CGFloat bookViewBottomOffset;  // distance from the bottom of bookview to the top of cell, which means where the books should put on the shelf
 
 @property (nonatomic, readonly) CGFloat shelfShadowHeight; // the shadow heigt of cell (in iBooks the shelf image has a shadow that will cover the cell below it, so if your image of cell has a shadow like this, you can set the shadow's height. If not set it zero
@@ -116,16 +117,30 @@
 
 @protocol GSBookShelfViewDataSource <NSObject>
 
-//- (CGFloat)heightOfCellInBookShelfView:(GSBookShelfView *)bookShelfView;
-
-//- (NSInteger)numberOfCellsInBookShelfView:(GSBookShelfView *)bookShelfView;
-
-//- (NSInteger)numberOfBooksInCellOfBookShelfView:(GSBookShelfView *)bookShelfView; // Books on Each Cell
-
 - (NSInteger)numberOfBooksInBookShelfView:(GSBookShelfView *)bookShelfView; // Total number of Books
+- (NSInteger)numberOFBooksInCellOfBookShelfView:(GSBookShelfView *)bookShelfView; // Number of books in each cell
 
 - (UIView *)bookShelfView:(GSBookShelfView *)bookShelfView bookViewAtIndex:(NSInteger)index;
 - (UIView *)bookShelfView:(GSBookShelfView *)bookShelfView cellForRow:(NSInteger)row;
+
+- (UIView *)aboveTopViewOfBookShelfView:(GSBookShelfView *)bookShelfView; // View tha will be shown when you drag down |bookShelfView| and reach the edge.
+- (UIView *)belowBottomViewOfBookShelfView:(GSBookShelfView *)bookShelfView; // View tha will be shown when you drag up |bookShelfView| and reach the edge.
+
+- (UIView *)headerViewOfBookShelfView:(GSBookShelfView *)bookShelfView; // This view will be shown above the first cell. You can return a UISearchBar or something you like.
+
+// The followings help with the layout of books
+// Take a look at the "comments.png" in BookShelf >> Image to understand what are these means
+- (CGFloat)cellHeightOfBookShelfView:(GSBookShelfView *)bookShelfView;
+- (CGFloat)cellMarginOfBookShelfView:(GSBookShelfView *)bookShelfView;
+
+- (CGFloat)bookViewHeightOfBookShelfView:(GSBookShelfView *)bookShelfView;
+- (CGFloat)bookViewWidthOfBookShelfView:(GSBookShelfView *)bookShelfView;
+
+- (CGFloat)bookViewBottomOffsetOfBookShelfView:(GSBookShelfView *)bookShelfView;
+
+// The shadow heigt of cell (in iBooks the shelf image has a shadow that will cover the cell below it, 
+// so if your image of cell has a shadow like this, you can set it with the shadow's height. If not set it zero
+- (CGFloat)cellShadowHeightOfBookShelfView:(GSBookShelfView *)bookShelfView;
 
 @optional
 // Override to support rearranging.

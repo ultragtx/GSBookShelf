@@ -103,23 +103,35 @@
     
 	[self initBooks];
     
-    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    //UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     //AboveTopView *aboveTop = [[AboveTopView alloc] initWithFrame:CGRectMake(0, 0, 320, 164)];
-    MyBelowBottomView *belowBottom = [[MyBelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT * 2)];
+    _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    _belowBottomView = [[MyBelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT * 2)];
     
-    _bookShelfView = [[GSBookShelfView alloc] initWithFrame:CGRectMake(0, 0, 320, 460 - 44) cellHeight:CELL_HEIGHT cellMarginWidth:20 bookViewBottomOffset:110 shelfShadowHeight:56 numberOfBooksInCell:3 aboveTopView:nil belowBottomView:belowBottom searchBar:searchBar];
+    //MyBelowBottomView *belowBottom = [[MyBelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT * 2)];
+    
+    //_bookShelfView = [[GSBookShelfView alloc] initWithFrame:CGRectMake(0, 0, 320, 460 - 44) cellHeight:CELL_HEIGHT cellMarginWidth:20 bookViewBottomOffset:110 shelfShadowHeight:0 numberOfBooksInCell:3 aboveTopView:nil belowBottomView:belowBottom searchBar:searchBar];
+    _bookShelfView = [[GSBookShelfView alloc] initWithFrame:CGRectMake(0, 0, 320, 460 - 44)];
     [_bookShelfView setDataSource:self];
     //[_bookShelfView setShelfViewDelegate:self];
     
     [self.view addSubview:_bookShelfView];
-    
 }
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return YES;
+}
+
 
 
 #pragma mark GSBookShelfViewDataSource
 
 - (NSInteger)numberOfBooksInBookShelfView:(GSBookShelfView *)bookShelfView {
     return [_bookArray count];
+}
+
+- (NSInteger)numberOFBooksInCellOfBookShelfView:(GSBookShelfView *)bookShelfView {
+    return 3;
 }
 
 - (UIView *)bookShelfView:(GSBookShelfView *)bookShelfView bookViewAtIndex:(NSInteger)index {
@@ -145,6 +157,42 @@
         cellView.reuseIdentifier = identifier;
     }
     return cellView;
+}
+
+- (UIView *)aboveTopViewOfBookShelfView:(GSBookShelfView *)bookShelfView {
+    return nil;
+}
+
+- (UIView *)belowBottomViewOfBookShelfView:(GSBookShelfView *)bookShelfView {
+    return _belowBottomView;
+}
+
+- (UIView *)headerViewOfBookShelfView:(GSBookShelfView *)bookShelfView {
+    return _searchBar;
+}
+
+- (CGFloat)cellHeightOfBookShelfView:(GSBookShelfView *)bookShelfView {
+    return 125.0f;
+}
+
+- (CGFloat)cellMarginOfBookShelfView:(GSBookShelfView *)bookShelfView {
+    return 20.0f;
+}
+
+- (CGFloat)bookViewHeightOfBookShelfView:(GSBookShelfView *)bookShelfView {
+    return 88.0f;
+}
+
+- (CGFloat)bookViewWidthOfBookShelfView:(GSBookShelfView *)bookShelfView {
+    return 74.0f;
+}
+
+- (CGFloat)bookViewBottomOffsetOfBookShelfView:(GSBookShelfView *)bookShelfView {
+    return 110.0f;
+}
+
+- (CGFloat)cellShadowHeightOfBookShelfView:(GSBookShelfView *)bookShelfView {
+    return 0.0f;
 }
 
 - (void)bookShelfView:(GSBookShelfView *)bookShelfView moveBookFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex {
@@ -174,8 +222,6 @@
             [bookView setIndex:bookView.index + 1];
         }
     }
-
-
 }
 
 #pragma mark - BarButtonListener 

@@ -51,7 +51,7 @@
 @synthesize dragAndDropEnabled = _dragAndDropEnabled;
 @synthesize scrollWhileDragingEnabled = _scrollWhileDragingEnabled;
 @synthesize cellHeight = _cellHeight;
-@synthesize cellMarginWidth = _cellMarginWidth;
+@synthesize cellMargin = _cellMargin;
 @synthesize bookViewBottomOffset = _bookViewBottomOffset;
 @synthesize shelfShadowHeight = _shelfShadowHeight;
 @synthesize numberOfBooksInCell = _numberOfBooksInCell;
@@ -63,8 +63,20 @@
 // init 
 
 - (id)initWithFrame:(CGRect)frame {
-    NSLog(@"You should Use the initWithFrame:cellHeight:cellMarginWidth:bookViewBottomOffset:numberOfBooksInCell: to init the BookShelfView");
-    return nil;
+    self = [super initWithFrame:frame];
+    if (self) {
+        _dragAndDropEnabled = YES;
+        _scrollWhileDragingEnabled = YES;
+        
+        _bookViewContainerView = [[GSBookViewContainerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
+        _bookViewContainerView.parentBookShelfView = self;
+        _cellContainerView = [[GSCellContainerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
+        _cellContainerView.parentBookShelfView = self;
+        
+        [self addSubview:_cellContainerView];
+        [self addSubview:_bookViewContainerView];
+    }
+    return self;
 }
 
 - (id)initWithFrame:(CGRect)frame cellHeight:(CGFloat)cellHeight cellMarginWidth:(CGFloat)cellMarginWidth bookViewBottomOffset:(CGFloat)bookViewBottomOffset shelfShadowHeight:(CGFloat)shelfShadowHeight numberOfBooksInCell:(NSInteger)numberOfBooksInCell {
@@ -76,7 +88,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         _cellHeight = cellHeight;
-        _cellMarginWidth = cellMarginWidth;
+        _cellMargin = cellMarginWidth;
         _bookViewBottomOffset = bookViewBottomOffset;
         _shelfShadowHeight = shelfShadowHeight;
         _numberOfBooksInCell = numberOfBooksInCell;
@@ -104,17 +116,10 @@
     
 }
 
-- (void)resetContentOffset {
-    CGFloat headerHeight = _headerView.frame.size.height;
-    CGPoint offset = CGPointMake(0, headerHeight);
-    [self setContentOffset:offset];
-}
-
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
     
-    [self resetContentSize];
-    [self resetContentOffset];
+    [self reloadData];
 }
 
 #pragma mark - Accessors
@@ -139,6 +144,7 @@
 
 - (void)resetContentSize {
     //NSLog(@"resetContentSize");
+    
     // Use the flowing code beteen /* */ to set a custom position for header
     /*
      CGFloat headerHeight = 44.0f;
@@ -170,6 +176,12 @@
     //NSLog(@"cellContainerView frame:%@", NSStringFromCGRect(_cellContainerView.frame));
 }
 
+- (void)resetContentOffset {
+    CGFloat headerHeight = _headerView.frame.size.height;
+    CGPoint offset = CGPointMake(0, headerHeight);
+    [self setContentOffset:offset];
+}
+
 #pragma mark - Layout
 
 - (void)layoutSubviews {
@@ -184,6 +196,27 @@
 #pragma mark - Public
 
 - (void)reloadData {
+
+    _numberOfBooksInCell = [_dataSource numberOFBooksInCellOfBookShelfView:self];
+    
+    
+    // remove these views first, set new and then add back
+    [_headerView removeFromSuperview];
+    [_aboveTopView removeFromSuperview];
+    [_belowBottomView removeFromSuperview];
+    
+    _headerView = [_dataSource headerViewOfBookShelfView:self];
+    _aboveTopView = [_dataSource aboveTopViewOfBookShelfView:self];
+    _belowBottomView = [_dataSource belowBottomViewOfBookShelfView:self];
+    
+    [self insertSubview:_headerView atIndex:0];
+    [self insertSubview:_aboveTopView atIndex:0];
+    [self insertSubview:_belowBottomView atIndex:0];
+    
+    _cellHeight = [_dataSource cellHeightOfBookShelfView:self];
+    _cellMargin = [_dataSource cellMarginOfBookShelfView:self];
+    _bookViewBottomOffset = [_dataSource bookViewBottomOffsetOfBookShelfView:self];
+    
     [_cellContainerView reloadData];
     [_bookViewContainerView reloadData];
     [self resetContentSize];

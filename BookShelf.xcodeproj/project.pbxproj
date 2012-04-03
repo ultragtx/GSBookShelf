@@ -42,6 +42,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C116C3BC152B05F000AD6710 /* comments.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = comments.png; sourceTree = "<group>"; };
 		C12BFCDA14F7CEF600206AFC /* GSBookViewContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBookViewContainerView.h; sourceTree = "<group>"; };
 		C12BFCDB14F7CEF600206AFC /* GSBookViewContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSBookViewContainerView.m; sourceTree = "<group>"; };
 		C12BFCDE14F7CF3A00206AFC /* GSCellContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSCellContainerView.h; sourceTree = "<group>"; };
@@ -150,6 +151,7 @@
 		C16047E5150E08EB000929CC /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				C116C3BC152B05F000AD6710 /* comments.png */,
 				C16047E6150E0908000929CC /* 1.png */,
 				C16047E7150E0908000929CC /* 1@2x.png */,
 				C16047E8150E0908000929CC /* 2.png */,
