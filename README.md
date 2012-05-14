@@ -1,4 +1,10 @@
-An iBooks style book shelf
+#GSBookShelf
+
+An iBooks-inspired bookshelf control.
+
+Supports animated deletion, reordering, and addition.
+
+---
 
 Attention:
 
@@ -42,3 +48,10 @@ Demo:(Be Patient, some gifs' size > 1M)
 ![image](https://github.com/ultragtx/ultragtx.github.com/blob/master/images/Move_s.gif?raw=true)
 ![image](https://github.com/ultragtx/ultragtx.github.com/blob/master/images/Add_s.gif?raw=true)
 ![image](https://github.com/ultragtx/ultragtx.github.com/blob/master/images/Delete_s.gif?raw=true)
+
+---
+Please support if you like it!
+
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ultragtx%40gmail%2ecom&lc=US&item_name=GSBookShelf%20Improve%20Fund&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest">
+<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
+</a>
