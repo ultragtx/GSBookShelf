@@ -126,7 +126,7 @@ typedef enum {
     _bookViewWidth = [_parentBookShelfView.dataSource bookViewWidthOfBookShelfView:_parentBookShelfView];
     _bookViewHeight = [_parentBookShelfView.dataSource bookViewHeightOfBookShelfView:_parentBookShelfView];
     
-    _bookViewSpacingWidth = (cellWidth - 2 * cellMargin - numOfBooksInCell * _bookViewWidth) / (numOfBooksInCell - 1);
+    _bookViewSpacingWidth = numOfBooksInCell == 1 ? 0 : (cellWidth - 2 * cellMargin - numOfBooksInCell * _bookViewWidth) / (numOfBooksInCell - 1);
 }
 
 - (void)reloadData {

@@ -20,7 +20,6 @@ Features:
 4. custom header (add a search bar or anything you want)
 5. **[NEW 12.04.03]** The demo supports oritation changing now, but I'm too lazy to make a new cell image. Just reset the number of books in each cell.(3 when portrait, 4 when landscape).
 
-
 ---
 
 How TO:
@@ -30,6 +29,7 @@ How TO:
 3. To enable reusing for bookViews and cells, add the "GSBookView" / "GSBookShelfCell" protocols. (You'd better do this, perfromance will be a lot better).
 4. **[NEW 12.04.03]** To support oritation change, you should call the reload method and return different values (if necessary) in the delegate method with different orientation.
 5. **[NEW 12.04.03]** For more information about the data GSBookShelf need for layout, take a look at the "[comments.png](https://github.com/ultragtx/GSBookShelf/blob/ReadyTo/BookShelf/comments.png?raw=true)" (also available in the project)
+6: **[NEW 12.05.18]** The books are center-aligend when there are more than one books in a row. If you only have one per row, it's left-aligend, you can set the "cellMargin" to make it center-aligend manualy.
 
 ---
 
@@ -42,6 +42,8 @@ TODO:
 3. **[NEW 12.04.03]** Need some animation for cell when the orientation change.
 
 4. **[NEW 12.05.14]** Go to a proper row when orientation change. (Always go to top currently)
+
+5. **[NEW 12.05.18]** Maybe it's better to support left-aligend center-aligend and right-aligend.
 
 ---
 
