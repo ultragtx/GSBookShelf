@@ -143,7 +143,7 @@
         return 4;
     }
     else {
-        return 1;
+        return 3;
     }
 }
 
