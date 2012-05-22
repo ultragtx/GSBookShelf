@@ -54,7 +54,7 @@
     _bookArray = [[NSMutableArray alloc] initWithCapacity:numberOfBooks];
     _bookStatus = [[NSMutableArray alloc] initWithCapacity:numberOfBooks];
     for (int i = 0; i < numberOfBooks; i++) {
-        NSNumber *number = [NSNumber numberWithInt:i];
+        NSNumber *number = [NSNumber numberWithInt:i % 4 + 1];
         [_bookArray addObject:number];
         [_bookStatus addObject:[NSNumber numberWithInt:BOOK_UNSELECTED]];
     }
@@ -157,7 +157,7 @@
     }
     [bookView setIndex:index];
     [bookView setSelected:[(NSNumber *)[_bookStatus objectAtIndex:index] intValue]];
-    int imageNO = [(NSNumber *)[_bookArray objectAtIndex:index] intValue] % 4 + 1;
+    int imageNO = [(NSNumber *)[_bookArray objectAtIndex:index] intValue];
     [bookView setBackgroundImage:[UIImage imageNamed:[NSString stringWithFormat:@"%d.png", imageNO]] forState:UIControlStateNormal];
     return bookView;
 }
