@@ -116,17 +116,17 @@
     CGFloat headerHeight = _headerView.frame.size.height;
     
     NSInteger numberOfBooks = [_dataSource numberOfBooksInBookShelfView:self];
-    // plus one cell for scrollView bounces
-    NSInteger numberOfCells = ceilf((float)numberOfBooks / (float)_numberOfBooksInCell);
+
+    _numberOfCells = ceilf((float)numberOfBooks / (float)_numberOfBooksInCell);
     
     CGRect bounds = [self bounds];
-    // fill the visible rect with cells and plus one cell for scrollView bounces
-    NSInteger minNumberOfCells = ceilf(bounds.size.height/ _cellHeight);
+
+    _minNumberOfCells = ceilf(bounds.size.height/ _cellHeight);
     
     
-    CGFloat contentSizeHeight = MAX(numberOfCells, minNumberOfCells) * _cellHeight + headerHeight;
+    _contentSizeHeight = MAX(_numberOfCells, _minNumberOfCells) * _cellHeight + headerHeight;
     
-    [self setContentSize:CGSizeMake(self.frame.size.width, contentSizeHeight)];
+    [self setContentSize:CGSizeMake(self.frame.size.width, _contentSizeHeight)];
     
     // Set Bounds For the two container view
     [_cellContainerView setFrame:CGRectMake(0, 0 + headerHeight, self.contentSize.width, self.contentSize.height - headerHeight)];
@@ -193,6 +193,23 @@
 
 - (UIView *)dequeueReuseableCellViewWithIdentifier:(NSString *)identifier {
     return [_cellContainerView dequeueReuseableCellWithIdentifier:identifier];
+}
+
+- (void)scrollToRow:(NSInteger)row animate:(BOOL)animate {
+    CGFloat headerHeight = _headerView.frame.size.height;
+    
+    row = MAX(row, 0);
+    row = MIN(row, _numberOfCells - 1);
+    
+    CGRect bounds = [self bounds];
+    
+    CGPoint newOffset = CGPointMake(0, row * _cellHeight + headerHeight);
+    
+    if (newOffset.y + bounds.size.height > _contentSizeHeight) {
+        newOffset.y = _contentSizeHeight - bounds.size.height;
+    }
+    
+    [self setContentOffset:newOffset animated:animate];
 }
 
 - (void)removeBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; {

@@ -57,8 +57,7 @@
     
     BOOL _dragAndDropEnabled;
     BOOL _scrollWhileDragingEnabled;
-    //BOOL _editModeEnabled; //only support Delete Now, May add a AddButton Like Book at index 0 to support add
-    
+    //BOOL _editModeEnabled;  
     
     // Layout of books and cells
     
@@ -70,6 +69,11 @@
     CGFloat _shelfShadowHeight;
     
     NSInteger _numberOfBooksInCell;
+    
+    // store the variables to prevent recalculate
+    NSInteger _numberOfCells;
+    NSInteger _minNumberOfCells;
+    CGFloat _contentSizeHeight;
 }
 
 @property (nonatomic, unsafe_unretained) id<GSBookShelfViewDataSource> dataSource;
@@ -99,6 +103,8 @@
 //- (UIView *)cellAtIndex:(NSInteger)index;
 
 - (void)reloadData;
+
+- (void)scrollToRow:(NSInteger)row animate:(BOOL)animate;
 
 - (void)removeBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate;
 - (void)insertBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; 

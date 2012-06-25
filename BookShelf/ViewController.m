@@ -94,6 +94,10 @@
 
 #pragma mark - View lifecycle
 
+- (void)testScrollToRow {
+    [_bookShelfView scrollToRow:34 animate:YES];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -114,6 +118,8 @@
     //[_bookShelfView setShelfViewDelegate:self];
     
     [self.view addSubview:_bookShelfView];
+    
+    //[self performSelector:@selector(testScrollToRow) withObject:self afterDelay:3];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -121,8 +127,7 @@
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
-    if (UIDeviceOrientationIsLandscape(orientation)) {
+    if (UIDeviceOrientationIsLandscape(toInterfaceOrientation)) {
         [_bookShelfView setFrame:CGRectMake(0, 0, 480, 320 - 44)];
     }
     else {
@@ -181,6 +186,14 @@
 }
 
 - (UIView *)headerViewOfBookShelfView:(GSBookShelfView *)bookShelfView {
+    UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+    if (UIDeviceOrientationIsLandscape(orientation)) {
+        [_searchBar setFrame:CGRectMake(0, 0, 480, 44)];
+    }
+    else {
+        [_searchBar setFrame:CGRectMake(0, 0, 320, 44)];
+    }
+    
     return _searchBar;
 }
 
