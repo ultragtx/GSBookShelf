@@ -39,11 +39,13 @@ TODO:
 
 2. **[Done]** ~~the init method need too many parameters now. I will move all of them to GSBookShelfViewDataSource protocol methods, and this will help a lot when orientation changes, but maybe there'll be too many protocol methods.~~
 
-3. **[NEW 12.04.03]** Need some animation for cell when the orientation change.
+3. **[NEW 12.04.03]** ~~Need some animation for cell when the orientation change.~~ Go to 6.
 
 4. **[NEW 12.05.14]** Go to a proper row when orientation change. (Always go to top currently)
 
 5. **[NEW 12.05.18]** Maybe it's better to support left-aligend center-aligend and right-aligend.
+
+6. **[NEW 12.08.22]** Recently I realized that using autoresizingMask can make GSBookShelf much more similar to iBooks when the orientation change. But I'm facing some "strange"(for me) problems and still don't know what to do after a few days work on it.I have few experience on autoresizingMask and orientation, so it may cost me a long time to figure out how to solve these.If anybody want's to help, I'll appreciate that.
 
 ---
 
