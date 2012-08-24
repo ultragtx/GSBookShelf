@@ -18,7 +18,7 @@ Features:
 2. scroll up/down while draging
 3. add & remove animation
 4. custom header (add a search bar or anything you want)
-5. **[NEW 12.04.03]** The demo supports oritation changing now, but I'm too lazy to make a new cell image. Just reset the number of books in each cell.(3 when portrait, 4 when landscape).
+5. **[NEW 12.04.03]** The demo supports oritation changing now, but I'm too lazy to make a new cell image. Just reset the number of books in each cell.(3 when portrait, 4 when landscape).(To make a cell image yourself if you are not good at UI like me, check [this](http://www.psawesome.com/tutorials/create-an-i-pad-inspired-bookshelf-using-photoshop))
 
 ---
 
