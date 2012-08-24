@@ -36,6 +36,7 @@
 #import "GSCellContainerView.h"
 #import "GSBookShelfView.h"
 #import "GSBookShelfCell.h"
+#import <QuartzCore/QuartzCore.h>
 
 typedef enum {
     ADD_TYPE_HEAD,
@@ -69,12 +70,13 @@ typedef enum {
     _firstVisibleRow = -1;
     _lastVisibleRow = -1;
     
-    for (UIView *view in _visibleCells) {
-        [view removeFromSuperview];
+    for (UIView *cell in _visibleCells) {
+        [self addReuseableCell:cell];
+        [cell removeFromSuperview];
     }
-    [_visibleCells removeAllObjects];
     
-    [_reuseableCells removeAllObjects];
+    [_visibleCells removeAllObjects];
+    //[_reuseableCells removeAllObjects];
 }
 
 #pragma mark - Reuse
@@ -110,7 +112,7 @@ typedef enum {
 #pragma mark - layout
 
 - (CGRect)cellRectAtRow:(NSInteger)row {
-    CGFloat cellHeight = _parentBookShelfView.cellHeight;
+    CGFloat cellHeight = [_parentBookShelfView.dataSource cellHeightOfBookShelfView:_parentBookShelfView];
     return CGRectMake(0, cellHeight * row, self.frame.size.width, cellHeight);
 }
 
@@ -132,7 +134,38 @@ typedef enum {
 
 - (void)addCellAtRow:(NSInteger)row addType:(AddType)type{
     UIView *cell = [_parentBookShelfView.dataSource bookShelfView:_parentBookShelfView cellForRow:row];
-    [cell setFrame:[self cellRectAtRow:row]];
+    
+    // Disable animation to make the cell animate properly when orientation change
+    // 1. Disable animtaion and set position properly
+    // 2. Enable animatoin and let bounds animate
+    // Why set anchorPoint? Have a look at the discussion below
+    [UIView setAnimationsEnabled:NO];
+    CGRect newFrame = [self cellRectAtRow:row];
+    [cell.layer setAnchorPoint:CGPointZero];
+    [cell setCenter:CGPointMake(0, newFrame.origin.y)];
+    //[cell setCenter:CGPointMake(newFrame.size.width / 2, newFrame.origin.y + newFrame.size.height / 2)];
+    [UIView setAnimationsEnabled:YES];
+    //[cell.layer setAnchorPoint:CGPointZero];
+    [cell setBounds:CGRectMake(0, 0, newFrame.size.width, newFrame.size.height)];
+    
+    // !!!:CANNOT set anchorPoint back here this may cause bug!
+    //[cell.layer setAnchorPoint:CGPointMake(0.5, 0.5)];
+    // NSLog(@"cell frame:[%@]", NSStringFromCGRect(cell.frame));
+    
+    // Discussion:
+    // The code above used to be :
+    // {
+    // [UIView setAnimationsEnabled:NO];
+    // [cell setFrame:CGRectMake(newFrame.origin.x, newFrame.origin.y, cell.frame.size.width, cell.frame.size.height * 2)];
+    // [UIView setAnimationsEnabled:YES];
+    // [cell setFrame:newFrame];
+    // }
+    // It "should" case the center change immediately and the bounds change with animation.
+    // I test this outSide and worked well.
+    // But here it'll have a strange behave -- The center.y also animate.
+    // I tried to set center and bounds separately but once I put the position outSide the setAnimationsEnabled block, there'll be animation.
+    // So I do some trick just as what I did above.
+    // Set anchorPoint to make the bounds change not from the center of the view.
     
     switch (type) {
         case ADD_TYPE_TAIL:
@@ -143,30 +176,30 @@ typedef enum {
             [_visibleCells insertObject:cell atIndex:0];
             [self addSubview:cell];
             break;
-
     }
 }
 
 - (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect {
-    
-    CGFloat shelfShadowHeight = _parentBookShelfView.shelfShadowHeight;
+    CGFloat shelfShadowHeight = [_parentBookShelfView.dataSource cellShadowHeightOfBookShelfView:_parentBookShelfView];
     CGFloat newOriginY = fmaxf(visibleRect.origin.y - shelfShadowHeight, 0);
     CGFloat addHeight = visibleRect.origin.y - newOriginY;
     visibleRect.origin.y = newOriginY;
     visibleRect.size.height += addHeight;
     
-    NSInteger numberOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
+    NSInteger numberOfBooksInCell = [_parentBookShelfView.dataSource numberOFBooksInCellOfBookShelfView:_parentBookShelfView];
     
     NSInteger numberOfBooks = [_parentBookShelfView.dataSource numberOfBooksInBookShelfView:_parentBookShelfView];
     
     NSInteger numberOfCells = ceilf((float)numberOfBooks / (float)numberOfBooksInCell);
     
-    NSInteger minNumberOfCells = ceilf(_parentBookShelfView.bounds.size.height/ _parentBookShelfView.cellHeight);
+    NSInteger cellHeight = [_parentBookShelfView.dataSource cellHeightOfBookShelfView:_parentBookShelfView];
+    
+    NSInteger minNumberOfCells = ceilf(_parentBookShelfView.bounds.size.height/ cellHeight);
     
     NSInteger maxNumberOfCells = MAX(numberOfCells, minNumberOfCells);
     
-    NSInteger firstNeededRow = MAX(0, floorf(CGRectGetMinY(visibleRect) / _parentBookShelfView.cellHeight));
-    NSInteger lastNeededRow = MIN(maxNumberOfCells - 1, floorf(CGRectGetMaxY(visibleRect) / _parentBookShelfView.cellHeight));
+    NSInteger firstNeededRow = MAX(0, floorf(CGRectGetMinY(visibleRect) / cellHeight));
+    NSInteger lastNeededRow = MIN(maxNumberOfCells - 1, floorf(CGRectGetMaxY(visibleRect) / cellHeight));
     
     if (_firstVisibleRow == -1) {
         // First time 
@@ -218,6 +251,11 @@ typedef enum {
     _firstVisibleRow = firstNeededRow;
     _lastVisibleRow = lastNeededRow;
     
+}
+
+- (void)layoutSubviews {
+    // Do nothing here
+    // use layoutSubviewsWithVisibleRect: instead
 }
 
 #pragma mark - convert

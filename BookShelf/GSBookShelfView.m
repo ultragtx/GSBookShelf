@@ -36,6 +36,7 @@
 #import "GSBookShelfView.h"
 #import "GSBookViewContainerView.h"
 #import "GSCellContainerView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface GSBookShelfView (Private)
 
@@ -65,13 +66,28 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        [super setDelegate:self];
+        
+        _orientationChangeFlag = 0;
+        
         _dragAndDropEnabled = YES;
         _scrollWhileDragingEnabled = YES;
         
         _bookViewContainerView = [[GSBookViewContainerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
         _bookViewContainerView.parentBookShelfView = self;
+        //[_bookViewContainerView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+        //[_bookViewContainerView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
         _cellContainerView = [[GSCellContainerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
         _cellContainerView.parentBookShelfView = self;
+        //[_cellContainerView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+        
+        [_bookViewContainerView setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2]];
+        [_cellContainerView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:1 alpha:0.2]];
+        //[_bookViewContainerView.layer setBorderWidth:2.0];
+        //[_bookViewContainerView.layer setBorderColor:[[UIColor greenColor] CGColor]];
+        //[_cellContainerView.layer setBorderWidth:2.0];
+        //[_cellContainerView.layer setBorderColor:[[UIColor greenColor] CGColor]];
         
         [self addSubview:_cellContainerView];
         [self addSubview:_bookViewContainerView];
@@ -106,6 +122,7 @@
 }
 
 - (void)resetContentSize {
+    NSLog(@"resetContentSize");
     //NSLog(@"resetContentSize");
     
     // Use the flowing code beteen /* */ to set a custom position for header
@@ -116,6 +133,8 @@
     CGFloat headerHeight = _headerView.frame.size.height;
     
     NSInteger numberOfBooks = [_dataSource numberOfBooksInBookShelfView:self];
+    
+    _numberOfBooksInCell = [_dataSource numberOFBooksInCellOfBookShelfView:self];
 
     _numberOfCells = ceilf((float)numberOfBooks / (float)_numberOfBooksInCell);
     
@@ -126,7 +145,23 @@
     
     _contentSizeHeight = MAX(_numberOfCells, _minNumberOfCells) * _cellHeight + headerHeight;
     
+    CGPoint newOffset = self.contentOffset;
+    if (newOffset.y + bounds.size.height > _contentSizeHeight) {
+        newOffset.y = _contentSizeHeight - bounds.size.height;
+        //newOffset = CGPointZero;
+    }
+    
+    NSLog(@"new offset %@", NSStringFromCGPoint(newOffset));
+    //[UIView setAnimationsEnabled:NO];
+    [self setContentOffset:newOffset animated:NO];
+    
+    //NSLog(@"new offset %@", NSStringFromCGPoint(newOffset));
+    
+    //[self setBounces:NO];
     [self setContentSize:CGSizeMake(self.frame.size.width, _contentSizeHeight)];
+    //[UIView setAnimationsEnabled:YES];
+    //NSLog(@"setContentSize");
+    
     
     // Set Bounds For the two container view
     [_cellContainerView setFrame:CGRectMake(0, 0 + headerHeight, self.contentSize.width, self.contentSize.height - headerHeight)];
@@ -145,24 +180,63 @@
     [self setContentOffset:offset];
 }
 
+- (void)adjustContentOffset {
+    CGPoint newOffset = self.contentOffset;
+    CGRect bounds = [self bounds];
+    if (newOffset.y + bounds.size.height > _contentSizeHeight) {
+        newOffset.y = _contentSizeHeight - bounds.size.height;
+    }
+    [self setContentOffset:newOffset animated:NO];
+}
+
 #pragma mark - Layout
 
 - (void)layoutSubviews {
-    //NSLog(@"layout");
+    NSLog(@"layout");
     [super layoutSubviews];
     
-    //[_bookViewContainerView setNeedsLayout];
+    if (_orientationChangeFlag) {
+        _orientationChangeFlag = 0;
+        [_cellContainerView reloadData];
+        [_bookViewContainerView reloadData];
+        [self resetContentSize];
+    }
+    
     [_bookViewContainerView layoutSubviewsWithVisibleRect:[self visibleRect]];
     [_cellContainerView layoutSubviewsWithVisibleRect:[self visibleRect]];
 }
 
 #pragma mark - Public
 
-- (void)reloadData {
+- (void)oritationChangeReloadData {
+    _orientationChangeFlag = 1;
+    return;
+    
+    // remove these views first, set new and then add back
+    [_headerView removeFromSuperview];
+    [_aboveTopView removeFromSuperview];
+    [_belowBottomView removeFromSuperview];
+    
+    _headerView = [_dataSource headerViewOfBookShelfView:self];
+    _aboveTopView = [_dataSource aboveTopViewOfBookShelfView:self];
+    _belowBottomView = [_dataSource belowBottomViewOfBookShelfView:self];
+    
+    [self insertSubview:_headerView atIndex:0];
+    [self insertSubview:_aboveTopView atIndex:0];
+    [self insertSubview:_belowBottomView atIndex:0];
+    
+    _cellHeight = [_dataSource cellHeightOfBookShelfView:self];
+    _cellMargin = [_dataSource cellMarginOfBookShelfView:self];
+    _bookViewBottomOffset = [_dataSource bookViewBottomOffsetOfBookShelfView:self];
+    
+    //[_cellContainerView reloadData];
+    [_bookViewContainerView reloadData];
+    [self resetContentSize];
+    //[self adjustContentOffset];
+    //[self setNeedsLayout];
+}
 
-    _numberOfBooksInCell = [_dataSource numberOFBooksInCellOfBookShelfView:self];
-    
-    
+- (void)reloadData {
     // remove these views first, set new and then add back
     [_headerView removeFromSuperview];
     [_aboveTopView removeFromSuperview];
@@ -243,5 +317,13 @@
 - (UIView *)cellAtRow:(NSInteger)row {
     return [_cellContainerView cellAtRow:row];
 }
+
+#pragma mark - test code 
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    NSLog(@"****%@", NSStringFromCGPoint(self.contentOffset));
+}
+
+
 
 @end

@@ -39,5 +39,6 @@
 @interface MyCellView : UIView <GSBookShelfCell>
 
 @property (nonatomic, strong) NSString *reuseIdentifier;
+@property (nonatomic, strong) UILabel *label; // used for debug
 
 @end

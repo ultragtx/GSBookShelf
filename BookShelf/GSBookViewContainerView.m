@@ -146,11 +146,12 @@ typedef enum {
     _isRemoving = NO;
     
     for (UIView *view in _visibleBookViews) {
+        [self addReuseableBookView:view];
         [view removeFromSuperview];
     }
     [_visibleBookViews removeAllObjects];
     
-    [_reuseableBookViews removeAllObjects];
+    //[_reuseableBookViews removeAllObjects];
 }
 
 #pragma mark - Reuse
@@ -186,7 +187,7 @@ typedef enum {
 #pragma mark - Layout 
 
 - (UIView *)addBookViewAsSubviewWithBookViewPosition:(BookViewPostion)position {
-    
+    [UIView setAnimationsEnabled:NO];
     UIView *bookView = [_parentBookShelfView.dataSource bookShelfView:_parentBookShelfView bookViewAtIndex:position.index];
     // Take a look at the "Discussion" in removeBookViewWithType:
     // Since _dragView won't be removed from supervie, we should not add it or change the frame either. And although the new bookView returned from dataSource have the same position with _dragView, but they are not the same view, so set _dragView to bookView, ignore the bookView returned from dataSource.
@@ -207,6 +208,7 @@ typedef enum {
         }
         
     }
+    [UIView setAnimationsEnabled:YES];
     return bookView;
 }
 
@@ -275,15 +277,16 @@ typedef enum {
     //NSLog(@"visibleRect %@", NSStringFromCGRect(visibleRect));
     _visibleRect = visibleRect;
     
-    NSInteger numberOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
+    NSInteger numberOfBooksInCell = [_parentBookShelfView.dataSource numberOFBooksInCellOfBookShelfView:_parentBookShelfView];
     
     NSInteger numberOfBooks = [_parentBookShelfView.dataSource numberOfBooksInBookShelfView:_parentBookShelfView];
     
     NSInteger numberOfCells = ceilf((float)numberOfBooks / (float)numberOfBooksInCell);
     
+    NSInteger cellHeight = [_parentBookShelfView.dataSource cellHeightOfBookShelfView:_parentBookShelfView];
     
-    NSInteger firstNeededRow = MAX(0, floorf(CGRectGetMinY(visibleRect) / _parentBookShelfView.cellHeight));
-    NSInteger lastNeededRow = MIN(numberOfCells - 1, floorf(CGRectGetMaxY(visibleRect) / _parentBookShelfView.cellHeight));
+    NSInteger firstNeededRow = MAX(0, floorf(CGRectGetMinY(visibleRect) / cellHeight));
+    NSInteger lastNeededRow = MIN(numberOfCells - 1, floorf(CGRectGetMaxY(visibleRect) / cellHeight));
     
     //NSLog(@"\n------------\nfirstNeededRow:%d firstVisibleRow:%d\nlastNeededRow: %d lastVisibleRow: %d\n************", firstNeededRow, _firstVisibleRow, lastNeededRow, _lastVisibleRow);
     
@@ -370,6 +373,11 @@ typedef enum {
     //NSLog(@"visible count:%d", [_visibleBookViews count]);
     _firstVisibleRow = firstNeededRow;
     _lastVisibleRow = lastNeededRow;
+}
+
+- (void)layoutSubviews {
+    // Do nothing here
+    // use layoutSubviewsWithVisibleRect: instead
 }
 
 #pragma mark - BookViewPosition 

@@ -38,6 +38,7 @@
 #import "MyCellView.h"
 #import "MyBookView.h"
 #import "MyBelowBottomView.h"
+#import <QuartzCore/QuartzCore.h>
 
 #define CELL_HEIGHT 125
 
@@ -109,12 +110,19 @@
     
     //AboveTopView *aboveTop = [[AboveTopView alloc] initWithFrame:CGRectMake(0, 0, 320, 164)];
     _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    [_searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
     _belowBottomView = [[MyBelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT * 2)];
+    [_belowBottomView setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+    [_belowBottomView.layer setBorderWidth:2.0];
+    [_belowBottomView.layer setBorderColor:[[UIColor greenColor] CGColor]];
     
     //MyBelowBottomView *belowBottom = [[MyBelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT * 2)];
     
     _bookShelfView = [[GSBookShelfView alloc] initWithFrame:CGRectMake(0, 0, 320, 460 - 44)];
+    [_bookShelfView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     [_bookShelfView setDataSource:self];
+    //[_bookShelfView.layer setBorderWidth:2.0];
+    //[_bookShelfView.layer setBorderColor:[[UIColor greenColor] CGColor]];
     //[_bookShelfView setShelfViewDelegate:self];
     
     [self.view addSubview:_bookShelfView];
@@ -126,14 +134,28 @@
     return YES;
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    NSLog(@"will rotate from %u to %u", [[UIDevice currentDevice] orientation], toInterfaceOrientation);
+    // TODO:only set orientation change flag when protrait to landscape and reverse
+    [_bookShelfView oritationChangeReloadData];
+}
+
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    if (UIDeviceOrientationIsLandscape(toInterfaceOrientation)) {
+    NSLog(@"will animate rotate");
+    /*if (UIDeviceOrientationIsLandscape(toInterfaceOrientation)) {
         [_bookShelfView setFrame:CGRectMake(0, 0, 480, 320 - 44)];
     }
     else {
         [_bookShelfView setFrame:CGRectMake(0, 0, 320, 460 - 44)];
-    }
-    [_bookShelfView reloadData];
+    }*/
+    NSLog(@"bookShelfViewFrame:%@", NSStringFromCGRect(_bookShelfView.frame));
+    //[_bookShelfView reloadData];
+    //[_bookShelfView oritationChangeReloadData];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    NSLog(@"didRotate");
+    NSLog(@"bookShelfViewFrame:%@", NSStringFromCGRect(_bookShelfView.frame));
 }
 
 #pragma mark GSBookShelfViewDataSource
@@ -173,7 +195,10 @@
     if (cellView == nil) {
         cellView = [[MyCellView alloc] initWithFrame:CGRectZero];
         cellView.reuseIdentifier = identifier;
+        [cellView.layer setBorderColor:[[UIColor redColor] CGColor]];
+        [cellView.layer setBorderWidth:2.0f];
     }
+    [cellView.label setText:[NSString stringWithFormat:@"row:%d", row]];
     return cellView;
 }
 
@@ -186,14 +211,6 @@
 }
 
 - (UIView *)headerViewOfBookShelfView:(GSBookShelfView *)bookShelfView {
-    UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
-    if (UIDeviceOrientationIsLandscape(orientation)) {
-        [_searchBar setFrame:CGRectMake(0, 0, 480, 44)];
-    }
-    else {
-        [_searchBar setFrame:CGRectMake(0, 0, 320, 44)];
-    }
-    
     return _searchBar;
 }
 

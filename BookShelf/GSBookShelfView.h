@@ -42,7 +42,7 @@
 @protocol GSBookShelfViewDelegate;
 @protocol GSBookShelfViewDataSource;
 
-@interface GSBookShelfView : UIScrollView {
+@interface GSBookShelfView : UIScrollView<UIScrollViewDelegate> {
 @private
     id<GSBookShelfViewDataSource> __unsafe_unretained _dataSource;
     
@@ -74,6 +74,8 @@
     NSInteger _numberOfCells;
     NSInteger _minNumberOfCells;
     CGFloat _contentSizeHeight;
+    
+    NSInteger _orientationChangeFlag;
 }
 
 @property (nonatomic, unsafe_unretained) id<GSBookShelfViewDataSource> dataSource;
@@ -103,6 +105,7 @@
 //- (UIView *)cellAtIndex:(NSInteger)index;
 
 - (void)reloadData;
+- (void)oritationChangeReloadData;
 
 - (void)scrollToRow:(NSInteger)row animate:(BOOL)animate;
 

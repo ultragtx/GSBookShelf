@@ -38,6 +38,7 @@
 @implementation MyCellView
 
 @synthesize reuseIdentifier;
+@synthesize label;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -47,6 +48,12 @@
         
         [imageView setImage:[UIImage imageNamed:@"BookShelfCell.png"]];
         [self addSubview:imageView];
+        
+        label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
+        [label setTextColor:[UIColor greenColor]];
+        [self addSubview:label];
+        
+        [self setBackgroundColor:[UIColor colorWithRed:0 green:1 blue:0 alpha:0.2]];
         
     }
     return self;
