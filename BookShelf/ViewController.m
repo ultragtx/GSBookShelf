@@ -115,8 +115,8 @@
     [_searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
     _belowBottomView = [[BelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT * 2)];
     [_belowBottomView setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
-    [_belowBottomView.layer setBorderWidth:2.0];
-    [_belowBottomView.layer setBorderColor:[[UIColor greenColor] CGColor]];
+    //[_belowBottomView.layer setBorderWidth:2.0];
+    //[_belowBottomView.layer setBorderColor:[[UIColor greenColor] CGColor]];
     
     //MyBelowBottomView *belowBottom = [[MyBelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT * 2)];
     
@@ -212,8 +212,8 @@
     if (cellView == nil) {
         cellView = [[BookShelfCellView alloc] initWithFrame:CGRectZero];
         [cellView setReuseIdentifier:identifier];
-        [cellView.layer setBorderColor:[[UIColor redColor] CGColor]];
-        [cellView.layer setBorderWidth:2.0f];
+        //[cellView.layer setBorderColor:[[UIColor redColor] CGColor]];
+        //[cellView.layer setBorderWidth:2.0f];
     }
     return cellView;
 }

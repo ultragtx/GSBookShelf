@@ -17,8 +17,8 @@ Features:
 1. drag & drop
 2. scroll up/down while draging
 3. add & remove animation
-4. custom header (add a search bar or anything you want)
-5. **[NEW 12.04.03]** The demo supports oritation changing now, but I'm too lazy to make a new cell image. Just reset the number of books in each cell.(3 when portrait, 4 when landscape).(To make a cell image yourself if you are not good at UI like me, check [this](http://www.psawesome.com/tutorials/create-an-i-pad-inspired-bookshelf-using-photoshop))
+4. custom header (add a search bar or anything you want)5. 
+5. **[Update 12.08.26]** support orientation change now and the cell has a simple animtaion when orientation change make this more similar to iBooks, to get more info, take a look at the demo 
 
 ---
 
@@ -30,6 +30,13 @@ How To:
 4. **[NEW 12.04.03]** To support oritation change, you should call the reload method and return different values (if necessary) in the delegate method with different orientation.
 5. **[NEW 12.04.03]** For more information about the data GSBookShelf need for layout, take a look at the "[comments.png](https://github.com/ultragtx/GSBookShelf/blob/ReadyTo/BookShelf/comments.png?raw=true)" (also available in the project).
 6. **[NEW 12.05.18]** The books are center-aligend when there are more than one books in a row. If you only have one per row, it's left-aligend, you can set the "cellMargin" to make it center-aligend manually.
+
+---
+
+WARNING:
+
+1. **[12.08.26]** Some of the images came from iBooks (a little change to the color). Just to show how the code works. PLEASE use your own image in your project. Check [this](http://www.psawesome.com/tutorials/create-an-i-pad-inspired-bookshelf-using-photoshop) and learn how to draw an bookshelf using Photoshop, if you are not good at this.
+
 
 ---
 
@@ -45,7 +52,7 @@ TODO:
 
 5. **[NEW 12.05.18]** Maybe it's better to support left-aligend center-aligend and right-aligend.
 
-6. **[NEW 12.08.22]** Recently I realized that using autoresizingMask can make GSBookShelf much more similar to iBooks when the orientation change. But I'm facing some "strange"(for me) problems and still don't know what to do after a few days work on it.I have few experience on autoresizingMask and orientation, so it may cost me a long time to figure out how to solve these.If anybody want's to help, I'll appreciate that.
+6. **[NEW 12.08.22]** ~~Recently I realized that using autoresizingMask can make GSBookShelf much more similar to iBooks when the orientation change. But I'm facing some "strange"(for me) problems and still don't know what to do after a few days work on it.I have few experience on autoresizingMask and orientation, so it may cost me a long time to figure out how to solve these.If anybody want's to help, I'll appreciate that.~~
 
 ---
 
@@ -54,10 +61,14 @@ Updates:
 1. **[12.08.24]** merge to master
 2. **[12.08.24]** enhance orientation change support
 3. **[12.08.24]** bug fix when delete one which index is bigger than the visibles
+4. **[12.08.26]** orientation change with cell animation(like what iBooks do to the shelf when orientation change).
+5. **[12.08.26]** demo updated
 
 ---
 
-Demo:(Be Patient, some gifs' size > 1M)
+Demo:
+
+(Be Patient, some gifs' size > 1M)
 
 ![image](https://github.com/ultragtx/ultragtx.github.com/blob/master/images/Move_s.gif?raw=true)
 ![image](https://github.com/ultragtx/ultragtx.github.com/blob/master/images/Add_s.gif?raw=true)

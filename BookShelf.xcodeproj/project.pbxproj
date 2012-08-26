@@ -35,10 +35,6 @@
 		C1B5E18015E9DADE0040781D /* NavBar-Landscape~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B5E17215E9DADE0040781D /* NavBar-Landscape~iphone.png */; };
 		C1B5E18115E9DADE0040781D /* NavBar@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B5E17315E9DADE0040781D /* NavBar@2x~iphone.png */; };
 		C1B5E18215E9DADE0040781D /* NavBar~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B5E17415E9DADE0040781D /* NavBar~iphone.png */; };
-		C1B5E18315E9DADE0040781D /* Shelf-Landscape@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B5E17515E9DADE0040781D /* Shelf-Landscape@2x~iphone.png */; };
-		C1B5E18415E9DADE0040781D /* Shelf-Landscape~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B5E17615E9DADE0040781D /* Shelf-Landscape~iphone.png */; };
-		C1B5E18515E9DADE0040781D /* Shelf@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B5E17715E9DADE0040781D /* Shelf@2x~iphone.png */; };
-		C1B5E18615E9DADE0040781D /* Shelf~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B5E17815E9DADE0040781D /* Shelf~iphone.png */; };
 		C1B712B51536F5FD00C07179 /* BookViewChecked.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B712B31536F5FD00C07179 /* BookViewChecked.png */; };
 		C1B712B61536F5FD00C07179 /* BookViewChecked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B712B41536F5FD00C07179 /* BookViewChecked@2x.png */; };
 		C1D6739B14F4D247006D3483 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D6739A14F4D247006D3483 /* UIKit.framework */; };
@@ -53,6 +49,10 @@
 		C1D673E714F62283006D3483 /* BookView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D673E614F62282006D3483 /* BookView.m */; };
 		C1D673EA14F67DA4006D3483 /* BookShelfCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D673E914F67DA4006D3483 /* BookShelfCellView.m */; };
 		C1DAD8061500A466004B4BD5 /* NSMutableArray+Rearrange.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DAD8051500A466004B4BD5 /* NSMutableArray+Rearrange.m */; };
+		C1F0ED2F15EA6C470034F0FC /* Shelf-Landscape@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1F0ED2B15EA6C3D0034F0FC /* Shelf-Landscape@2x~iphone.png */; };
+		C1F0ED3015EA6C470034F0FC /* Shelf-Landscape~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1F0ED2C15EA6C3D0034F0FC /* Shelf-Landscape~iphone.png */; };
+		C1F0ED3115EA6C470034F0FC /* Shelf~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1F0ED2D15EA6C3F0034F0FC /* Shelf~iphone.png */; };
+		C1F0ED3215EA6C470034F0FC /* Shelf@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1F0ED2E15EA6C420034F0FC /* Shelf@2x~iphone.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -93,10 +93,6 @@
 		C1B5E17215E9DADE0040781D /* NavBar-Landscape~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavBar-Landscape~iphone.png"; sourceTree = "<group>"; };
 		C1B5E17315E9DADE0040781D /* NavBar@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavBar@2x~iphone.png"; sourceTree = "<group>"; };
 		C1B5E17415E9DADE0040781D /* NavBar~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavBar~iphone.png"; sourceTree = "<group>"; };
-		C1B5E17515E9DADE0040781D /* Shelf-Landscape@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Shelf-Landscape@2x~iphone.png"; sourceTree = "<group>"; };
-		C1B5E17615E9DADE0040781D /* Shelf-Landscape~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Shelf-Landscape~iphone.png"; sourceTree = "<group>"; };
-		C1B5E17715E9DADE0040781D /* Shelf@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Shelf@2x~iphone.png"; sourceTree = "<group>"; };
-		C1B5E17815E9DADE0040781D /* Shelf~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Shelf~iphone.png"; sourceTree = "<group>"; };
 		C1B712B31536F5FD00C07179 /* BookViewChecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BookViewChecked.png; sourceTree = "<group>"; };
 		C1B712B41536F5FD00C07179 /* BookViewChecked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BookViewChecked@2x.png"; sourceTree = "<group>"; };
 		C1B905CC1504B75800513802 /* GSBookView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBookView.h; sourceTree = "<group>"; };
@@ -122,6 +118,10 @@
 		C1D673E914F67DA4006D3483 /* BookShelfCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookShelfCellView.m; sourceTree = "<group>"; };
 		C1DAD8041500A466004B4BD5 /* NSMutableArray+Rearrange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Rearrange.h"; sourceTree = "<group>"; };
 		C1DAD8051500A466004B4BD5 /* NSMutableArray+Rearrange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Rearrange.m"; sourceTree = "<group>"; };
+		C1F0ED2B15EA6C3D0034F0FC /* Shelf-Landscape@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Shelf-Landscape@2x~iphone.png"; sourceTree = "<group>"; };
+		C1F0ED2C15EA6C3D0034F0FC /* Shelf-Landscape~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Shelf-Landscape~iphone.png"; sourceTree = "<group>"; };
+		C1F0ED2D15EA6C3F0034F0FC /* Shelf~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Shelf~iphone.png"; sourceTree = "<group>"; };
+		C1F0ED2E15EA6C420034F0FC /* Shelf@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Shelf@2x~iphone.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,10 +210,10 @@
 				C1B5E17215E9DADE0040781D /* NavBar-Landscape~iphone.png */,
 				C1B5E17315E9DADE0040781D /* NavBar@2x~iphone.png */,
 				C1B5E17415E9DADE0040781D /* NavBar~iphone.png */,
-				C1B5E17515E9DADE0040781D /* Shelf-Landscape@2x~iphone.png */,
-				C1B5E17615E9DADE0040781D /* Shelf-Landscape~iphone.png */,
-				C1B5E17715E9DADE0040781D /* Shelf@2x~iphone.png */,
-				C1B5E17815E9DADE0040781D /* Shelf~iphone.png */,
+				C1F0ED2B15EA6C3D0034F0FC /* Shelf-Landscape@2x~iphone.png */,
+				C1F0ED2C15EA6C3D0034F0FC /* Shelf-Landscape~iphone.png */,
+				C1F0ED2D15EA6C3F0034F0FC /* Shelf~iphone.png */,
+				C1F0ED2E15EA6C420034F0FC /* Shelf@2x~iphone.png */,
 			);
 			name = "images from ibooks";
 			sourceTree = "<group>";
@@ -390,10 +390,10 @@
 				C1B5E18015E9DADE0040781D /* NavBar-Landscape~iphone.png in Resources */,
 				C1B5E18115E9DADE0040781D /* NavBar@2x~iphone.png in Resources */,
 				C1B5E18215E9DADE0040781D /* NavBar~iphone.png in Resources */,
-				C1B5E18315E9DADE0040781D /* Shelf-Landscape@2x~iphone.png in Resources */,
-				C1B5E18415E9DADE0040781D /* Shelf-Landscape~iphone.png in Resources */,
-				C1B5E18515E9DADE0040781D /* Shelf@2x~iphone.png in Resources */,
-				C1B5E18615E9DADE0040781D /* Shelf~iphone.png in Resources */,
+				C1F0ED2F15EA6C470034F0FC /* Shelf-Landscape@2x~iphone.png in Resources */,
+				C1F0ED3015EA6C470034F0FC /* Shelf-Landscape~iphone.png in Resources */,
+				C1F0ED3115EA6C470034F0FC /* Shelf~iphone.png in Resources */,
+				C1F0ED3215EA6C470034F0FC /* Shelf@2x~iphone.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -76,11 +76,9 @@
         
         _bookViewContainerView = [[GSBookViewContainerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
         _bookViewContainerView.parentBookShelfView = self;
-        //[_bookViewContainerView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-        //[_bookViewContainerView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+        
         _cellContainerView = [[GSCellContainerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
         _cellContainerView.parentBookShelfView = self;
-        //[_cellContainerView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
         
         //[_bookViewContainerView setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2]];
         //[_cellContainerView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:1 alpha:0.2]];
@@ -118,6 +116,12 @@
     CGFloat headerHeight = _headerView.frame.size.height;
     visibleRect.size.height -= fmaxf(headerHeight - visibleRect.origin.y, 0.0f);
     visibleRect.origin.y = fmaxf(visibleRect.origin.y - headerHeight, 0.0f);
+    
+    // increase size.height to not lost one cell when orientation change from portrait to landscape
+    // this should be adjusted according to the cell height
+    
+    visibleRect.size.height += fminf(self.contentSize.height - (visibleRect.origin.y + visibleRect.size.height), [_dataSource cellHeightOfBookShelfView:self]);
+
     return visibleRect;
 }
 
@@ -192,7 +196,7 @@
 #pragma mark - Layout
 
 - (void)layoutSubviews {
-    NSLog(@"layout");
+    //NSLog(@"layout");
     [super layoutSubviews];
     
     if (_orientationChangeFlag) {
@@ -321,7 +325,7 @@
 #pragma mark - test code 
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSLog(@"****%@", NSStringFromCGPoint(self.contentOffset));
+    //NSLog(@"****%@", NSStringFromCGPoint(self.contentOffset));
 }
 
 

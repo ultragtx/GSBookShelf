@@ -141,7 +141,7 @@ typedef enum {
     // Why set anchorPoint? Have a look at the discussion below
     [UIView setAnimationsEnabled:NO];
     CGRect newFrame = [self cellRectAtRow:row];
-    NSLog(@"anchorPoint%@", NSStringFromCGPoint(cell.layer.anchorPoint));
+    //NSLog(@"anchorPoint%@", NSStringFromCGPoint(cell.layer.anchorPoint));
     [cell.layer setAnchorPoint:CGPointZero];
     [cell setCenter:CGPointMake(0, newFrame.origin.y)];
     //[cell setCenter:CGPointMake(newFrame.size.width / 2, newFrame.origin.y + newFrame.size.height / 2)];
