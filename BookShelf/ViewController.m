@@ -247,7 +247,7 @@
 }
 
 - (CGFloat)bookViewBottomOffsetOfBookShelfView:(GSBookShelfView *)bookShelfView {
-    return 110.0f;
+    return 123.0f;
 }
 
 - (CGFloat)cellShadowHeightOfBookShelfView:(GSBookShelfView *)bookShelfView {
