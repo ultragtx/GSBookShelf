@@ -82,8 +82,8 @@
         _cellContainerView.parentBookShelfView = self;
         //[_cellContainerView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
         
-        [_bookViewContainerView setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2]];
-        [_cellContainerView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:1 alpha:0.2]];
+        //[_bookViewContainerView setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2]];
+        //[_cellContainerView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:1 alpha:0.2]];
         //[_bookViewContainerView.layer setBorderWidth:2.0];
         //[_bookViewContainerView.layer setBorderColor:[[UIColor greenColor] CGColor]];
         //[_cellContainerView.layer setBorderWidth:2.0];

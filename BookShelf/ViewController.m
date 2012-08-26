@@ -37,10 +37,12 @@
 
 #import "MyCellView.h"
 #import "MyBookView.h"
+#import "BookShelfCellView.h"
+#import "BelowBottomView.h"
 #import "MyBelowBottomView.h"
 #import <QuartzCore/QuartzCore.h>
 
-#define CELL_HEIGHT 125
+#define CELL_HEIGHT 139.0f
 
 @implementation ViewController
 
@@ -111,7 +113,7 @@
     //AboveTopView *aboveTop = [[AboveTopView alloc] initWithFrame:CGRectMake(0, 0, 320, 164)];
     _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     [_searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
-    _belowBottomView = [[MyBelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT * 2)];
+    _belowBottomView = [[BelowBottomView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT * 2)];
     [_belowBottomView setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
     [_belowBottomView.layer setBorderWidth:2.0];
     [_belowBottomView.layer setBorderColor:[[UIColor greenColor] CGColor]];
@@ -156,6 +158,11 @@
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     NSLog(@"didRotate");
     NSLog(@"bookShelfViewFrame:%@", NSStringFromCGRect(_bookShelfView.frame));
+    /*for (UIView *cell in [_bookShelfView visibleCells]) {
+        CGRect frame = cell.frame;
+        [cell.layer setAnchorPoint:CGPointMake(0.5, 0.5)];
+        [cell setFrame:frame];
+    }*/
 }
 
 #pragma mark GSBookShelfViewDataSource
@@ -191,7 +198,7 @@
 
 - (UIView *)bookShelfView:(GSBookShelfView *)bookShelfView cellForRow:(NSInteger)row {
     static NSString *identifier = @"cell";
-    MyCellView *cellView = (MyCellView *)[bookShelfView dequeueReuseableCellViewWithIdentifier:identifier];
+    /*MyCellView *cellView = (MyCellView *)[bookShelfView dequeueReuseableCellViewWithIdentifier:identifier];
     if (cellView == nil) {
         cellView = [[MyCellView alloc] initWithFrame:CGRectZero];
         cellView.reuseIdentifier = identifier;
@@ -199,6 +206,15 @@
         [cellView.layer setBorderWidth:2.0f];
     }
     [cellView.label setText:[NSString stringWithFormat:@"row:%d", row]];
+    return cellView;*/
+    
+    BookShelfCellView *cellView = (BookShelfCellView *)[bookShelfView dequeueReuseableCellViewWithIdentifier:identifier];
+    if (cellView == nil) {
+        cellView = [[BookShelfCellView alloc] initWithFrame:CGRectZero];
+        [cellView setReuseIdentifier:identifier];
+        [cellView.layer setBorderColor:[[UIColor redColor] CGColor]];
+        [cellView.layer setBorderWidth:2.0f];
+    }
     return cellView;
 }
 
@@ -215,7 +231,7 @@
 }
 
 - (CGFloat)cellHeightOfBookShelfView:(GSBookShelfView *)bookShelfView {
-    return 125.0f;
+    return CELL_HEIGHT;
 }
 
 - (CGFloat)cellMarginOfBookShelfView:(GSBookShelfView *)bookShelfView {
@@ -235,7 +251,8 @@
 }
 
 - (CGFloat)cellShadowHeightOfBookShelfView:(GSBookShelfView *)bookShelfView {
-    return 0.0f;
+    //return 0.0f;
+    return 55.0f;
 }
 
 - (void)bookShelfView:(GSBookShelfView *)bookShelfView moveBookFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex {

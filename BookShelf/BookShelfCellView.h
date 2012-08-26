@@ -43,13 +43,20 @@ typedef enum {
 
 @interface BookShelfCellView : UIView <GSBookShelfCell> {
     UIImageView *_shelfImageView;
+    UIImageView *_shelfImageViewLandscape;
+    UIImageView *_woodImageView;
+    UIImageView *_shadingImageView;
+    
     UIImageView *_sideImageView_left;
     UIImageView *_sideImageView_right;
-    UIImageView *_woodImageView;
+    
 }
 
 @property (nonatomic, strong) NSString *reuseIdentifier;
 
-- (id)initWithFrame:(CGRect)frame woodPart:(WoodPart)part;
++ (UIImage *)shadingImage;
++ (UIImage *)woodImage;
++ (UIImage *)shelfImageProtrait;
++ (UIImage *)shelfImageLandscape;
 
 @end

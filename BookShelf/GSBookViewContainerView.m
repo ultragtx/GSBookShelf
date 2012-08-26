@@ -790,6 +790,9 @@ typedef enum {
                              if (indexOfVisibleBookViews >= 0) {
                                  if (indexOfVisibleBookViews >= [_visibleBookViews count]) {
                                      *stop = YES;
+                                     // added on 12.08.24 fix deletion when deletion index bigger than max visible index
+                                     // not increse steps, balance with steps++
+                                     steps--;
                                  }
                                  else {
                                      // shrink

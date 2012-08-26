@@ -43,9 +43,11 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        BookShelfCellView *cell1 = [[BookShelfCellView alloc] initWithFrame:CGRectMake(0, 0, 320, 139) woodPart:WOOD_PART_1];
+        BookShelfCellView *cell1 = [[BookShelfCellView alloc] initWithFrame:CGRectMake(0, 0, 320, 139)];
+        BookShelfCellView *cell2 = [[BookShelfCellView alloc] initWithFrame:CGRectMake(0, 139, 320, 139)];
         
-        BookShelfCellView *cell2 = [[BookShelfCellView alloc] initWithFrame:CGRectMake(0, 139, 320, 139) woodPart:WOOD_PART_2];
+        [cell1 setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        [cell2 setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         
         [self addSubview:cell1];
         [self addSubview:cell2];

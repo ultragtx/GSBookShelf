@@ -22,7 +22,7 @@ Features:
 
 ---
 
-How TO:
+How To:
 
 1. Just take a look at the demo.
 2. bookView and shelfCell are just UIViews. So you can cutomize them almost whatever you want. But the frame of each view is fixed, if you want to have different size of bookView, you can try adding your content on a transparent UIView.
@@ -46,6 +46,14 @@ TODO:
 5. **[NEW 12.05.18]** Maybe it's better to support left-aligend center-aligend and right-aligend.
 
 6. **[NEW 12.08.22]** Recently I realized that using autoresizingMask can make GSBookShelf much more similar to iBooks when the orientation change. But I'm facing some "strange"(for me) problems and still don't know what to do after a few days work on it.I have few experience on autoresizingMask and orientation, so it may cost me a long time to figure out how to solve these.If anybody want's to help, I'll appreciate that.
+
+---
+
+Updates:
+
+1. **[12.08.24]** merge to master
+2. **[12.08.24]** enhance orientation change support
+3. **[12.08.24]** bug fix when delete one which index is bigger than the visibles
 
 ---
 
