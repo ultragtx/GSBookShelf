@@ -35,7 +35,7 @@ How To:
 
 WARNING:
 
-1. **[12.08.26]** Some of the images came from iBooks (a little change to the color). Just to show how the code works. PLEASE use your own image in your project. Check [this](http://www.psawesome.com/tutorials/create-an-i-pad-inspired-bookshelf-using-photoshop) and learn how to draw an bookshelf using Photoshop, if you are not good at this.
+1. **[12.08.26]** Some of the images came from iBooks (a little change to the color). Just to show how the code works. PLEASE use your own image in your project. Check [this](http://www.psawesome.com/tutorials/create-an-i-pad-inspired-bookshelf-using-photoshop) and learn how to draw a bookshelf using Photoshop, if you are not good at this.
 
 
 ---
