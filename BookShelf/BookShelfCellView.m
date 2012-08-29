@@ -53,11 +53,11 @@ static UIImage *shelfImageLandscape = nil;
         
         UIGraphicsBeginImageContext(CGSizeMake(320 * scale, 139 * scale));
         UIImage *shadingImageToDraw = [UIImage imageNamed:@"Side Shading-iPhone.png"];
-        [shadingImageToDraw drawAtPoint:CGPointZero];
+        [shadingImageToDraw drawInRect:CGRectMake(0, 0, shadingImageToDraw.size.width * scale, shadingImageToDraw.size.height * scale)];
         
         CGAffineTransform ctm1 = CGAffineTransformMakeScale(-1.0f, 1.0f);
         CGContextConcatCTM(UIGraphicsGetCurrentContext(), ctm1);
-        [shadingImageToDraw drawAtPoint:CGPointMake(-320, 0)];
+        [shadingImageToDraw drawInRect:CGRectMake(-320 * scale, 0, shadingImageToDraw.size.width * scale, shadingImageToDraw.size.height * scale)];
         shadingImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
@@ -72,7 +72,7 @@ static UIImage *shelfImageLandscape = nil;
         
         UIGraphicsBeginImageContext(CGSizeMake(480 * scale, 139 * scale));
         UIImage *woodImageToDraw = [UIImage imageNamed:@"WoodTile.png"];
-        [woodImageToDraw drawAtPoint:CGPointZero];
+        [woodImageToDraw drawInRect:CGRectMake(0, 0, woodImageToDraw.size.width * scale, woodImageToDraw.size.width * scale)];
         woodImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         

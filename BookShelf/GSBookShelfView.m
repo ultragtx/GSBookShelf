@@ -120,7 +120,8 @@
     // increase size.height to not lost one cell when orientation change from portrait to landscape
     // this should be adjusted according to the cell height
     
-    visibleRect.size.height += fminf(self.contentSize.height - (visibleRect.origin.y + visibleRect.size.height), [_dataSource cellHeightOfBookShelfView:self]);
+    // FIXME: remove temporarily
+    //visibleRect.size.height += fminf(self.contentSize.height - (visibleRect.origin.y + visibleRect.size.height), [_dataSource cellHeightOfBookShelfView:self] * 2);
 
     return visibleRect;
 }
@@ -157,7 +158,7 @@
     
     NSLog(@"new offset %@", NSStringFromCGPoint(newOffset));
     //[UIView setAnimationsEnabled:NO];
-    [self setContentOffset:newOffset animated:NO];
+    //[self setContentOffset:newOffset animated:NO];
     
     //NSLog(@"new offset %@", NSStringFromCGPoint(newOffset));
     
