@@ -126,6 +126,17 @@
     return visibleRect;
 }
 
+- (CGRect)availableRectFromVisibleRect:(CGRect)visibleRect {
+    // Discussion:
+    // visibleRect: the visible rect
+    // availableRect: highter than the visible rect, make 
+    CGRect availableRect = visibleRect;
+    
+    availableRect.size.height += fminf(self.contentSize.height - (availableRect.origin.y + availableRect.size.height), [_dataSource cellHeightOfBookShelfView:self] * 2);
+    
+    return availableRect;
+}
+
 - (void)resetContentSize {
     NSLog(@"resetContentSize");
     //NSLog(@"resetContentSize");
@@ -207,8 +218,11 @@
         [self resetContentSize];
     }
     
-    [_bookViewContainerView layoutSubviewsWithVisibleRect:[self visibleRect]];
-    [_cellContainerView layoutSubviewsWithVisibleRect:[self visibleRect]];
+    //[_bookViewContainerView layoutSubviewsWithVisibleRect:[self visibleRect]];
+    CGRect visibleRect = [self visibleRect];
+    CGRect availableRect = [self availableRectFromVisibleRect:visibleRect];
+    [_bookViewContainerView layoutSubviewsWithAvailableRect:availableRect visibleRect:visibleRect];
+    [_cellContainerView layoutSubviewsWithAvailableRect:availableRect];
 }
 
 #pragma mark - Public

@@ -57,6 +57,6 @@
 - (UIView *)cellAtRow:(NSInteger)row;
 - (void)reloadData;
 - (UIView *)dequeueReuseableCellWithIdentifier:(NSString *)identifier;
-- (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect;
+- (void)layoutSubviewsWithAvailableRect:(CGRect)availableRect;
 
 @end

@@ -127,6 +127,8 @@ typedef enum {
     _bookViewHeight = [_parentBookShelfView.dataSource bookViewHeightOfBookShelfView:_parentBookShelfView];
     
     _bookViewSpacingWidth = numOfBooksInCell == 1 ? 0 : (cellWidth - 2 * cellMargin - numOfBooksInCell * _bookViewWidth) / (numOfBooksInCell - 1);
+    
+    NSAssert(_bookViewSpacingWidth >= 0, @"invalid book size");
 }
 
 - (void)reloadData {
@@ -240,7 +242,7 @@ typedef enum {
             rmIndex = [_visibleBookViews count] - 1;
     }
     UIView *bookView = [_visibleBookViews objectAtIndex:rmIndex];
-    // Discusstion:When Drag And Scroll happends,somtimes _dragView's pickupPosition may have not changed. Then it may be told to be removed from superView, and this will cause the _dragView dissappear. So here we prevent the removeFromSuperview from happening, but still remove it from the _visibleBookViews. _visibleBookViews tells which view is visible except the _dragView, which means _dragView is "invisible" for _visibleBookViews when it's original position scroll out of the _visibleRect.
+    // Discusstion:When Drag And Scroll happends,somtimes _dragView's pickupPosition may have not changed. Then it may be told to be removed from superView, and this will cause the _dragView dissappear. So here we prevent the removeFromSuperview from happening, but still remove it from the _visibleBookViews. _visibleBookViews tells which view is visible except the _dragView, which means _dragView is "invisible" for _visibleBookViews when it's original position scroll out of the _availableRect.
     if (_isDragViewPickedUp && bookView == _dragView) {
         _isDragViewRemovedFromVisibleBookViews = YES;
     }
@@ -252,7 +254,7 @@ typedef enum {
 }
 
 
-- (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect {
+- (void)layoutSubviewsWithAvailableRect:(CGRect)availableRect visibleRect:(CGRect)visibleRect{
     // To reduce memory usage, we only add visible bookViews to the subviews. So every time it scrolls, we shoud add and remove some bookViews.You can check the sample project (ScrollView Suit >> Tiling) for information.
     
     // Discussion: the layout sequence is easy to understand. There are 6 situation we should consider.  You can draw these condition on a papper to get it more clear.
@@ -274,7 +276,8 @@ typedef enum {
 
     
     //NSLog(@"bookViewContainer layout");
-    //NSLog(@"visibleRect %@", NSStringFromCGRect(visibleRect));
+    //NSLog(@"availableRect %@", NSStringFromCGRect(availableRect));
+    _availableRect = availableRect;
     _visibleRect = visibleRect;
     
     NSInteger numberOfBooksInCell = [_parentBookShelfView.dataSource numberOFBooksInCellOfBookShelfView:_parentBookShelfView];
@@ -285,8 +288,8 @@ typedef enum {
     
     NSInteger cellHeight = [_parentBookShelfView.dataSource cellHeightOfBookShelfView:_parentBookShelfView];
     
-    NSInteger firstNeededRow = MAX(0, floorf(CGRectGetMinY(visibleRect) / cellHeight));
-    NSInteger lastNeededRow = MIN(numberOfCells - 1, floorf(CGRectGetMaxY(visibleRect) / cellHeight));
+    NSInteger firstNeededRow = MAX(0, floorf(CGRectGetMinY(availableRect) / cellHeight));
+    NSInteger lastNeededRow = MIN(numberOfCells - 1, floorf(CGRectGetMaxY(availableRect) / cellHeight));
     
     //NSLog(@"\n------------\nfirstNeededRow:%d firstVisibleRow:%d\nlastNeededRow: %d lastVisibleRow: %d\n************", firstNeededRow, _firstVisibleRow, lastNeededRow, _lastVisibleRow);
     
@@ -377,7 +380,7 @@ typedef enum {
 
 - (void)layoutSubviews {
     // Do nothing here
-    // use layoutSubviewsWithVisibleRect: instead
+    // use layoutSubviewsWithavailableRect: instead
 }
 
 #pragma mark - BookViewPosition 
@@ -424,7 +427,7 @@ typedef enum {
 }
 
 - (CGRect)bookViewRectAtBookViewPosition:(BookViewPostion)position {
-    // Dose not need position.index here
+    // Do not need position.index here
     CGFloat cellHeight = _parentBookShelfView.cellHeight;
     CGFloat bookViewBottomOffset = _parentBookShelfView.bookViewBottomOffset;
     CGFloat cellMarginWidth = _parentBookShelfView.cellMargin;
@@ -435,6 +438,22 @@ typedef enum {
     return CGRectMake(originX, originY, _bookViewWidth, _bookViewHeight);
 }
 
+- (CGRect)bookViewEffectiveRectAtBookViewPosition:(BookViewPostion)position {
+    CGFloat cellHeight = _parentBookShelfView.cellHeight;
+    CGFloat bookViewBottomOffset = _parentBookShelfView.bookViewBottomOffset;
+    CGFloat cellMarginWidth = _parentBookShelfView.cellMargin;
+    
+    NSInteger numberOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
+    
+    CGFloat originX = position.col * (_bookViewWidth + _bookViewSpacingWidth) + (position.col > 0 ? (cellMarginWidth - _bookViewSpacingWidth / 2) : 0);
+    
+    CGFloat effectiveWidth = _bookViewWidth + _bookViewSpacingWidth + ((position.col == 0 || position.col == numberOfBooksInCell - 1) ? (cellMarginWidth - _bookViewSpacingWidth / 2) : 0);
+    
+    CGFloat originY = position.row * cellHeight + bookViewBottomOffset - _bookViewHeight;
+    
+    return CGRectMake(originX, originY, effectiveWidth, _bookViewHeight);
+}
+
 - (BookViewPostion)bookViewPositionAtPoint:(CGPoint)point {
     // Always return a valid BookViewPosition
     CGFloat cellHeight = _parentBookShelfView.cellHeight;
@@ -443,11 +462,23 @@ typedef enum {
     
     CGFloat cellMarginWidth = _parentBookShelfView.cellMargin; 
     
-    NSInteger currentCol = floorf((point.x - cellMarginWidth) / (_bookViewWidth + _bookViewSpacingWidth));
+    CGFloat firstColWidth = cellMarginWidth + _bookViewWidth + _bookViewSpacingWidth / 2;
+    CGFloat middleColWidth = _bookViewWidth + _bookViewSpacingWidth;
     
     NSInteger numberOfBooksInCell = _parentBookShelfView.numberOfBooksInCell;
     
+    NSInteger currentCol;
+    
+    if (point.x < firstColWidth) {
+        currentCol = 0;
+    }
+    else {
+        currentCol =  MIN(floorf((point.x - firstColWidth) / middleColWidth) + 1, numberOfBooksInCell - 1);
+    }
+    
     BookViewPostion position = {currentRow, currentCol, currentRow * numberOfBooksInCell + currentCol};
+    
+    //NSLog(@"position [%d] [%d]", currentRow, currentCol);
     
     return position;
 }
@@ -570,14 +601,14 @@ typedef enum {
         [self stopScrollTimer];
         CGFloat distanceFromTop = _dragView.center.y - _visibleRect.origin.y;
         if (distanceFromTop < kScroll_trigger_dis) {
-            double rate = (kScroll_trigger_dis - distanceFromTop) / 6.0;
+            double rate = (kScroll_trigger_dis - distanceFromTop) / 4.0;
             NSTimeInterval interval = fmax(kScroll_interval_min, kScroll_interval_max / rate);
             _scrollTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(dragScroll:) userInfo:[NSNumber numberWithBool:YES] repeats:YES];
             
         }
         else if (distanceFromTop > _visibleRect.size.height - kScroll_trigger_dis) {
             
-            double rate = (kScroll_trigger_dis - (_visibleRect.size.height - distanceFromTop)) / 6.0;
+            double rate = (kScroll_trigger_dis - (_visibleRect.size.height - distanceFromTop)) / 4.0;
             NSTimeInterval interval = fmax(kScroll_interval_min, kScroll_interval_max / rate);
             _scrollTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(dragScroll:) userInfo:[NSNumber numberWithBool:NO] repeats:YES];
             
@@ -620,10 +651,17 @@ typedef enum {
     [self bringSubviewToFront:_dragView];
     BookViewPostion position = [self bookViewPositionAtPoint:_dragView.center];
     CGRect bookViewRect = [self bookViewRectAtBookViewPosition:position];
+    CGRect bookviewEffectiveRect = [self bookViewEffectiveRectAtBookViewPosition:position];
+    
+    //NSLog(@"[0] %@", NSStringFromCGPoint(_dragView.center));
+    //NSLog(@"[1] %@", NSStringFromCGRect(bookViewRect));
+    //NSLog(@"[2] %@", NSStringFromCGRect(bookviewEffectiveRect));
 
-    if (CGRectContainsPoint(bookViewRect, _dragView.center) && [self isBookViewPositionVisible:position]) {
+    if (CGRectContainsPoint(bookviewEffectiveRect, _dragView.center) && [self isBookViewPositionVisible:position]) {
+        //NSLog(@"contain");
         if (!CGRectEqualToRect(bookViewRect, _pickUpRect)) {
             // Rerange _visibleBookViews
+            //NSLog(@"Rerange");
             [self animateBookViewToBookViewPostion:position rect:bookViewRect];
         }
     }

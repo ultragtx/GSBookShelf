@@ -46,7 +46,9 @@
         UIImageView *woodImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 139 * 2)];
         
         CGFloat scale = isRetina ? 2.0f : 1.0f;
-        [woodImageView setImage:[UIImage imageWithCGImage:CGImageCreateWithImageInRect([[UIImage imageNamed:@"WoodTile-iPhone.png"] CGImage], CGRectMake(0, 0, 320 * scale, 139 * 2 * scale))]];
+        CGImageRef woodImgRef = CGImageCreateWithImageInRect([[UIImage imageNamed:@"WoodTile-iPhone.png"] CGImage], CGRectMake(0, 0, 320 * scale, 139 * 2 * scale));
+        [woodImageView setImage:[UIImage imageWithCGImage:woodImgRef]];
+        CGImageRelease(woodImgRef);
         [self addSubview:woodImageView];
         
         UIImageView *sideImageView_left1 = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 160, 164)];

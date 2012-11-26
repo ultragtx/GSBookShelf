@@ -25,6 +25,7 @@
 		C16047F5150E0908000929CC /* 4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C16047ED150E0908000929CC /* 4@2x.png */; };
 		C16047F8150E0911000929CC /* BookShelfCell.png in Resources */ = {isa = PBXBuildFile; fileRef = C16047F6150E0911000929CC /* BookShelfCell.png */; };
 		C16047F9150E0911000929CC /* BookShelfCell@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C16047F7150E0911000929CC /* BookShelfCell@2x.png */; };
+		C182834616633FB600A69C46 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = C182834516633FB600A69C46 /* LICENSE */; };
 		C1B5E17915E9DADE0040781D /* Side Shading-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B5E16B15E9DADE0040781D /* Side Shading-iPhone.png */; };
 		C1B5E17A15E9DADE0040781D /* Side Shading-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B5E16C15E9DADE0040781D /* Side Shading-iPhone@2x.png */; };
 		C1B5E17B15E9DADE0040781D /* topshelf side shading-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = C1B5E16D15E9DADE0040781D /* topshelf side shading-iPhone.png */; };
@@ -83,6 +84,7 @@
 		C16047ED150E0908000929CC /* 4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "4@2x.png"; sourceTree = "<group>"; };
 		C16047F6150E0911000929CC /* BookShelfCell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BookShelfCell.png; sourceTree = "<group>"; };
 		C16047F7150E0911000929CC /* BookShelfCell@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BookShelfCell@2x.png"; sourceTree = "<group>"; };
+		C182834516633FB600A69C46 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		C1B5E16B15E9DADE0040781D /* Side Shading-iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Side Shading-iPhone.png"; sourceTree = "<group>"; };
 		C1B5E16C15E9DADE0040781D /* Side Shading-iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Side Shading-iPhone@2x.png"; sourceTree = "<group>"; };
 		C1B5E16D15E9DADE0040781D /* topshelf side shading-iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "topshelf side shading-iPhone.png"; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 		C1D6738B14F4D247006D3483 = {
 			isa = PBXGroup;
 			children = (
+				C182834516633FB600A69C46 /* LICENSE */,
 				C1539F4C1510C76A00C6A479 /* README.md */,
 				C1D673A014F4D247006D3483 /* BookShelf */,
 				C1D6739914F4D247006D3483 /* Frameworks */,
@@ -394,6 +397,7 @@
 				C1F0ED3015EA6C470034F0FC /* Shelf-Landscape~iphone.png in Resources */,
 				C1F0ED3115EA6C470034F0FC /* Shelf~iphone.png in Resources */,
 				C1F0ED3215EA6C470034F0FC /* Shelf@2x~iphone.png in Resources */,
+				C182834616633FB600A69C46 /* LICENSE in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

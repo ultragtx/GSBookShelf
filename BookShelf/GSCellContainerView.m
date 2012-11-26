@@ -186,12 +186,12 @@ typedef enum {
     }
 }
 
-- (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect {
+- (void)layoutSubviewsWithAvailableRect:(CGRect)availableRect {
     CGFloat shelfShadowHeight = [_parentBookShelfView.dataSource cellShadowHeightOfBookShelfView:_parentBookShelfView];
-    CGFloat newOriginY = fmaxf(visibleRect.origin.y - shelfShadowHeight, 0);
-    CGFloat addHeight = visibleRect.origin.y - newOriginY;
-    visibleRect.origin.y = newOriginY;
-    visibleRect.size.height += addHeight;
+    CGFloat newOriginY = fmaxf(availableRect.origin.y - shelfShadowHeight, 0);
+    CGFloat addHeight = availableRect.origin.y - newOriginY;
+    availableRect.origin.y = newOriginY;
+    availableRect.size.height += addHeight;
     
     NSInteger numberOfBooksInCell = [_parentBookShelfView.dataSource numberOFBooksInCellOfBookShelfView:_parentBookShelfView];
     
@@ -205,8 +205,8 @@ typedef enum {
     
     NSInteger maxNumberOfCells = MAX(numberOfCells, minNumberOfCells);
     
-    NSInteger firstNeededRow = MAX(0, floorf(CGRectGetMinY(visibleRect) / cellHeight));
-    NSInteger lastNeededRow = MIN(maxNumberOfCells - 1, floorf(CGRectGetMaxY(visibleRect) / cellHeight));
+    NSInteger firstNeededRow = MAX(0, floorf(CGRectGetMinY(availableRect) / cellHeight));
+    NSInteger lastNeededRow = MIN(maxNumberOfCells - 1, floorf(CGRectGetMaxY(availableRect) / cellHeight));
     
     if (_firstVisibleRow == -1) {
         // First time 
@@ -262,7 +262,7 @@ typedef enum {
 
 - (void)layoutSubviews {
     // Do nothing here
-    // use layoutSubviewsWithVisibleRect: instead
+    // use layoutSubviewsWithavailableRect: instead
 }
 
 #pragma mark - convert

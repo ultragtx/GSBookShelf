@@ -53,6 +53,7 @@ typedef struct BookViewPostion {
     @private
     
     CGRect _visibleRect;
+    CGRect _availableRect;
     
     NSInteger _firstVisibleRow;
     NSInteger _lastVisibleRow;
@@ -95,7 +96,7 @@ typedef struct BookViewPostion {
 - (NSArray *)visibleBookViews;
 - (UIView *)bookViewAtIndex:(NSInteger)index;
 
-- (void)layoutSubviewsWithVisibleRect:(CGRect)visibleRect;
+- (void)layoutSubviewsWithAvailableRect:(CGRect)availableRect visibleRect:(CGRect)visibleRect;
 
 - (UIView *)dequeueReusableBookViewWithIdentifier:(NSString *)identifier;
 
