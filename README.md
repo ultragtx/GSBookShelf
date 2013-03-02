@@ -40,6 +40,12 @@ WARNING:
 
 ---
 
+Known Issue:
+
+1. Rotation issue part 1 and part 2  (check issue #12 for description)
+
+---
+
 TODO:
 
 1. **[Done]** ~~does not support orientation change now, it's fixed Portrait or landscape (doesn't have a convenient method to reload the parameters which was set in the init method.)~~ 
