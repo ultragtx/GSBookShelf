@@ -33,32 +33,29 @@ How To:
 
 ---
 
-WARNING:
+**WARNING**:
 
 1. **[12.08.26]** Some of the images came from iBooks (a little change to the color). Just to show how the code works. PLEASE use your own image in your project. Check [this](http://www.psawesome.com/tutorials/create-an-i-pad-inspired-bookshelf-using-photoshop) and learn how to draw a bookshelf using Photoshop, if you are not good at this.
 
 
 ---
 
-Known Issue:
+**Known Issue**:
 
-1. Rotation issue part 1 and part 2  (check issue #12 for description)
+1. Rotation issue part 1 and part 2  (check [issue #12](https://github.com/ultragtx/GSBookShelf/issues/12) for description)
 
 ---
 
 TODO:
 
-1. **[Done]** ~~does not support orientation change now, it's fixed Portrait or landscape (doesn't have a convenient method to reload the parameters which was set in the init method.)~~ 
+1. **[NEW 12.05.14]** Fix [issue 12](https://github.com/ultragtx/GSBookShelf/issues/12)
+2. **[NEW 12.05.18]** Maybe it's better to support left-aligend center-aligend and right-aligend.
 
-2. **[Done]** ~~the init method need too many parameters now. I will move all of them to GSBookShelfViewDataSource protocol methods, and this will help a lot when orientation changes, but maybe there'll be too many protocol methods.~~
+---
 
-3. **[NEW 12.04.03]** ~~Need some animation for cell when the orientation change.~~ Go to 6.
+**Contribute**:
 
-4. **[NEW 12.05.14]** Go to a proper row when orientation change. (Always go to top currently)
-
-5. **[NEW 12.05.18]** Maybe it's better to support left-aligend center-aligend and right-aligend.
-
-6. **[NEW 12.08.22]** ~~Recently I realized that using autoresizingMask can make GSBookShelf much more similar to iBooks when the orientation change. But I'm facing some "strange"(for me) problems and still don't know what to do after a few days work on it.I have few experience on autoresizingMask and orientation, so it may cost me a long time to figure out how to solve these.If anybody want's to help, I'll appreciate that.~~
+* Anyone who contribute to this project can receive a License of [AppCode](http://www.jetbrains.com/objc/index.html) (Send me a e-mail if you want one).
 
 ---
 
