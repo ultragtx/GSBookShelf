@@ -42,7 +42,7 @@ How To:
 
 **Known Issue**:
 
-1. Rotation issue part 1 and part 2  (check [issue #12](https://github.com/ultragtx/GSBookShelf/issues/12) for description)
+1. Rotation issue part 1 and ~~part 2~~  (check [issue #12](https://github.com/ultragtx/GSBookShelf/issues/12) for description)
 
 ---
 
