@@ -110,7 +110,9 @@
 - (void)scrollToRow:(NSInteger)row animate:(BOOL)animate;
 
 - (void)removeBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate;
-- (void)insertBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate; 
+- (void)insertBookViewsAtIndexs:(NSIndexSet *)indexs animate:(BOOL)animate;
+
+- (void)didFinshRotation;
 
 @end
 

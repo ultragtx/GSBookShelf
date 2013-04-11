@@ -227,10 +227,15 @@
 
 #pragma mark - Public
 
+- (void)didFinshRotation {
+    [_cellContainerView resizeReuseCells];
+}
+
 - (void)oritationChangeReloadData {
+    // RETURN HERE!!!
     _orientationChangeFlag = 1;
     return;
-    
+    /*
     // remove these views first, set new and then add back
     [_headerView removeFromSuperview];
     [_aboveTopView removeFromSuperview];
@@ -249,10 +254,12 @@
     _bookViewBottomOffset = [_dataSource bookViewBottomOffsetOfBookShelfView:self];
     
     //[_cellContainerView reloadData];
+    [_cellContainerView orientationResetReuse];
     [_bookViewContainerView reloadData];
     [self resetContentSize];
     //[self adjustContentOffset];
     //[self setNeedsLayout];
+    */
 }
 
 - (void)reloadData {

@@ -79,6 +79,23 @@ typedef enum {
     //[_reuseableCells removeAllObjects];
 }
 
+- (void)resizeReuseCells {
+    // Discussion:
+    // This is a fix of issue #12 part 2
+    // Resize all the "in store" cells when orientation end.
+    // When next orientation begin,
+    // cells that will be reused can animate to the new size
+    // and issue #12 won't happen.
+    
+    for (NSString *key in [_reuseableCells allKeys]) {
+        NSMutableSet *cellSet = [_reuseableCells objectForKey:key];
+        for (UIView *view in cellSet) {
+            [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, self.frame.size.width, view.frame.size.height)];
+            [view layoutSubviews];
+        }
+    }
+}
+
 #pragma mark - Reuse
 
 - (void)addReuseableCell:(UIView *)cell {

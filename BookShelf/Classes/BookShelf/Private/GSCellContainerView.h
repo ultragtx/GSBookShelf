@@ -59,4 +59,6 @@
 - (UIView *)dequeueReuseableCellWithIdentifier:(NSString *)identifier;
 - (void)layoutSubviewsWithAvailableRect:(CGRect)availableRect;
 
+- (void)resizeReuseCells;
+
 @end

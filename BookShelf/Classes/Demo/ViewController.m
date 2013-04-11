@@ -137,7 +137,6 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    NSLog(@"will rotate from %u to %u", [[UIDevice currentDevice] orientation], toInterfaceOrientation);
     // TODO:only set orientation change flag when protrait to landscape and reverse
     [_bookShelfView oritationChangeReloadData];
 }
@@ -158,6 +157,7 @@
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     NSLog(@"didRotate");
     NSLog(@"bookShelfViewFrame:%@", NSStringFromCGRect(_bookShelfView.frame));
+    [_bookShelfView didFinshRotation];
     /*for (UIView *cell in [_bookShelfView visibleCells]) {
         CGRect frame = cell.frame;
         [cell.layer setAnchorPoint:CGPointMake(0.5, 0.5)];
