@@ -116,12 +116,6 @@
     CGFloat headerHeight = _headerView.frame.size.height;
     visibleRect.size.height -= fmaxf(headerHeight - visibleRect.origin.y, 0.0f);
     visibleRect.origin.y = fmaxf(visibleRect.origin.y - headerHeight, 0.0f);
-    
-    // increase size.height to not lost one cell when orientation change from portrait to landscape
-    // this should be adjusted according to the cell height
-    
-    // FIXME: remove temporarily
-    //visibleRect.size.height += fminf(self.contentSize.height - (visibleRect.origin.y + visibleRect.size.height), [_dataSource cellHeightOfBookShelfView:self] * 2);
 
     return visibleRect;
 }
@@ -129,10 +123,14 @@
 - (CGRect)availableRectFromVisibleRect:(CGRect)visibleRect {
     // Discussion:
     // visibleRect: the visible rect
-    // availableRect: highter than the visible rect, make 
+    // availableRect: highter than the visible rect
+    // increase size.height to not lost one cell when orientation change from portrait to landscape
+    // this should be adjusted according to the cell height
+
     CGRect availableRect = visibleRect;
+    CGFloat numberOfCellHeights = 1.0f; // how many cellHeight will be added, if set too high, moving a book with scroll may not be smooth.
     
-    availableRect.size.height += fminf(self.contentSize.height - (availableRect.origin.y + availableRect.size.height), [_dataSource cellHeightOfBookShelfView:self] * 2);
+    availableRect.size.height += fminf(self.contentSize.height - (availableRect.origin.y + availableRect.size.height), [_dataSource cellHeightOfBookShelfView:self] * numberOfCellHeights);
     
     return availableRect;
 }
@@ -218,9 +216,9 @@
         [self resetContentSize];
     }
     
-    //[_bookViewContainerView layoutSubviewsWithVisibleRect:[self visibleRect]];
     CGRect visibleRect = [self visibleRect];
     CGRect availableRect = [self availableRectFromVisibleRect:visibleRect];
+
     [_bookViewContainerView layoutSubviewsWithAvailableRect:availableRect visibleRect:visibleRect];
     [_cellContainerView layoutSubviewsWithAvailableRect:availableRect];
 }
