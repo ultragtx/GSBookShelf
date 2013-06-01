@@ -36,6 +36,7 @@
 #import "GSBookViewContainerView.h"
 #import "GSBookShelfView.h"
 #import "GSBookView.h"
+#import <QuartzCore/QuartzCore.h>
 
 #define kRatio_width_spacing 2.5f
 #define kRatio_height_width 1.2f
@@ -591,31 +592,29 @@ typedef enum {
 #define kScroll_trigger_dis 40.0f
 #define kScroll_interval_max 0.0075
 #define kScroll_interval_min 0.00050
+#define kScroll_dis_scale 27
 
 - (void)stopScrollTimer {
-    [_scrollTimer invalidate];
+    [_displayLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    [_displayLink invalidate];
+    _displayLink = nil;
 }
 
 - (void)scrollIfNecessary {
     if (_parentBookShelfView.scrollWhileDragingEnabled) {
         [self stopScrollTimer];
+        
         CGFloat distanceFromTop = _dragView.center.y - _visibleRect.origin.y;
-        if (distanceFromTop < kScroll_trigger_dis) {
-            double rate = (kScroll_trigger_dis - distanceFromTop) / 4.0;
-            NSTimeInterval interval = fmax(kScroll_interval_min, kScroll_interval_max / rate);
-            _scrollTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(dragScroll:) userInfo:[NSNumber numberWithBool:YES] repeats:YES];
-            
-        }
-        else if (distanceFromTop > _visibleRect.size.height - kScroll_trigger_dis) {
-            
-            double rate = (kScroll_trigger_dis - (_visibleRect.size.height - distanceFromTop)) / 4.0;
-            NSTimeInterval interval = fmax(kScroll_interval_min, kScroll_interval_max / rate);
-            _scrollTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(dragScroll:) userInfo:[NSNumber numberWithBool:NO] repeats:YES];
-            
+        if (distanceFromTop < kScroll_trigger_dis || distanceFromTop > _visibleRect.size.height - kScroll_trigger_dis) {
+            _lastDragScrollTime = CACurrentMediaTime(); // Note: See http://stackoverflow.com/questions/358207/iphone-how-to-get-current-milliseconds for speed comparation
+            _lastDragScrollDisDecimalPart = 0.0;
+            _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(dragScroll:)];
+            [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
         }
     }
 }
 
+// Not use currently
 - (BOOL)canScroll:(BOOL)isScrollUp {
     if (isScrollUp) {
         if (_parentBookShelfView.contentOffset.y <= 0) {
@@ -630,18 +629,70 @@ typedef enum {
     return YES;
 }
 
+- (CGFloat)safeHorizontalScrollDistanceWithDistance:(CGFloat)distance isScrollUp:(BOOL)isScrollUp {
+    if (isScrollUp) {
+        CGFloat maxDis = _parentBookShelfView.contentOffset.y;
+        return MIN(maxDis, distance);
+    }
+    else {
+        CGFloat maxDis = _parentBookShelfView.contentSize.height - (_parentBookShelfView.contentOffset.y + _visibleRect.size.height);
+        return MIN(maxDis, distance);
+    }
+}
+
 - (void)dragScroll:(NSTimer *)timer {
-    // contentOffset +/- 1
-    BOOL isScrollUp = ((NSNumber *)timer.userInfo).boolValue;
-    if ([self canScroll:isScrollUp]) {
+    BOOL isScrollUp;
+    CGFloat distanceFromTop = _dragView.center.y - _visibleRect.origin.y;
+    double timeSinceLastScroll = CACurrentMediaTime() - _lastDragScrollTime; // Around 0.015
+    CGFloat scrollDistance = 0;
+    double rate; // Between 0 to 40
+    
+    if (distanceFromTop < kScroll_trigger_dis) {
+        isScrollUp = YES;
+        rate = (kScroll_trigger_dis - distanceFromTop);
+    }
+    else {
+        isScrollUp = NO;
+        rate = (kScroll_trigger_dis - (_visibleRect.size.height - distanceFromTop));
+    }
+    
+    // Discussion:
+    // When we change the contentOffset of UIScrollView, no matter what number we set, it will always
+    // result in integer. As time is not integer, the distance(scrollDistance) we get will mostly be a
+    // float number, but the decimal part will not affect on the contentOffset. This will cause the scroll
+    // animation not smooth. Two choices to solve:
+    // 1. (Currently used) Store the decimal part of scrollDistance, scrollDistance set to it's integer part.
+    //    Next time we add the stored decimal part to scrollDistance and do the same steps as before.
+    // 2. Reduce scrollDistance to it's interger value, use the decimal part to calculate the "real" time we use,
+    //    add the time we did not use to the next timeSinceLastScroll.
+    // 
+    // Q: Are there any differences between these two?
+    
+    scrollDistance = rate * timeSinceLastScroll * kScroll_dis_scale; // Between 0 to around 20
+    scrollDistance = [self safeHorizontalScrollDistanceWithDistance:scrollDistance isScrollUp:isScrollUp];
+    if (scrollDistance >= 1) {
+        scrollDistance += _lastDragScrollDisDecimalPart;
+        
+        // store the decimal part, make the scrollDistance integer
+        NSInteger scrollDistanceInteger = floorf(scrollDistance);
+        _lastDragScrollDisDecimalPart = scrollDistance - scrollDistanceInteger;
+        scrollDistance = scrollDistanceInteger;
+        
+        // Actually it won't scroll when the distance is below 1
+        // Also the contentOffset is always interger
+        // so there's no difference betteen scroll 1.0 and 1.4/1.9 ??
+        
         CGPoint newOffset = _parentBookShelfView.contentOffset;
-        newOffset.y = newOffset.y + (isScrollUp ? -1 : 1);
+        newOffset.y = newOffset.y + (isScrollUp ? -scrollDistance : scrollDistance);
         [_parentBookShelfView setContentOffset:newOffset];
         
         CGPoint newDragViewCenter = _dragView.center;
-        newDragViewCenter.y = newDragViewCenter.y + (isScrollUp ? -1 : 1);
+        newDragViewCenter.y = newDragViewCenter.y + (isScrollUp ? -scrollDistance : scrollDistance);
         _dragView.center = newDragViewCenter;
         [self moveBooksIfNecessary];
+        
+        // Refresh time only when it really scrolled
+        _lastDragScrollTime = CACurrentMediaTime();
     }
 }
 
@@ -868,7 +919,7 @@ typedef enum {
                          
                          [UIView animateWithDuration:animate ? 0.3 : 0.0
                                                delay:0.01
-                                             options:UIViewAnimationCurveLinear
+                                             options:UIViewAnimationOptionCurveLinear
                                           animations:^ {
                                               //NSLog(@"move animation");
                                               for (int i = 0; i < [_visibleBookViews count]; i++) {
@@ -911,7 +962,7 @@ typedef enum {
     // then in the animation, we set the bookView's scale to (1,1) to "show" the bookView and then refresh the _visibleBookView as we did in removeBookViewsAtIndexs:animate:
     [UIView animateWithDuration:animate ? 0.3 : 0.0
                           delay:0.0
-                        options:UIViewAnimationCurveLinear
+                        options:UIViewAnimationOptionCurveLinear
                      animations:^{
                          __block NSInteger steps = 0;
                          __block NSInteger moveFromIndex = 0;
