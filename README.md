@@ -66,6 +66,8 @@ Updates:
 3. **[12.08.24]** bug fix when delete one which index is bigger than the visibles
 4. **[12.08.26]** orientation change with cell animation(like what iBooks do to the shelf when orientation change).
 5. **[12.08.26]** demo updated
+6. **[12.04.11]** fix issue #12 part 2, orientation change issue
+7. **[13.06.02]** use CADisplay link to replace NSTimer in customizing scroll speed of UIScrollView
 
 ---
 
