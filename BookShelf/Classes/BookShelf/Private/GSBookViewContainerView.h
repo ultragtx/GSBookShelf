@@ -80,7 +80,6 @@ typedef struct BookViewPostion {
     // Scroll While Drag
     CADisplayLink *_displayLink;
     double _lastDragScrollTime;
-    double _lastDragScrollDisDecimalPart;
     
     // Remove Book
     NSMutableIndexSet *_indexsOfBookViewToBeRemoved;

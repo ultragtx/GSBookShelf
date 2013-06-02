@@ -607,7 +607,6 @@ typedef enum {
         CGFloat distanceFromTop = _dragView.center.y - _visibleRect.origin.y;
         if (distanceFromTop < kScroll_trigger_dis || distanceFromTop > _visibleRect.size.height - kScroll_trigger_dis) {
             _lastDragScrollTime = CACurrentMediaTime(); // Note: See http://stackoverflow.com/questions/358207/iphone-how-to-get-current-milliseconds for speed comparation
-            _lastDragScrollDisDecimalPart = 0.0;
             _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(dragScroll:)];
             [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
         }
@@ -656,31 +655,15 @@ typedef enum {
         rate = (kScroll_trigger_dis - (_visibleRect.size.height - distanceFromTop));
     }
     
-    // Discussion:
-    // When we change the contentOffset of UIScrollView, no matter what number we set, it will always
-    // result in integer. As time is not integer, the distance(scrollDistance) we get will mostly be a
-    // float number, but the decimal part will not affect on the contentOffset. This will cause the scroll
-    // animation not smooth. Two choices to solve:
-    // 1. (Currently used) Store the decimal part of scrollDistance, scrollDistance set to it's integer part.
-    //    Next time we add the stored decimal part to scrollDistance and do the same steps as before.
-    // 2. Reduce scrollDistance to it's interger value, use the decimal part to calculate the "real" time we use,
-    //    add the time we did not use to the next timeSinceLastScroll.
-    // 
-    // Q: Are there any differences between these two?
     
     scrollDistance = rate * timeSinceLastScroll * kScroll_dis_scale; // Between 0 to around 20
     scrollDistance = [self safeHorizontalScrollDistanceWithDistance:scrollDistance isScrollUp:isScrollUp];
     if (scrollDistance >= 1) {
-        scrollDistance += _lastDragScrollDisDecimalPart;
-        
-        // store the decimal part, make the scrollDistance integer
-        NSInteger scrollDistanceInteger = floorf(scrollDistance);
-        _lastDragScrollDisDecimalPart = scrollDistance - scrollDistanceInteger;
-        scrollDistance = scrollDistanceInteger;
-        
         // Actually it won't scroll when the distance is below 1
         // Also the contentOffset is always interger
         // so there's no difference betteen scroll 1.0 and 1.4/1.9 ??
+        // we round the float to integer to get the best fit value <<- is this necessary ?
+        scrollDistance = roundf(scrollDistance);
         
         CGPoint newOffset = _parentBookShelfView.contentOffset;
         newOffset.y = newOffset.y + (isScrollUp ? -scrollDistance : scrollDistance);
