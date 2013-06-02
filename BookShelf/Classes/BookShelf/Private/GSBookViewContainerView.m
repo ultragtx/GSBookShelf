@@ -590,9 +590,8 @@ typedef enum {
 #pragma mark - Scroll While Draging
 
 #define kScroll_trigger_dis 40.0f
-#define kScroll_interval_max 0.0075
-#define kScroll_interval_min 0.00050
 #define kScroll_dis_scale 27
+#define kScroll_max_speed 20
 
 - (void)stopScrollTimer {
     [_displayLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
@@ -613,7 +612,7 @@ typedef enum {
     }
 }
 
-// Not use currently
+// Not used currently
 - (BOOL)canScroll:(BOOL)isScrollUp {
     if (isScrollUp) {
         if (_parentBookShelfView.contentOffset.y <= 0) {
@@ -664,6 +663,7 @@ typedef enum {
         // so there's no difference betteen scroll 1.0 and 1.4/1.9 ??
         // we round the float to integer to get the best fit value <<- is this necessary ?
         scrollDistance = roundf(scrollDistance);
+        scrollDistance = MIN(scrollDistance, kScroll_max_speed);
         
         CGPoint newOffset = _parentBookShelfView.contentOffset;
         newOffset.y = newOffset.y + (isScrollUp ? -scrollDistance : scrollDistance);
