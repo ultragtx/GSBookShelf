@@ -6,7 +6,7 @@ Supports animated deletion, reordering, and addition.
 
 ---
 
-14.04.08: This project won't have any update, using UICollectionView with custom layout can be a better solution.
+14.04.08: **This project won't have any update, using UICollectionView with custom layout can be a better solution.**
 
 ---
 
